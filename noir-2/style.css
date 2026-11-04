@@ -119,16 +119,17 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
 .hz .book-track{position:absolute;top:0;left:0;height:100%;display:flex;flex-wrap:nowrap;align-items:center;gap:0;padding:0 0 0 var(--m);will-change:transform;width:max-content}
 .hz .book-track>*{flex:none;margin-right:clamp(40px,4.4vw,80px)}
 .hz .book-intro{width:clamp(280px,26vw,440px);align-self:center;margin-right:clamp(64px,8vw,140px);padding:0}
-.hz .chap{margin:0 clamp(40px,4.4vw,80px) 0 clamp(24px,3vw,56px);height:68vh;display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:12px;border-top:0;border-left:1px solid var(--line);padding:0 0 0 18px;width:auto}
+.hz .chap{margin:0 clamp(40px,4.4vw,80px) 0 clamp(24px,3vw,56px);height:calc(var(--hL) + 30px);transform:translateY(23px);display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:12px;border-top:0;border-left:1px solid var(--line);padding:0 0 0 18px;width:auto}
 .hz .chap .lbl.mute{margin-top:auto}
 .hz .chap-1{margin-left:0}
-.hz .ph{--h:min(60vh,44vw);align-self:center}
+.hz .book-track{--hL:min(60vh,44vw)}
+.hz .ph{--h:var(--hL);align-self:center}
 .hz .ph .clip{height:var(--h);width:auto;aspect-ratio:var(--ar,2/3)}
 .hz .ph img{width:114%;max-width:none;margin-left:-7%}
 .hz .ph.d-m{--h:min(44vh,32vw)}
 .hz .ph.d-land{--h:min(42vh,29vw)}
-.hz .ph.a-e{align-self:flex-end;margin-bottom:calc(14vh + 26px)}
-.hz .ph.a-s{align-self:flex-start;margin-top:22vh}
+.hz .ph.a-e{align-self:flex-end;margin-bottom:calc(50vh - 8px - var(--hL) / 2)}
+.hz .ph.a-s{align-self:flex-start;margin-top:calc(50vh + 8px - var(--hL) / 2)}
 .hz .ph figcaption{position:absolute;left:0;right:0;top:100%}
 .hz .ph.a-c{transform:translateY(8px)}
 .hz .book-end{width:1px;margin-right:0}
@@ -268,6 +269,12 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
   html:not(.hz) .m-full{grid-column:4/10}html:not(.hz) .m-right{grid-column:7/12}html:not(.hz) .m-left{grid-column:2/7}
   html:not(.hz) .m-pa{grid-column:2/6}html:not(.hz) .m-pb{grid-column:8/12}
   html:not(.hz) .m-bleed{grid-column:2/12;margin-inline:0}html:not(.hz) .m-bleed figcaption{padding-inline:0}
+}
+/* vertical book on a landscape screen (reduced motion, touch laptops): no frame taller than the viewport */
+@media (min-aspect-ratio:1/1){
+  html:not(.hz) .ph:not(.m-bleed){width:min(100%, calc(82vh * (var(--ar))));justify-self:center}
+  html:not(.hz) .ph.m-right{justify-self:end}html:not(.hz) .ph.m-left,html:not(.hz) .ph.m-pb{justify-self:start}html:not(.hz) .ph.m-pa{justify-self:end}
+  html:not(.hz) .ph.m-bleed{width:min(100%, calc(80vh * (var(--ar))));justify-self:center}
 }
 @media (min-width:640px) and (max-aspect-ratio:1/1){
   html:not(.hz) .m-full{grid-column:2/12}html:not(.hz) .m-right{grid-column:5/13}html:not(.hz) .m-left{grid-column:1/9}

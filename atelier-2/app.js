@@ -140,7 +140,7 @@ const fit = (el) => {
   el.style.fontSize = "100px";
   const w = inner.getBoundingClientRect().width;
   const target = el.parentElement.clientWidth - parseFloat(getComputedStyle(el.parentElement).paddingLeft) - parseFloat(getComputedStyle(el.parentElement).paddingRight);
-  el.style.fontSize = (100 * target / (w - 4.5)) + "px";   // the R hangs .035em into the margin (optical alignment)
+  el.style.fontSize = (100 * target / (w + 1.5)) + "px";   // the R hangs .035em into the margin, the r ear overshoots: optical, not metric, fit
 };
 const fitAll = () => { fit(cvName); fit($("#bk-name")); };
 
@@ -296,7 +296,7 @@ function buildDeck() {
   });
   book = {
     mode: "deck", st: null,
-    goto: (pi) => { const i = dps.findIndex((d) => +d.dataset.pi === pi || +d.dataset.pi === pi - 1 && pages[pi].type === "spread"); scrollToY(top() + Math.max(0, i) * H(), 1.6); },
+    goto: (pi) => { const i = dps.findIndex((d) => +d.dataset.pi === pi); scrollToY(top() + Math.max(0, i) * H(), 1.6); },
     kill: () => tws.forEach((t) => { t.scrollTrigger && t.scrollTrigger.kill(); t.kill(); }),
   };
 }

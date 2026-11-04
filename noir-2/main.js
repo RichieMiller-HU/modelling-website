@@ -88,7 +88,7 @@
 
   function figure(p, i, cls, mob) {
     const f = d.createElement("figure");
-    f.className = `ph ${cls}`;
+    f.className = `ph ${cls}`; f.style.setProperty("--ar", p.fit === "landscape" ? "3/2" : "2/3");
     f.dataset.cursor = "View"; f.tabIndex = 0; f.setAttribute("role", "button");
     f.setAttribute("aria-label", `Open photo ${i + 1} of ${N}: ${p.caption}`);
     const ar = p.fit === "landscape" ? "3/2" : "2/3";
@@ -96,7 +96,7 @@
     const lazy = !hzAtBuild && i > 1;
     f.innerHTML = `<div class="clip" style="--ar:${ar}"><img src="${sm(p.src)}" srcset="${sm(p.src)} 900w, ${url(p.src)} 2000w" sizes="(min-width: 900px) 34vw, ${mSize}" alt="${p.caption}" ${lazy ? 'loading="lazy"' : ""} decoding="async"></div><figcaption><span class="lbl num">${pad(i + 1)}</span><span class="lbl mute">${p.caption}</span></figcaption>`;
     const img = $("img", f);
-    const setAr = () => { if (img.naturalWidth) { f.firstChild.style.setProperty("--ar", `${img.naturalWidth}/${img.naturalHeight}`); refreshSoon(); } };
+    const setAr = () => { if (img.naturalWidth) { const r = `${img.naturalWidth}/${img.naturalHeight}`; f.firstChild.style.setProperty("--ar", r); f.style.setProperty("--ar", r); refreshSoon(); } };
     img.complete ? setAr() : img.addEventListener("load", setAr, { once: true });
     f.addEventListener("click", () => lightbox(photos, i, f));
     f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(photos, i, f); } });
@@ -206,7 +206,9 @@
     if (e.isIntersecting) { if (!(isFilm && userPaused)) v.play().catch(() => {}); }
     else { v.pause(); if (isFilm && !v.muted) setSound(false); }
   }, { threshold: 0.2 }).observe(v);
-  vio(heroV, false); vio(filmV, true);
+  if (reduce) { userPaused = true; pp.textContent = "Play"; heroV.removeAttribute("autoplay"); heroV.preload = "metadata"; }
+  else vio(heroV, false);
+  vio(filmV, true);
 
   /* image reveals (curtain, not clip-path, so lazy images still load) */
   if (!reduce) {
@@ -489,7 +491,7 @@
 
   /* ---------------- intro ---------------- */
   const chars = $$(".hn .mk>span"), meta = $$(".hero-meta > *");
-  if (reduce) { html.classList.add("no-pre"); $(".pre").remove(); heroV.play().catch(() => {}); return; }
+  if (reduce) { html.classList.add("no-pre"); $(".pre").remove(); return; }
   scrollTo(0, 0);
   html.style.overflow = "hidden"; lenis && lenis.stop();
   gsap.set(chars, { yPercent: 115 }); gsap.set(meta, { opacity: 0 }); gsap.set(heroV, { scale: 1.12 });
