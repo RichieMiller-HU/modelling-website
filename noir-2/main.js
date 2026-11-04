@@ -101,7 +101,12 @@
     const lazy = !hzAtBuild && i > 1;
     f.innerHTML = `<div class="clip" style="--ar:${ar}"><img src="${sm(p.src)}" srcset="${sm(p.src)} 900w, ${url(p.src)} 2000w" sizes="(min-width: 900px) 34vw, ${mSize}" alt="${p.caption}" ${lazy ? 'loading="lazy"' : ""} decoding="async"></div><figcaption><span class="lbl num">${pad(i + 1)}</span><span class="lbl mute">${p.caption}</span></figcaption>`;
     const img = $("img", f);
-    const setAr = () => { if (img.naturalWidth) { const r = `${img.naturalWidth}/${img.naturalHeight}`; f.firstChild.style.setProperty("--ar", r); f.style.setProperty("--ar", r); refreshSoon(); } };
+    const setAr = () => {
+      if (!img.naturalWidth) return;
+      const real = img.naturalWidth / img.naturalHeight, preset = p.fit === "landscape" ? 1.5 : 2 / 3;
+      if (Math.abs(real - preset) < 0.01) return; /* the preset was right: no layout change, no refresh */
+      const r = `${img.naturalWidth}/${img.naturalHeight}`; f.firstChild.style.setProperty("--ar", r); f.style.setProperty("--ar", r); refreshSoon();
+    };
     img.complete ? setAr() : img.addEventListener("load", setAr, { once: true });
     f.addEventListener("click", () => lightbox(seq, i, f));
     f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(seq, i, f); } });
@@ -166,8 +171,9 @@
   const ctMail = $("#ct-mail"); ctMail.href = mail(); $("#ct-t").textContent = `Book ${M.first}`;
   /* the closing line is set to the full measure, edge to edge */
   const fitCta = () => {
-    ctMail.style.fontSize = "100px";
+    ctMail.style.fontSize = "100px"; ctMail.style.width = "max-content"; /* measure the line at its natural width */
     const t = $("#ct-t").getBoundingClientRect().width, arr = 100 * 0.42, gap = 100 * 0.18;
+    ctMail.style.width = "";
     const avail = ctMail.parentNode.clientWidth;
     if (t) ctMail.style.fontSize = `${Math.min(340, (100 * avail) / (t + arr + gap)) - 0.5}px`;
   };
@@ -298,14 +304,15 @@
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.config({ ignoreMobileResize: true });
   let lenis = null, gl = null;
-  var rT; function refreshSoon() { clearTimeout(rT); rT = setTimeout(() => ScrollTrigger.refresh(), 120); }
+  /* a refresh restores scroll and would cut short a smooth jump, so it waits until the jump has landed */
+  var rT, jumping = 0; function refreshSoon() { clearTimeout(rT); rT = setTimeout(() => (performance.now() < jumping ? refreshSoon() : ScrollTrigger.refresh()), 160); }
   addEventListener("load", refreshSoon);
   d.fonts && d.fonts.ready.then(refreshSoon);
 
   /* anchor links: smooth via Lenis on desktop, native elsewhere */
   $$('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
     const id = a.getAttribute("href"); const t = id === "#top" ? 0 : $(id); if (t === null) return;
-    e.preventDefault();
+    e.preventDefault(); jumping = performance.now() + 2200;
     if (lenis) lenis.scrollTo(t, { duration: 1.6, easing: (x) => 1 - Math.pow(1 - x, 4) });
     else if (t === 0) scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
     else t.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
@@ -332,6 +339,7 @@
   $("#ix-note").textContent = `${cap1(word(photos.length))} frames in ${word(groups.length - (cuEntry ? 1 : 0))} chapters, closing on a close-up. ${fine && !reduce ? "Hover for a preview, select" : "Select"} a title to go to the frame.`;
 
   const scrollToY = (y) => {
+    jumping = performance.now() + 2200;
     if (lenis) lenis.scrollTo(y, { duration: 1.8, easing: (x) => 1 - Math.pow(1 - x, 4) });
     else scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
   };

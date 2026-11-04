@@ -31,6 +31,8 @@ const CONFIG = {
   ease: 'power1.out',
   reveal: 0.9, // seconds for a frame to develop out of its card
   revealEase: 'power2.inOut',
+  revealSoft: 0.24, // the reveal's edge is feathered over this share of the sweep, so it dissolves rather than cuts
+  revealBlur: 1.6, // and reads the photograph's tones this many mip levels softer, so no grain breaks into islands
   pull: 0.4, // how far ahead of the sweep the near tones fill, as a share of the look
   light: 0.18, // the hairline of light along the edge, 0 to 1
   rest: 1600, // ms a look keeps its context after it comes to rest
@@ -67,6 +69,8 @@ uniform float uLead;
 uniform float uTrail;
 uniform float uLight;
 uniform vec3 uRim;
+uniform float uSoft; // 0: a crisp edge (hover); above: a feathered one (reveal)
+uniform float uBlur; // extra mip levels on the tones
 
 out vec4 color;
 
@@ -85,13 +89,14 @@ float rim(float t, float edge, float w, float side) {
 void main() {
   vec2 uv = gl_FragCoord.xy / uResolution;
   float d = dot(uv, uSweep.xy) + uSweep.z;
-  float k = mix(tone(uv, 2.0), tone(uv, 4.5), 0.5);
+  float k = mix(tone(uv, 2.0 + uBlur), tone(uv, 4.5 + uBlur), 0.5);
   k = mix(k, 1.0 - k, uFlip);
   float t = mix(d, k, uPull);
   float w = max(fwidth(t), 1e-5);
-  float lead = mix(-0.01, 1.01, uLead);
-  float trail = mix(-0.01, 1.01, uTrail);
-  float covered = (1.0 - smoothstep(lead - 1.5 * w, lead, t)) * smoothstep(trail - 1.5 * w, trail, t);
+  float edge = max(1.5 * w, uSoft);
+  float lead = mix(-0.01, 1.01 + uSoft, uLead);
+  float trail = mix(-0.01, 1.01 + uSoft, uTrail);
+  float covered = (1.0 - smoothstep(lead - edge, lead, t)) * smoothstep(trail - edge, trail, t);
   float light = max(rim(t, lead, w, 1.0), rim(t, trail, w, -1.0)) * uLight * (1.0 - covered);
   vec3 card = texture(uCard, uv).rgb;
   color = vec4(card * covered + uRim * light, covered + light);
@@ -159,6 +164,7 @@ export class Plate {
     canvas.setAttribute('aria-hidden', 'true');
     const gl = canvas.getContext('webgl2', { antialias: false });
     if (!gl) return false;
+    this.pending = gl;
     try {
       const prog = program(gl, fullscreen, fragment);
       gl.useProgram(prog);
@@ -170,7 +176,7 @@ export class Plate {
       this.tones ||= range(this.img);
       gl.uniform2f(this.u.uTones, ...this.tones);
       gl.uniform1f(this.u.uPull, CONFIG.pull);
-      gl.uniform1f(this.u.uLight, CONFIG.light);
+      this.mode(false);
       const bg = getComputedStyle(this.card).backgroundColor;
       const light = lightness(bg) > 0.5;
       gl.uniform1f(this.u.uFlip, light ? 1 : 0);
@@ -184,6 +190,14 @@ export class Plate {
     this.img.after(canvas);
     this.size();
     return true;
+  }
+
+  // The uniforms that differ between the reveal and the hover.
+  mode(reveal) {
+    const gl = this.gl || this.pending;
+    gl.uniform1f(this.u.uSoft, reveal ? CONFIG.revealSoft : 0);
+    gl.uniform1f(this.u.uBlur, reveal ? CONFIG.revealBlur : 0);
+    gl.uniform1f(this.u.uLight, reveal ? 0 : CONFIG.light);
   }
 
   size() {
@@ -235,6 +249,7 @@ export class Plate {
     this.edges.lead = 1;
     this.edges.trail = 0;
     this.gl.uniform3f(this.u.uSweep, ...sweeps.bottom);
+    this.mode(true);
     this.render();
     this.look.classList.remove('is-veiled');
     gsap.to(this.edges, {
@@ -245,6 +260,7 @@ export class Plate {
       onUpdate: () => this.render(),
       onComplete: () => {
         this.edges.lead = this.edges.trail = 0;
+        this.mode(false);
         this.render();
         done();
         this.park();
