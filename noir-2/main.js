@@ -63,6 +63,7 @@
   let gi = 0;
   order.forEach((k, ci) => {
     const list = photos.filter((p) => p.key === k);
+    if (!list.length) return;
     const chap = d.createElement("div");
     chap.className = `chap chap-${ci + 1}`;
     chap.innerHTML = `<span class="d-s">${ROMAN[ci] || ci + 1}</span><span class="lbl">${chapNames[ci]}</span><span class="lbl mute num">${pad(gi + 1)}${list.length > 1 ? "—" + pad(gi + list.length) : ""}</span>`;
@@ -310,10 +311,72 @@
   /* nav: wordmark appears once the hero name is gone; current section underline */
   const navMark = $(".nav-mark");
   ScrollTrigger.create({ start: () => $(".profile").offsetTop - innerHeight * 0.6, end: "max", onToggle: (s) => navMark.classList.toggle("on", s.isActive) });
-  [["#work", ".book"], ["#film", ".film"], ["#measurements", ".meas"], ["#contact", ".ct"]].forEach(([h, s]) => {
+  [["#work", ".ix", ".book"], ["#film", ".film"], ["#measurements", ".meas"], ["#contact", ".ct"]].forEach(([h, s, e]) => {
     const link = $(`.nav a[href="${h}"]`), sec = $(s); if (!link || !sec) return;
-    ScrollTrigger.create({ trigger: sec, start: "top 50%", end: "bottom 50%", onToggle: (st) => link.setAttribute("aria-current", st.isActive) });
+    ScrollTrigger.create({ trigger: sec, endTrigger: e ? $(e) : sec, start: "top 50%", end: "bottom 50%", onToggle: (st) => link.setAttribute("aria-current", st.isActive) });
   });
+
+  /* ---------------- contents index (cursor-follow preview, after atelier-2's index) ---------------- */
+  const rowsEl = $("#rows"), figEls = $$(".ph", track);
+  const groups = order.map((k, ci) => ({ roman: ROMAN[ci] || String(ci + 1), name: chapNames[ci], items: photos.filter((p) => p.key === k) })).filter((g) => g.items.length);
+  if (cuEntry) groups.push({ roman: "", name: "Close-up", items: [cuEntry] });
+  const arrowSvg = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1"/></svg>';
+  rowsEl.innerHTML = groups.map((g) => {
+    const a = seq.indexOf(g.items[0]) + 1, b = seq.indexOf(g.items[g.items.length - 1]) + 1;
+    return `<div class="ix-ch"><span class="d-s">${g.roman}</span><span class="lbl">${g.name}</span><span class="lbl mute num">${pad(a)}${b > a ? "—" + pad(b) : ""}</span></div>` +
+      g.items.map((p) => { const i = seq.indexOf(p); return `<a class="ix-row" href="#book" data-i="${i}"><span class="lbl mute num n">${pad(i + 1)}</span><span class="ti">${p.caption}</span><span class="lbl mute ft">${p.fit}</span><span class="go">${arrowSvg}</span></a>`; }).join("");
+  }).join("");
+  $("#ix-note").textContent = `${cap1(word(photos.length))} frames in ${word(groups.length - (cuEntry ? 1 : 0))} chapters, closing on a close-up. ${fine && !reduce ? "Hover for a preview, select" : "Select"} a title to go to the frame.`;
+
+  const scrollToY = (y) => {
+    if (lenis) lenis.scrollTo(y, { duration: 1.8, easing: (x) => 1 - Math.pow(1 - x, 4) });
+    else scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+  };
+  const frameY = (i) => {
+    if (seq[i] === cuEntry) { const cu = $(".cu"); return cu.offsetTop + (html.classList.contains("motion") ? (cu.offsetHeight - innerHeight) * 0.85 : 0); }
+    const f = figEls[i], sec = $(".book");
+    if (html.classList.contains("hz")) {
+      const dist = Math.max(1, track.scrollWidth - innerWidth);
+      const pr = clamp((f.offsetLeft + f.offsetWidth / 2 - innerWidth * 0.5) / dist, 0, 1);
+      return sec.offsetTop + pr * (sec.offsetHeight - innerHeight);
+    }
+    const r = f.getBoundingClientRect();
+    return scrollY + r.top - Math.max(0, (innerHeight - r.height) / 2);
+  };
+  $$(".ix-row", rowsEl).forEach((row) => row.addEventListener("click", (e) => {
+    e.preventDefault(); e.stopImmediatePropagation();
+    const i = +row.dataset.i; scrollToY(frameY(i));
+    const target = seq[i] === cuEntry ? cuF : figEls[i];
+    if (target) setTimeout(() => target.focus({ preventScroll: true }), lenis ? 1850 : 700);
+  }));
+
+  const fl = $("#float"), flc = $("#float-c");
+  if (fine && !reduce) {
+    const flImgs = seq.map((p) => { const im = new Image(); im.alt = ""; im.decoding = "async"; im.src = sm(p.src); flc.append(im); return im; });
+    let tx = innerWidth / 2, ty = innerHeight / 2, cx = tx, cy = ty, rot = 0, z = 1, on = false, last = null;
+    addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+    const show = () => { if (on) return; on = true; cx = tx; cy = ty; gsap.set(fl, { visibility: "visible" }); gsap.to(flc, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.9, ease: "expo.out", overwrite: true }); };
+    const hide = () => {
+      on = false; last = null; rowsEl.classList.remove("hov"); $$(".ix-row.on", rowsEl).forEach((r) => r.classList.remove("on"));
+      gsap.to(flc, { clipPath: "inset(50% 50% 50% 50%)", duration: 0.5, ease: "power3.in", overwrite: true, onComplete: () => { if (!on) gsap.set(fl, { visibility: "hidden" }); } });
+    };
+    $$(".ix-row", rowsEl).forEach((row, k) => row.addEventListener("pointerenter", () => {
+      const dir = last == null || k > last ? 1 : -1; last = k;
+      rowsEl.classList.add("hov"); $$(".ix-row.on", rowsEl).forEach((r) => r.classList.remove("on")); row.classList.add("on");
+      const im = flImgs[+row.dataset.i]; im.style.zIndex = ++z;
+      gsap.fromTo(im, { clipPath: dir > 0 ? "inset(0% 0% 100% 0%)" : "inset(100% 0% 0% 0%)", scale: 1.16 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 0.85, ease: "expo.out", overwrite: true });
+      show();
+    }));
+    rowsEl.addEventListener("pointerleave", hide);
+    gsap.ticker.add(() => {
+      if (!on && fl.style.visibility !== "visible") return;
+      const nx = cx + (tx - cx) * 0.14, vx = nx - cx; cx = nx; cy += (ty - cy) * 0.14;
+      rot += (clamp(vx * 0.2, -6, 6) - rot) * 0.12;
+      const w = fl.offsetWidth, h = fl.offsetHeight;
+      const x = Math.min(cx + 40, innerWidth - w - 24), y = clamp(cy - h * 0.55, 16, innerHeight - h - 16);
+      fl.style.transform = `translate3d(${x}px,${y}px,0) rotate(${rot}deg)`;
+    });
+  } else fl.remove();
 
   const mm = gsap.matchMedia();
 
@@ -327,7 +390,7 @@
 
     const sec = $(".book"), bar = $(".book-bar i"), figs = $$(".ph", track);
     const dist = () => Math.max(0, track.scrollWidth - innerWidth);
-    const setH = () => { sec.style.height = `${dist() * 0.82 + innerHeight}px`; };
+    const setH = () => { sec.style.height = `${dist() * 0.78 + innerHeight}px`; };
     setH(); ScrollTrigger.addEventListener("refreshInit", setH);
     const ch = $("#bk-ch"), bn = $("#bk-n");
     let cur = -1;
@@ -383,7 +446,7 @@
 
     /* close-up: a slit of the portrait opens to full bleed */
     /* the slit starts centred on the eyes, then the frame glides back to its natural crop */
-    const win = () => (portrait() ? [22, 25] : [19, 38.5]);
+    const win = () => (portrait() ? [14, 18] : [19, 38.5]);
     const inset = () => { const [y, x] = win(); return `inset(${y}% ${x}% ${y}% ${x}%)`; };
     const z = { e: 0 };
     cuApply = () => {

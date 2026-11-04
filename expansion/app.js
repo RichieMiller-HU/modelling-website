@@ -466,6 +466,11 @@
     });
 
     ScrollTrigger.addEventListener("refresh", () => all.forEach((x) => x.measure()));
+    // lazy frames can settle to a slightly different height than reserved: keep pins in step
+    let rt = 0;
+    $$(".ph__btn img").forEach((img) => img.complete || img.addEventListener("load", () => {
+      clearTimeout(rt); rt = setTimeout(() => ScrollTrigger.refresh(), 200);
+    }, { once: true }));
     ScrollTrigger.refresh();
   };
 

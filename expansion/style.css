@@ -252,7 +252,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .s-lone-l { grid-column: 2 / span 5; }
 .s-wide { grid-column: 1 / -1; }
 .s-wide-i { grid-column: 2 / span 10; }
-.s-wide .ph__btn img, .s-wide-i .ph__btn img { aspect-ratio: auto; max-height: 82vh; object-fit: cover; }
+.s-wide .ph__btn img, .s-wide-i .ph__btn img { aspect-ratio: auto 3 / 2; max-height: 82vh; object-fit: cover; }
 .s-coda { grid-column: 4 / span 6; }
 
 /* reveal: transform only, so lazy images are never inside a hidden or clipped box */
