@@ -25,7 +25,7 @@
 
 :root {
   --paper: #eeeae3;
-  --ink: #0d0c0b;
+  --ink: #0a0a09;
   --paper-mute: #6f6a62;
   --ink-mute: #8b857c;
   --g: clamp(16px, 2.8vw, 40px); /* page gutter */
@@ -201,7 +201,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   display: flex; justify-content: space-between; align-items: baseline; color: var(--paper);
 }
 .xp__cap .ph__n { margin-right: 18px; }
-.ph__btn--text { display: inline; width: auto; overflow: visible; background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 100% 1px; cursor: zoom-in; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding-bottom: 2px; }
+.xp__cap .ph__btn--text { display: inline; width: auto; overflow: visible; background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 100% 1px; cursor: zoom-in; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding-bottom: 2px; }
 
 /* ---------- statement (in-flow expansion) ---------- */
 .say {
@@ -408,11 +408,12 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
   .xp__type--brief { font-size: 17.6vw; --win-w: 1.75em; --win-h: 0.72em; }
   .xp-line--i { padding-left: 0.9em; }
-  .xp__type--film { font-size: 24vw; --win-w: 1.95em; --win-h: 0.72em; }
-  .xp-line--r { padding-left: 0.85em; }
+  .xp__type--film { font-size: 22vw; --win-w: 1.9em; --win-h: 0.72em; }
+  .xp-line--r { padding-left: 0.42em; }
 
   .say { padding: 16vh var(--g) 14vh; row-gap: 6vh; }
-  .say__type { font-size: 21vw; --win-w: 1.5em; }
+  .say__type { font-size: 25vw; --win-w: 1.95em; white-space: normal; line-height: 0.84; }
+  .say__type .say__w:last-child { display: block; padding-left: 0.62em; }
   .say__body { grid-column: 3 / -1; }
   .say__text { font-size: 19px; }
 
@@ -446,6 +447,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   .contact { padding-top: 16vh; }
   .contact__mail { white-space: normal; }
   .contact__mail span { display: block; width: max-content; }
+  .contact__mail wbr { display: none; }
   .contact__grid { grid-template-columns: 1fr; margin-top: 9vh; row-gap: 28px; }
   .contact__grid > div { display: grid; grid-template-columns: 1fr 1.4fr; align-items: baseline; }
   .contact__grid .label { margin: 0; }
