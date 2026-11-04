@@ -288,9 +288,11 @@
     video.addEventListener("play", syncToggle); video.addEventListener("pause", syncToggle);
     toggle.addEventListener("click", () => { if (video.paused) { userPaused = false; video.play().catch(() => {}); } else { userPaused = true; video.pause(); } });
     syncToggle();
+    // the film holds on its first frame while the window opens in the words,
+    // and starts rolling as the window grows to full bleed (see filmGate below)
     new IntersectionObserver(([en]) => {
-      if (en.isIntersecting && !userPaused) video.play().catch(() => {});
-      else if (!en.isIntersecting) video.pause();
+      if (!en.isIntersecting) video.pause();
+      else if (!userPaused && (reduce || !window.gsap)) video.play().catch(() => {});
     }, { threshold: 0.15 }).observe(film);
   }
 
@@ -455,15 +457,20 @@
       });
     }
 
-    const pinned = (x, len) => ScrollTrigger.create({
+    const pinned = (x, len, gate) => ScrollTrigger.create({
       trigger: x.el, pin: true, start: "top top", end: `+=${len}%`,
       onUpdate: (self) => {
-        const p = self.progress;
-        x.render(clamp(p / 0.3), clamp((p - 0.36) / 0.52));
+        const p = self.progress, b = clamp((p - 0.36) / 0.52);
+        x.render(clamp(p / 0.3), b);
+        gate && gate(b);
       },
     });
     brief && pinned(brief, 210);
-    filmX && pinned(filmX, 210);
+    const filmGate = (b) => {
+      if (b > 0.02) { if (video.paused && !userPaused) video.play().catch(() => {}); }
+      else if (!video.paused) { video.pause(); video.currentTime = 0; }
+    };
+    filmX && pinned(filmX, 210, filmGate);
 
     ScrollTrigger.create({ trigger: say, start: "top 82%", end: "top 18%", onUpdate: (s) => renderSay(s.progress) });
     renderSay(0);

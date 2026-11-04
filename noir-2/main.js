@@ -110,7 +110,7 @@
   cuImg.src = url(cuSrc); cuImg.alt = photos[cuIdx] ? photos[cuIdx].caption : "Close-up";
   $("#cu-c").textContent = `${pad(cuIdx + 1)} / ${pad(N)} — ${photos[cuIdx] ? photos[cuIdx].caption : ""}`;
   /* where the eyes sit in the close-up frame, as a fraction of the image (x, y) */
-  const CU_FOCUS = [0.42, 0.24];
+  const CU_FOCUS = [0.36, 0.25];
   let cuDim = [2, 3], cuApply = () => {};
   /* cover-fit geometry shared by the <img> fallback and the WebGL shader, so both frame identically */
   const cuGeo = () => {
@@ -159,6 +159,14 @@
 
   /* contact */
   const ctMail = $("#ct-mail"); ctMail.href = mail(); $("#ct-t").textContent = `Book ${M.first}`;
+  /* the closing line is set to the full measure, edge to edge */
+  const fitCta = () => {
+    ctMail.style.fontSize = "100px";
+    const t = $("#ct-t").getBoundingClientRect().width, arr = 100 * 0.42, gap = 100 * 0.18;
+    const avail = ctMail.parentNode.clientWidth;
+    if (t) ctMail.style.fontSize = `${Math.min(340, (100 * avail) / (t + arr + gap)) - 0.5}px`;
+  };
+  fitCta(); addEventListener("resize", fitCta); d.fonts && d.fonts.ready.then(fitCta);
   const cm = $("#c-mail"); cm.href = mail(); cm.textContent = M.email;
   const ig = $("#c-ig"); ig.href = `https://instagram.com/${M.instagram}`; ig.textContent = "@" + M.instagram;
   const ag = $("#c-ag");
@@ -314,16 +322,19 @@
     const dist = () => Math.max(0, track.scrollWidth - innerWidth);
     const setH = () => { sec.style.height = `${dist() * 0.82 + innerHeight}px`; };
     setH(); ScrollTrigger.addEventListener("refreshInit", setH);
+    const ch = $("#bk-ch"), bn = $("#bk-n");
+    let cur = -1;
+    const setIdx = (i) => { if (i === cur) return; cur = i; bn.textContent = pad(i + 1); const ci = order.indexOf(photos[i].key); ch.textContent = `${ROMAN[ci] || ci + 1} — ${chapNames[ci]}`; };
+    /* the frame whose centre is nearest the reading line (58% of the width) is "current" */
+    const track2 = () => { const x = -gsap.getProperty(track, "x") + innerWidth * 0.58; let best = 0, bd = 1e9;
+      figs.forEach((f, i) => { const c = f.offsetLeft + f.offsetWidth / 2, dd = Math.abs(c - x); if (dd < bd) { bd = dd; best = i; } }); setIdx(best); };
     const tween = gsap.to(track, {
       x: () => -dist(), ease: "none",
-      scrollTrigger: { trigger: sec, start: "top top", end: "bottom bottom", scrub: true, invalidateOnRefresh: true, onUpdate: (s) => gsap.set(bar, { scaleX: s.progress }) },
+      scrollTrigger: { trigger: sec, start: "top top", end: "bottom bottom", scrub: true, invalidateOnRefresh: true, onUpdate: (s) => { gsap.set(bar, { scaleX: s.progress }); track2(); } },
     });
-    const ch = $("#bk-ch"), bn = $("#bk-n");
-    const setIdx = (i) => { bn.textContent = pad(i + 1); ch.textContent = KEYS[photos[i].key] || ""; };
     setIdx(0);
     figs.forEach((f, i) => {
       gsap.fromTo($("img", f), { xPercent: 4.5 }, { xPercent: -4.5, ease: "none", scrollTrigger: { trigger: f, containerAnimation: tween, start: "left right", end: "right left", scrub: true } });
-      ScrollTrigger.create({ trigger: f, containerAnimation: tween, start: "left 62%", end: "right 62%", onToggle: (s) => s.isActive && setIdx(i) });
     });
     refreshSoon();
     return () => {
@@ -393,29 +404,28 @@
       .fromTo(".film-w2", { x: () => wOff(), opacity: 1 }, { x: () => wOff() + innerWidth * (portrait() ? 0 : 0.08), opacity: 0, ease: "power2.in", duration: 0.55 }, 0)
       .to({}, { duration: 0.3 });
 
-    return () => { gsap.set([cuF, ".film-frame", ".hero-frame", hn1, hn2, cuImg, ".film-w", words], { clearProps: "all" }); };
+    return () => { cuApply = () => {}; gsap.set([cuF, ".film-frame", ".hero-frame", hn1, hn2, cuImg, ".film-w", words], { clearProps: "all" }); };
   });
 
   /* ---------------- WebGL close-up: a whisper of bend on fast scroll ---------------- */
-  if (!reduce) gl = glImage(cuF, url(cuSrc), [0.5, 0.24]);
+  if (!reduce) { gl = glImage(cuF, url(cuSrc)); cuApply(); }
 
-  function glImage(host, src, focus) {
+  function glImage(host, src) {
     const c = d.createElement("canvas"); c.setAttribute("aria-hidden", "true");
     const opts = { antialias: false, alpha: false, depth: false, stencil: false, powerPreference: "low-power", preserveDrawingBuffer: false };
     let g = null, v2 = false;
     try { g = c.getContext("webgl2", opts); v2 = !!g; if (!g) g = c.getContext("webgl", opts); } catch (e) { g = null; }
     if (!g) return null;
     const vs = "attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}";
-    const fs = `precision highp float;varying vec2 v;uniform sampler2D t;uniform vec2 r,im,f;uniform float s,k;
+    /* same cover-fit maths as the <img> (o = crop origin, z = visible size), plus zoom s, offset dd, bend k */
+    const fs = `precision highp float;varying vec2 v;uniform sampler2D t;uniform vec2 o,z,dd;uniform float s,k;
       void main(){
         vec2 uv=vec2(v.x,1.-v.y);
-        float ra=r.x/r.y,ri=im.x/im.y;
-        vec2 sz=ra>ri?vec2(1.,ri/ra):vec2(ra/ri,1.);
-        vec2 o=clamp(f-sz*.5,vec2(0.),vec2(1.)-sz);
-        vec2 q=(uv-.5)/s+.5;
-        q.y+=sin(q.x*3.14159265)*k*.022;
-        vec2 tc=o+q*sz;
-        float sp=abs(k)*.0035;
+        vec2 q=(uv-.5)/s+.5+dd;
+        q.y+=sin(clamp(q.x,0.,1.)*3.14159265)*k*.02;
+        q=clamp(q,0.,1.);
+        vec2 tc=o+q*z;
+        float sp=abs(k)*.003;
         vec4 c=texture2D(t,tc);
         gl_FragColor=vec4(texture2D(t,tc+vec2(0.,sp)).r,c.g,texture2D(t,tc-vec2(0.,sp)).b,1.);
       }`;
@@ -427,8 +437,9 @@
     const buf = g.createBuffer(); g.bindBuffer(g.ARRAY_BUFFER, buf);
     g.bufferData(g.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), g.STATIC_DRAW);
     const loc = g.getAttribLocation(pr, "p"); g.enableVertexAttribArray(loc); g.vertexAttribPointer(loc, 2, g.FLOAT, false, 0, 0);
-    const U = {}; ["t", "r", "im", "f", "s", "k"].forEach((n) => (U[n] = g.getUniformLocation(pr, n)));
-    let ready = false, dead = false, sc = 1.32, kv = 0, kt = 0, dirty = true, visible = false, w = 0, h = 0;
+    const U = {}; ["t", "o", "z", "dd", "s", "k"].forEach((n) => (U[n] = g.getUniformLocation(pr, n)));
+    let ready = false, dead = false, kv = 0, kt = 0, dirty = true, visible = false, w = 0, h = 0;
+    const st = { s: 1.32, dx: 0, dy: 0, o: [0, 0], z: [1, 1] };
     const tex = g.createTexture();
     const im = new Image(); im.decoding = "async";
     im.onload = () => {
@@ -439,8 +450,10 @@
       if (v2) { g.generateMipmap(g.TEXTURE_2D); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR_MIPMAP_LINEAR); }
       else g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR);
       g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.LINEAR);
-      g.uniform1i(U.t, 0); g.uniform2f(U.im, im.naturalWidth, im.naturalHeight); g.uniform2f(U.f, focus[0], focus[1]);
-      ready = true; dirty = true; draw(); c.classList.add("on");
+      g.uniform1i(U.t, 0);
+      cuDim = [im.naturalWidth, im.naturalHeight]; cuLayout();
+      ready = true; dirty = true; draw();
+      requestAnimationFrame(() => c.classList.add("on"));
     };
     im.src = src;
     const size = () => {
@@ -450,13 +463,11 @@
     };
     const draw = () => {
       if (!ready || dead || !w) return;
-      g.viewport(0, 0, w, h); g.uniform2f(U.r, w, h); g.uniform1f(U.s, sc); g.uniform1f(U.k, kv);
+      g.viewport(0, 0, w, h);
+      g.uniform2f(U.o, st.o[0], st.o[1]); g.uniform2f(U.z, st.z[0], st.z[1]); g.uniform2f(U.dd, st.dx, st.dy);
+      g.uniform1f(U.s, st.s); g.uniform1f(U.k, kv);
       g.drawArrays(g.TRIANGLE_STRIP, 0, 4); dirty = false;
     };
-    c.addEventListener("webglcontextlost", (e) => { e.preventDefault(); dead = true; c.remove(); gl = null; gsap.ticker.remove(loop); });
-    host.append(c); size();
-    new ResizeObserver(() => { size(); draw(); }).observe(host);
-    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) dirty = true; }).observe(host);
     const loop = () => {
       if (!visible || dead) return;
       kt *= 0.9;
@@ -464,9 +475,13 @@
       if (Math.abs(nk - kv) > 1e-4 || Math.abs(nk) > 1e-4) { kv = Math.abs(nk) < 2e-4 ? 0 : nk; dirty = true; }
       if (dirty) draw();
     };
+    c.addEventListener("webglcontextlost", (e) => { e.preventDefault(); dead = true; c.remove(); gl = null; gsap.ticker.remove(loop); });
+    host.append(c); size();
+    new ResizeObserver(() => { size(); draw(); }).observe(host);
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) dirty = true; }).observe(host);
     gsap.ticker.add(loop);
     return {
-      scale: (v) => { if (v !== sc) { sc = v; dirty = true; } },
+      set: (s, dx, dy, geo) => { st.s = s; st.dx = dx; st.dy = dy; st.o = geo.o; st.z = geo.sz; dirty = true; },
       vel: (pxs) => { kt = clamp(pxs / 4500, -1, 1); },
     };
   }

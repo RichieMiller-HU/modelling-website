@@ -104,7 +104,7 @@ $("#cv-av").textContent = M.available;
 $("#cv-st").textContent = M.statement.replace(/\s+—\s+/g, ", ").replace(/\s*,\s*,/g, ",");
 const cvIm = $("#cv-im");
 cvIm.src = U(cover.src); cvIm.alt = `${full} — ${cover.caption}`;
-const nameHTML = (s) => s.split(" ").map((w) => `<span class="w">${[...w].map((c) => `<span class="ch">${esc(c)}</span>`).join("")}</span>`).join(" ");
+const nameHTML = (s) => s.split(" ").map((w) => `<span class="w"><span class="wi">${esc(w)}</span></span>`).join(" ");
 const cvName = $("#cv-name");
 cvName.innerHTML = `<span class="nm-in">${nameHTML(full)}</span>`; cvName.setAttribute("aria-label", full);
 $("#bk-name").innerHTML = `<span class="nm-in">${esc(full)}</span>`;
@@ -261,7 +261,7 @@ function buildFlip() {
   });
   const yFor = (s) => st.start + (n > 1 ? s / (n - 1) : 0) * (st.end - st.start);
   const onEnd = () => {
-    if (lbOpen || !st.isActive) return;
+    if (lbOpen || !st.isActive || window.__noSnap) return;
     const t = st.progress * (n - 1), r = Math.round(t);
     if (Math.abs(t - r) < 0.003) return;
     scrollToY(yFor(r), 0.6 + 0.6 * Math.abs(t - r));
@@ -460,7 +460,7 @@ function choreography() {
     onSplit: (s) => gsap.from(s.lines, { yPercent: 105, duration: 1.4, stagger: 0.09, ease: "o", scrollTrigger: { trigger: el, start: "top 88%", once: true } }),
   }));
   $$("[data-fade]").forEach((el) => gsap.from(el, { opacity: 0, y: 26, duration: 1.4, ease: "o", scrollTrigger: { trigger: el, start: "top 90%", once: true } }));
-  ScrollTrigger.batch(".toc-ch, .row", { start: "top 94%", once: true, onEnter: (els) => gsap.from(els, { opacity: 0, y: 22, duration: 1.1, stagger: 0.045, ease: "o", overwrite: true }) });
+  ScrollTrigger.batch(".toc-ch, .row", { start: "top 94%", once: true, onEnter: (els) => gsap.from(els, { opacity: 0, y: 22, duration: 1, stagger: 0.03, ease: "o", overwrite: true }) });
   ScrollTrigger.batch(".tbl-r, .bk-info > div", { start: "top 94%", once: true, onEnter: (els) => gsap.from(els, { opacity: 0, y: 18, duration: 1, stagger: 0.06, ease: "o" }) });
   /* cover image drifts and grows as the cover leaves */
   gsap.fromTo(cvIm, { scale: 1, yPercent: 0 }, { scale: 1.12, yPercent: 5, ease: "none", transformOrigin: "50% 100%", scrollTrigger: { trigger: ".cover", start: "top top", end: "bottom top", scrub: true } });
@@ -476,9 +476,9 @@ function choreography() {
 
 /* ---------------- intro: contact-sheet flicker, then the frame flies into the cover ---------------- */
 function coverIn(delay = 0) {
-  const chars = $$(".ch", cvName);
+  const chars = $$(".wi", cvName);
   const tl = gsap.timeline({ delay });
-  tl.from(chars, { yPercent: 108, duration: 1.5, stagger: 0.034, ease: "o" }, 0)
+  tl.from(chars, { yPercent: 104, duration: 1.6, stagger: 0.11, ease: "o" }, 0)
     .from(nav, { opacity: 0, duration: 1, ease: "power2.out" }, 0.25)
     .from(".cv-meta > span", { opacity: 0, y: 14, duration: 1.1, stagger: 0.08 }, 0.35);
   const st = SplitText.create("#cv-st", { type: "lines", mask: "lines", linesClass: "ln" });
@@ -502,7 +502,7 @@ async function intro() {
   const dec = ims.map((im) => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()));
   await Promise.race([Promise.all([...dec, fontsP]), wait(4500)]);
   fitAll();
-  gsap.set($$(".ch", cvName), { yPercent: 108 });
+  gsap.set($$(".wi", cvName), { yPercent: 104 });
   /* flicker: accelerate through the book, settle on the cover */
   const gaps = ims.map((_, i) => { const x = i / Math.max(1, ims.length - 1); return 60 + 120 * Math.pow(Math.abs(x - 0.5) * 2, 2.2); });
   const ctr = $("#i-n");
@@ -511,7 +511,7 @@ async function intro() {
     ctr.textContent = `${pad(i + 1)} / ${pad(ims.length)}`;
     await wait(i === ims.length - 1 ? 380 : gaps[i]);
   }
-  gsap.set($$(".ch", cvName), { clearProps: "transform" });
+  gsap.set($$(".wi", cvName), { clearProps: "transform" });
   const r = $("#cv-img").getBoundingClientRect();
   const tl = gsap.timeline();
   tl.to(".intro-c", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0)

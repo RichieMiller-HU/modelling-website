@@ -386,7 +386,7 @@ dt {
   grid-template-rows: auto;
 }
 
-.head--row {
+.grid .head--row {
   grid-column: 1 / -1;
   grid-row: 1;
   display: grid;
@@ -395,7 +395,7 @@ dt {
   padding-bottom: 14px;
 }
 
-.head--row .head__index {
+.grid .head--row .head__index {
   grid-column: 1 / -1;
 }
 
@@ -724,6 +724,8 @@ dt {
   line-height: 0.8;
   letter-spacing: -0.03em;
   white-space: nowrap;
+  width: max-content;
+  max-width: none;
   margin-left: -0.04em;
 }
 

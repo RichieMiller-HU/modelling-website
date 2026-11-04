@@ -522,7 +522,7 @@ const footName = $('.foot__name');
 const fitName = () => {
   footName.style.fontSize = '100px';
   const w = footName.parentElement.clientWidth - parseFloat(getComputedStyle(footName.parentElement).paddingLeft) * 2;
-  footName.style.fontSize = (100 * w) / footName.scrollWidth * 0.985 + 'px';
+  footName.style.fontSize = ((100 * w) / footName.getBoundingClientRect().width) * 0.99 + 'px';
 };
 fonts.then(fitName);
 addEventListener('resize', fitName);

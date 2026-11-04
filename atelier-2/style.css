@@ -37,7 +37,7 @@ ul{list-style:none}
 .vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ---------- type system: five sizes, nothing else ---------- */
-.a{font:500 12px/1.35 var(--grot);letter-spacing:.005em;font-feature-settings:"tnum" 1}         /* apparatus */
+.a{font:500 12px/1.35 var(--grot);letter-spacing:.005em}         /* apparatus */
 .a-m{color:var(--mute)}
 .t{font:400 17px/1.5 var(--serif);letter-spacing:.002em}                                         /* reading */
 .m{font:340 clamp(24px,2.45vw,40px)/1.12 var(--serif);letter-spacing:-.016em}                     /* medium display */
@@ -83,8 +83,8 @@ html.no-intro .intro{display:none}
 .menu li .m{font-size:38px;letter-spacing:-.025em}
 
 /* ---------- shared page apparatus ---------- */
-.foot{position:absolute;left:var(--px,var(--m));right:var(--px,var(--m));bottom:0;height:var(--foot);display:flex;align-items:center;justify-content:space-between;gap:24px;font:500 12px/1.2 var(--grot);font-feature-settings:"tnum" 1;color:var(--pm,var(--mute));white-space:nowrap}
-.foot .fo{color:var(--pi,var(--ink));min-width:2ch}
+.foot{position:absolute;left:var(--px,var(--m));right:var(--px,var(--m));bottom:0;height:var(--foot);display:flex;align-items:center;justify-content:space-between;gap:24px;font:500 12px/1.2 var(--grot);color:var(--pm,var(--mute));white-space:nowrap}
+.foot .fo{color:var(--pi,var(--ink));min-width:2ch;font-feature-settings:"tnum" 1}
 .foot .r .fo,.foot>.fo:last-child{text-align:right}
 .foot .rh{overflow:hidden;text-overflow:ellipsis}
 .cap{display:flex;gap:10px;align-items:baseline;white-space:nowrap}
@@ -105,7 +105,8 @@ html.no-intro .intro{display:none}
 .cv-meta .a-m{display:block}
 .cv-st .m{display:block;max-width:15.5em}
 .cv-name{grid-column:1/13;grid-row:2;white-space:nowrap;font:290 23vw/.8 var(--serif);letter-spacing:-.045em;margin:0 0 0 -.035em;padding-top:.035em;color:var(--ink);user-select:none}
-.cv-name .w{display:inline-block;overflow:clip;padding-bottom:.02em;vertical-align:top}
+.cv-name .w{display:inline-block;overflow:clip;padding:0 .04em .02em;margin:0 -.04em;vertical-align:top}
+.cv-name .wi{display:inline-block}
 .cv-foot{position:absolute;right:var(--m);bottom:0;height:var(--foot);display:none}
 
 /* ---------- contents (index) ---------- */
@@ -119,7 +120,7 @@ html.no-intro .intro{display:none}
 .toc-ch span:nth-child(2){grid-column:2/8}
 .toc-ch span:last-child{grid-column:11/13;text-align:right}
 .row{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--g);align-items:baseline;padding:13px 0 12px;border-top:1px solid var(--rule);cursor:pointer;transition:opacity .6s var(--e-out)}
-.row .n{grid-column:1/2;color:var(--mute)}
+.row .n{grid-column:1/2;color:var(--mute);font-feature-settings:"tnum" 1}
 .row .ti{grid-column:2/9;font:330 clamp(26px,2.7vw,44px)/1.04 var(--serif);letter-spacing:-.02em;transition:transform .9s var(--e-out)}
 .row .ft{grid-column:9/11;color:var(--mute);text-transform:capitalize}
 .row .pg{grid-column:11/13;text-align:right}

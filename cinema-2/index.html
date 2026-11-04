@@ -124,7 +124,7 @@ html[data-tone=light] .hud{color:var(--ink-2)}
   .lbl{font-size:9.5px;letter-spacing:.15em}
   .h-tl,.h-bl{left:26px}.h-tr,.h-br{right:26px}
   .hud .h{gap:1.2em}
-  .p-scene{background:linear-gradient(180deg,var(--bt,var(--pbg)) 0 40%,var(--bb,var(--pbg)) 40% 100%)}
+  .p-scene{background:linear-gradient(180deg,var(--bt,var(--pbg)) 22%,var(--bb,var(--pbg)) 78%)}
   .fit-portrait:not(.closeup) .frame{padding:calc(var(--g) + 44px) 0 0;align-items:flex-start;transform-origin:50% 40%}
   .fit-portrait:not(.closeup) .frame img{height:auto;width:min(100%,calc((100svh - 250px) * .667))}
   .fit-landscape .frame{display:flex;align-items:center;padding-bottom:18vh}
@@ -151,7 +151,7 @@ html[data-tone=light] .hud{color:var(--ink-2)}
 .cr-rows dd{font:400 clamp(22px,2.3vw,34px)/1.15 var(--display);letter-spacing:.005em;font-feature-settings:"lnum" 1}
 .cr-rows dd .imp{font:400 10.5px/1 var(--mono);letter-spacing:.12em;opacity:.55;margin-left:1em;vertical-align:.35em;white-space:nowrap}
 .cr-rows .gap{grid-column:1/-1;height:clamp(18px,3vh,30px)}
-.cr-final{text-align:center;display:flex;flex-direction:column;align-items:center;gap:clamp(22px,3.6vh,40px);margin-bottom:0;max-width:none}
+.cr-final{margin-top:34vh;text-align:center;display:flex;flex-direction:column;align-items:center;gap:clamp(22px,3.6vh,40px);margin-bottom:0;max-width:none}
 .cr-final .mail{font:400 clamp(28px,5.6vw,96px)/1.02 var(--display);letter-spacing:-.012em;transition:opacity .5s;max-width:100%}
 .cr-final .mail:hover{opacity:.6}
 .cr-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 34px}
@@ -169,6 +169,7 @@ html[data-tone=light] .hud{color:var(--ink-2)}
 /* ---------- lightbox ---------- */
 .lb{position:fixed;inset:0;z-index:90;background:#050505;display:grid;place-items:center;visibility:hidden}
 .lb.open{visibility:visible}
+.lb:focus{outline:0}
 .lb img{max-width:min(94vw,1500px);max-height:calc(100svh - 150px);object-fit:contain;opacity:0;transition:opacity .5s ease}
 .lb img.ld{opacity:1}
 .lb .lb-bar{position:absolute;left:var(--hud-x);right:var(--hud-x);bottom:calc(var(--g) + var(--sab) + 4px);display:flex;justify-content:space-between;gap:20px;color:var(--ink)}
@@ -229,7 +230,7 @@ html[data-tone=light] .hud{color:var(--ink-2)}
   </section>
 </main>
 
-<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Frame viewer">
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Frame viewer" tabindex="-1">
   <img alt="">
   <button class="lb-p" aria-label="Previous frame"></button><button class="lb-n" aria-label="Next frame"></button>
   <button class="lb-x lbl">Close</button>
@@ -368,7 +369,7 @@ function openLB(i) {
   lb.classList.add("open"); lbOpen = true;
   if (lenis) lenis.stop(); document.documentElement.style.overflow = "hidden";
   if (motion) gsap.fromTo(lb, { clipPath: "inset(50% 0% 50% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: .9, ease: "expo.inOut" });
-  $(".lb-x", lb).focus();
+  lb.focus({ preventScroll: true });
 }
 function closeLB() {
   if (!lbOpen) return; lbOpen = false;
@@ -386,7 +387,7 @@ addEventListener("keydown", e => {
   if (e.key === "Escape") closeLB();
   else if (e.key === "ArrowRight") go(1);
   else if (e.key === "ArrowLeft") go(-1);
-  else if (e.key === "Tab") { e.preventDefault(); $(".lb-x", lb).focus(); }
+  else if (e.key === "Tab") { const f = [$(".lb-x", lb), $(".lb-p", lb), $(".lb-n", lb)]; const k = f.indexOf(document.activeElement); e.preventDefault(); f[(k + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus(); }
 });
 let tx = 0;
 lb.addEventListener("touchstart", e => (tx = e.touches[0].clientX), { passive: true });
@@ -446,6 +447,7 @@ if (!motion) {
     const p = panels.find(q => q.el === e.target); setTone(p); hud(p.chapter, p.sc ? `Sc ${pad(p.sc)} / ${pad(total)}` : "");
   }), { rootMargin: "-50% 0px -50% 0px" });
   panels.forEach(p => io.observe(p.el));
+  new IntersectionObserver(([e]) => { if (e.isIntersecting) { document.documentElement.dataset.tone = "dark"; hud("End credits", ""); } }, { rootMargin: "-50% 0px -50% 0px" }).observe($("#credits"));
   $("#rewind").onclick = () => scrollTo(0, 0);
   return;
 }
