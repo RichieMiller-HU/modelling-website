@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en" data-base="../" class="has-cur">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Richie Miller — Model</title>
+<meta name="description" content="Richie Miller — model. Editorial, tailoring and campaign. Portfolio, digitals, measurements and booking.">
+<meta property="og:title" content="Richie Miller — Model">
+<meta property="og:image" content="../assets/photos/rm-10.jpg">
+<meta name="theme-color" content="#0b0b0a">
+<link rel="preload" as="image" href="../assets/video/studio-poster.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+<style>
+:root{--bg:#0b0b0a;--ink:#ece8e1;--mute:#8a857d;--line:#ece8e11f;--serif:"Bodoni Moda",Didot,"Times New Roman",serif;--sans:"Inter Tight",system-ui,sans-serif;--g:clamp(16px,2.4vw,40px)}
+body{font:300 15px/1.5 var(--sans);letter-spacing:.005em}
+.cap{font:400 11px/1.2 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+
+/* preloader */
+.pre{position:fixed;inset:0;z-index:1000;background:var(--bg);display:flex;align-items:flex-end;justify-content:space-between;padding:var(--g);clip-path:inset(0 0 0 0);transition:clip-path 1.3s var(--ease-io)}
+.pre.out{clip-path:inset(0 0 100% 0)}
+.pre-n{font:300 clamp(80px,16vw,260px)/.8 var(--sans);letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.pre-name{font:italic 400 clamp(18px,2vw,28px)/1 var(--serif);padding-bottom:1.2em}
+
+/* nav */
+.nav{position:fixed;inset:0 0 auto;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:calc(var(--g)*.8) var(--g);mix-blend-mode:difference;color:#fff}
+.nav-m{font:italic 400 22px/1 var(--serif);letter-spacing:-.02em}
+.nav ul{display:flex;gap:clamp(16px,3vw,44px);list-style:none}
+.nav a{font:400 11px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;position:relative}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .6s var(--ease)}
+.nav a:hover::after{transform:scaleX(1);transform-origin:left}
+
+/* hero */
+.hero{height:200vh;position:relative}
+.hero-s{position:sticky;top:0;height:100vh;overflow:hidden;display:grid;place-items:center}
+.hero-v{position:absolute;inset:0;will-change:clip-path}
+.hero-v video,.hero-v img{width:100%;height:100%;object-fit:cover;filter:brightness(.62) contrast(1.05)}
+.hero h1{position:relative;width:100%;padding:0 var(--g);font:400 clamp(64px,17vw,300px)/.82 var(--serif);letter-spacing:-.045em;color:#f3efe8;text-shadow:0 2px 40px #0006;pointer-events:none}
+.hero h1 .l1{display:block}
+.hero h1 .l2{display:block;text-align:right;font-style:italic}
+.hero-meta{position:absolute;left:var(--g);right:var(--g);bottom:var(--g);display:flex;justify-content:space-between;align-items:flex-end;color:#fff;mix-blend-mode:difference}
+.hero-meta .cap{color:inherit}
+.scroll-cue{width:1px;height:56px;background:linear-gradient(currentColor,transparent);animation:cue 2.2s var(--ease) infinite;transform-origin:top}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* statement — words light up with scroll */
+.st{padding:28vh var(--g) 22vh;max-width:1500px}
+.st p:not(.cap){font:400 clamp(30px,4.6vw,76px)/1.08 var(--serif);letter-spacing:-.025em}
+.st .w{opacity:.14;transition:opacity .25s linear}
+.st .w.on{opacity:1}
+.st .cap{margin-bottom:5vh}
+
+/* horizontal gallery */
+.hz{position:relative}
+.hz-s{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center}
+.hz-t{display:flex;gap:clamp(16px,3vw,56px);padding:0 var(--g);will-change:transform;align-items:center}
+.hz-i{flex:none;position:relative;overflow:hidden;cursor:pointer}
+.hz-i.portrait{height:72vh;aspect-ratio:4/5}
+.hz-i.landscape{height:52vh;aspect-ratio:3/2}
+.hz-i:nth-child(3n+2){align-self:flex-end;margin-bottom:6vh}
+.hz-i:nth-child(3n){align-self:flex-start;margin-top:8vh}
+.hz-i img{width:118%;max-width:none;height:100%;object-fit:cover;margin-left:-9%;transition:filter 1s var(--ease)}
+.hz-i figcaption{position:absolute;left:0;right:0;bottom:-28px;display:flex;justify-content:space-between}
+.hz-i{overflow:visible}.hz-i .clip{overflow:hidden;height:100%}
+.hz-h{position:absolute;top:calc(var(--g)*3);left:var(--g);right:var(--g);display:flex;justify-content:space-between;z-index:2}
+.hz-bar{position:absolute;left:var(--g);right:var(--g);bottom:var(--g);height:1px;background:var(--line)}
+.hz-bar i{display:block;height:100%;background:var(--ink);transform-origin:left;transform:scaleX(0)}
+
+/* close-up — expands to full bleed */
+.cu{height:220vh;position:relative}
+.cu-s{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden}
+.cu-f{position:absolute;inset:0;will-change:clip-path}
+.cu-f img{width:100%;height:100%;object-fit:cover;will-change:transform}
+.cu-t{position:relative;z-index:2;text-align:center;mix-blend-mode:difference;color:#fff}
+.cu-t h2{font:italic 400 clamp(48px,10vw,180px)/.9 var(--serif);letter-spacing:-.04em}
+
+/* film */
+.film{height:260vh;position:relative}
+.film-s{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden}
+.film-f{position:relative;width:100vw;height:100vh;will-change:clip-path;clip-path:inset(30% 34% 30% 34%)}
+.film-f video{width:100%;height:100%;object-fit:cover}
+.film-l,.film-r{position:absolute;top:50%;transform:translateY(-50%);font:400 clamp(40px,8vw,140px)/1 var(--serif);letter-spacing:-.04em;pointer-events:none;will-change:transform}
+.film-l{left:var(--g)}.film-r{right:var(--g);font-style:italic}
+.film-b{position:absolute;bottom:var(--g);left:50%;transform:translateX(-50%);z-index:3;color:#fff;mix-blend-mode:difference;display:flex;gap:28px}
+.film-b button{font:400 11px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;padding:14px 0;border-bottom:1px solid currentColor}
+
+/* digitals */
+.sec{padding:22vh var(--g)}
+.sec-h{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:clamp(32px,5vw,72px)}
+.sec-h h2{font:400 clamp(40px,6vw,96px)/.95 var(--serif);letter-spacing:-.035em}
+.sec-h h2 em{font-style:italic}
+.dg{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,1.2vw,20px)}
+.dg figure{cursor:pointer}
+.dg .clip{overflow:hidden;aspect-ratio:3/4}
+.dg img{width:100%;height:100%;object-fit:cover;filter:grayscale(1);transition:filter .9s var(--ease),transform 1.4s var(--ease)}
+.dg figure:hover img{filter:none;transform:scale(1.04)}
+.dg figcaption{margin-top:12px;display:flex;justify-content:space-between}
+.note{margin-top:28px;max-width:46ch;color:var(--mute)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.stats div{padding:28px 0 32px;border-bottom:1px solid var(--line)}
+.stats div:not(:nth-child(4n)){border-right:1px solid var(--line);padding-right:16px}
+.stats div:not(:nth-child(4n+1)){padding-left:clamp(12px,2vw,28px)}
+.stats b{display:block;font:400 clamp(30px,3.6vw,56px)/1 var(--serif);letter-spacing:-.03em;margin-top:18px}
+.unit{display:flex;gap:6px}
+.unit button{font:400 11px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mute);padding:6px 10px;border:1px solid var(--line);border-radius:99px;transition:.4s}
+.unit button[aria-pressed=true]{color:var(--bg);background:var(--ink);border-color:var(--ink)}
+
+/* marquee */
+.mq{overflow:hidden;border-block:1px solid var(--line);padding:30px 0;white-space:nowrap}
+.mq-t{display:inline-flex;animation:mq 40s linear infinite}
+.mq span{font:italic 400 clamp(28px,4vw,64px)/1 var(--serif);letter-spacing:-.02em;padding-right:.9em}
+.mq span::after{content:"✦";font:400 .35em/1 var(--sans);vertical-align:middle;padding-left:.9em;color:var(--mute)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* contact */
+.ct{min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:calc(var(--g)*4) var(--g) var(--g)}
+.ct-big{font:400 clamp(64px,14vw,240px)/.86 var(--serif);letter-spacing:-.05em;display:inline-block}
+.ct-big em{font-style:italic}
+.ct-big:hover em{color:var(--mute);transition:color .6s}
+.ct-g{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;border-top:1px solid var(--line);padding-top:24px;margin-top:10vh}
+.ct-g a{display:block;margin-top:10px;font-size:17px;width:max-content;transition:transform .4s var(--ease)}
+.ct-g a:hover{color:var(--mute)}
+.foot{display:flex;justify-content:space-between;margin-top:6vh}
+
+@media (max-width:820px){
+  .nav ul{gap:16px}.nav li:nth-child(2){display:none}
+  .hz-i.portrait{height:58vh}.hz-i.landscape{height:34vh}
+  .dg{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stats div:not(:nth-child(4n)){border-right:0}
+  .stats div:nth-child(odd){border-right:1px solid var(--line)}
+  .stats div:nth-child(even){padding-left:16px}.stats div:nth-child(odd){padding-left:0}
+  .ct-g{grid-template-columns:1fr 1fr;row-gap:32px}
+  .film-f{clip-path:inset(32% 14% 32% 14%)}
+  .film-l,.film-r{top:24%}
+}
+</style>
+</head>
+<body>
+<div class="pre" aria-hidden="true"><span class="pre-name"></span><span class="pre-n">0</span></div>
+<div class="grain" style="--grain:.07"></div>
+
+<nav class="nav" aria-label="Primary">
+  <a href="#top" class="nav-m" data-magnetic=".25">RM</a>
+  <ul><li><a href="#work">Work</a></li><li><a href="#film">Film</a></li><li><a href="#digitals">Digitals</a></li><li><a href="#book">Book</a></li></ul>
+</nav>
+
+<main id="top">
+  <section class="hero" aria-label="Intro">
+    <div class="hero-s">
+      <div class="hero-v"><video muted loop playsinline preload="auto"></video></div>
+      <h1><span class="l1" data-split></span><span class="l2" data-split></span></h1>
+      <div class="hero-meta"><span class="cap" id="h-role"></span><span class="scroll-cue"></span><span class="cap" id="h-city"></span></div>
+    </div>
+  </section>
+
+  <section class="st"><p class="cap">(Profile)</p><p id="statement"></p></section>
+
+  <section class="hz" id="work" aria-label="Selected work">
+    <div class="hz-s">
+      <div class="hz-h"><span class="cap">Selected work</span><span class="cap" id="hz-count"></span></div>
+      <div class="hz-t" id="track"></div>
+      <div class="hz-bar"><i></i></div>
+    </div>
+  </section>
+
+  <section class="cu" aria-label="Close-up">
+    <div class="cu-s">
+      <div class="cu-f"><img id="cu-img" alt="Close-up portrait"></div>
+      <div class="cu-t"><p class="cap" style="color:inherit;margin-bottom:18px">(Close-up)</p><h2>The details</h2></div>
+    </div>
+  </section>
+
+  <section class="film" id="film" aria-label="Studio film">
+    <div class="film-s">
+      <span class="film-l">On</span><span class="film-r">set</span>
+      <div class="film-f"><video muted loop playsinline preload="metadata"></video></div>
+      <div class="film-b"><button id="snd">Sound on</button></div>
+    </div>
+  </section>
+
+  <section class="sec" id="digitals">
+    <div class="sec-h"><h2 data-reveal>Digitals</h2><span class="cap">Natural light · No retouching</span></div>
+    <div class="dg" id="dg"></div>
+    <p class="note" data-reveal>Current digitals, updated seasonally. Full-length, profile and three-quarter available on request.</p>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="sec-h"><h2 data-reveal>Measure<em>ments</em></h2><div class="unit" role="group" aria-label="Units"><button aria-pressed="true" data-u="1">cm</button><button aria-pressed="false" data-u="2">in</button></div></div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <div class="mq" id="mq" aria-label="Selected clients"></div>
+
+  <section class="ct" id="book">
+    <div><p class="cap" style="margin-bottom:28px">(Bookings & enquiries)</p>
+      <a class="ct-big" id="ct-mail" data-cursor="Write"><span data-split>Book</span> <em data-split></em></a></div>
+    <div>
+      <div class="ct-g">
+        <div><span class="cap">Email</span><a id="c-mail"></a></div>
+        <div><span class="cap">Instagram</span><a id="c-ig" target="_blank" rel="noopener"></a></div>
+        <div><span class="cap">Representation</span><a id="c-ag"></a></div>
+        <div><span class="cap">Comp card</span><a id="c-cc"></a></div>
+      </div>
+      <div class="foot"><span class="cap" id="f-l"></span><span class="cap" id="clock"></span><a class="cap" href="#top">Back to top ↑</a></div>
+    </div>
+  </section>
+</main>
+
+<script src="../assets/content.js"></script>
+<script src="../assets/core.js"></script>
+<script>
+(() => {
+const { M, $, $$, clamp, lerp, url, reduce, onFrame, pinProgress, progress, reveal, split, cursor, magnetic, lightbox, preload, smartVideo, mail, ig, pad, sm, byKey } = K;
+M.photos = byKey("dark", "light", "colour");
+const full = `${M.first} ${M.last}`;
+
+/* ---- fill content ---- */
+$(".hero .l1").textContent = M.first; $(".hero .l2").textContent = M.last;
+$("#h-role").textContent = `${M.role} — ${M.available}`; $("#h-city").textContent = `Based in ${M.city}`;
+$(".pre-name").textContent = full;
+$("#statement").innerHTML = M.statement.split(" ").map(w => `<span class="w">${w}</span>`).join(" ");
+
+const heroV = $(".hero-v video"); heroV.poster = url(M.video.poster); heroV.src = url(M.video.src);
+const filmV = $(".film-f video"); filmV.poster = url(M.video.poster); filmV.src = url(M.video.src);
+smartVideo(heroV); smartVideo(filmV);
+
+const track = $("#track");
+M.photos.forEach((p, i) => {
+  const f = document.createElement("figure");
+  f.className = `hz-i ${p.fit}`; f.dataset.cursor = "View"; f.tabIndex = 0;
+  f.innerHTML = `<div class="clip"><img src="${url(p.src)}" alt="${p.caption}" loading="${i < 3 ? "eager" : "lazy"}" decoding="async"></div><figcaption><span class="cap">${pad(i + 1)}</span><span class="cap">${p.caption}</span></figcaption>`;
+  const open = () => lightbox(M.photos, i);
+  f.onclick = open; f.onkeydown = e => { if (e.key === "Enter") open(); };
+  track.append(f);
+});
+$("#hz-count").textContent = `${pad(M.photos.length)} images`;
+
+$("#cu-img").src = url(M.closeUpDark);
+
+const dg = $("#dg");
+M.digitals.forEach((p, i) => {
+  const f = document.createElement("figure"); f.dataset.cursor = "View"; f.dataset.reveal = ""; f.style.setProperty("--d", i * 90 + "ms");
+  f.innerHTML = `<div class="clip"><img src="${url(p.src)}" alt="Digital — ${p.caption}" loading="lazy"></div><figcaption><span class="cap">${p.caption}</span><span class="cap">${pad(i + 1)}</span></figcaption>`;
+  f.onclick = () => lightbox(M.digitals, i); dg.append(f);
+});
+
+const stats = $("#stats");
+const drawStats = u => { stats.innerHTML = M.stats.map(s => `<div data-reveal><span class="cap">${s[0]}</span><b>${s[u] || s[1]}</b></div>`).join(""); reveal(stats); $$("#stats [data-reveal]").forEach(e => e.classList.add("in")); };
+drawStats(1);
+$$(".unit button").forEach(b => b.onclick = () => { $$(".unit button").forEach(x => x.setAttribute("aria-pressed", x === b)); drawStats(+b.dataset.u); });
+
+if (M.clients.length) { const s = M.clients.map(c => `<span>${c}</span>`).join(""); $("#mq").innerHTML = `<div class="mq-t">${s}${s}</div>`; } else $("#mq").remove();
+
+$("#ct-mail").href = mail(); $("#ct-mail em").textContent = M.first;
+$("#c-mail").href = mail(); $("#c-mail").textContent = M.email;
+$("#c-ig").href = ig(); $("#c-ig").textContent = "@" + M.instagram;
+$("#c-ag").textContent = M.agency.name; if (M.agency.url) $("#c-ag").href = M.agency.url;
+if (M.compCard) { $("#c-cc").href = url(M.compCard); $("#c-cc").textContent = "Download PDF ↓"; $("#c-cc").download = ""; }
+else { $("#c-cc").href = mail(); $("#c-cc").textContent = "On request"; }
+$("#f-l").textContent = `© ${new Date().getFullYear()} ${full}`;
+const tick = () => { try { $("#clock").textContent = `${M.city} — ${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Budapest" }).format(new Date())}`; } catch (e) {} };
+tick(); setInterval(tick, 30000);
+
+$$("[data-split]").forEach(el => split(el, el.closest("h1") ? "char" : "word"));
+
+/* ---- motion ---- */
+const hero = $(".hero"), heroWrap = $(".hero-v"), h1 = $(".hero h1");
+const l1 = $(".l1"), l2 = $(".l2");
+onFrame(() => {
+  const p = pinProgress(hero);
+  const ins = p * 18;
+  heroWrap.style.clipPath = `inset(${ins}% ${ins * 1.6}% ${ins}% ${ins * 1.6}% )`;
+  l1.style.transform = `translateX(${-p * 14}vw)`; l2.style.transform = `translateX(${p * 14}vw)`;
+  h1.style.opacity = 1 - p * .6;
+});
+
+const words = $$("#statement .w"), st = $(".st");
+onFrame(() => { const p = clamp((progress(st) - .18) / .5); const n = Math.round(p * words.length); words.forEach((w, i) => w.classList.toggle("on", i < n)); });
+
+const hz = $(".hz"), bar = $(".hz-bar i"), imgs = $$(".hz-i img");
+const sizeHz = () => { hz.style.height = (track.scrollWidth - innerWidth + innerHeight) + "px"; };
+sizeHz(); addEventListener("resize", sizeHz); addEventListener("load", sizeHz);
+onFrame(() => {
+  const p = pinProgress(hz), max = track.scrollWidth - innerWidth;
+  track.style.transform = `translate3d(${-p * max}px,0,0)`; bar.style.transform = `scaleX(${p})`;
+  imgs.forEach(im => { const r = im.parentNode.getBoundingClientRect(); const c = (r.left + r.width / 2) / innerWidth - .5; im.style.transform = `translateX(${c * -8}%)`; });
+});
+
+const cu = $(".cu"), cuF = $(".cu-f"), cuI = $("#cu-img");
+onFrame(() => { const p = pinProgress(cu); const e = 1 - Math.pow(1 - clamp(p / .7), 3); const ix = lerp(30, 0, e), iy = lerp(18, 0, e); cuF.style.clipPath = `inset(${iy}% ${ix}% ${iy}% ${ix}%)`; cuI.style.transform = `scale(${lerp(1.35, 1, e)})`; });
+
+const film = $(".film"), ff = $(".film-f"), fl = $(".film-l"), fr = $(".film-r");
+const mob = () => innerWidth < 820;
+onFrame(() => {
+  const p = pinProgress(film); const e = 1 - Math.pow(1 - clamp(p / .65), 3);
+  const sx = mob() ? 14 : 34, sy = mob() ? 32 : 30;
+  ff.style.clipPath = `inset(${lerp(sy, 0, e)}% ${lerp(sx, 0, e)}% ${lerp(sy, 0, e)}% ${lerp(sx, 0, e)}%)`;
+  fl.style.transform = `translate(${-e * 60}vw,-50%)`; fr.style.transform = `translate(${e * 60}vw,-50%)`;
+});
+$("#snd").onclick = e => { filmV.muted = !filmV.muted; e.target.textContent = filmV.muted ? "Sound on" : "Sound off"; filmV.play(); };
+
+/* ---- intro ---- */
+const pre = $(".pre"), num = $(".pre-n");
+document.documentElement.style.overflow = "hidden";
+preload([M.video.poster, M.photos[0].src, M.photos[1].src], n => num.textContent = n).then(() => {
+  pre.classList.add("out"); document.documentElement.style.overflow = "";
+  heroV.play().catch(() => {});
+  setTimeout(() => { h1.querySelectorAll("[data-split]").forEach(e => e.classList.add("in")); }, 350);
+  setTimeout(() => pre.remove(), 1500);
+});
+reveal(); $$(".ct [data-split]").forEach(e => new IntersectionObserver(([x], o) => { if (x.isIntersecting) { e.classList.add("in"); o.disconnect(); } }).observe(e));
+cursor(); magnetic();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Photo Harmony</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0c0b;--ink:#ece8e1;--mute:#7d786f;--line:#ece8e11c;--warn:#e0a03a;--bad:#e0553a;--ok:#7fb07a;--g:clamp(16px,2vw,32px)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:400 14px/1.5 Geist,system-ui,sans-serif;padding:var(--g);max-width:1600px;margin:0 auto}
+h1{font:400 clamp(40px,5vw,80px)/.95 "Instrument Serif",serif}h1 em{color:var(--mute)}
+h2{font:400 32px/1 "Instrument Serif",serif;margin:48px 0 16px}
+.cap{font:500 10.5px/1.3 Geist,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.lead{max-width:70ch;color:var(--mute);margin:16px 0 28px}
+.drop{border:1px dashed #ece8e144;padding:28px;text-align:center;cursor:pointer;transition:.3s;border-radius:8px}
+.drop.over,.drop:hover{border-color:var(--ink);background:#ffffff08}
+button{font:500 12px Geist,sans-serif;color:var(--bg);background:var(--ink);border:0;padding:10px 16px;border-radius:99px;cursor:pointer;margin-right:8px}
+button.g{background:none;color:var(--ink);border:1px solid var(--line)}
+.strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px}
+.t{flex:none;width:120px}
+.t img{width:120px;height:150px;object-fit:cover;display:block}
+.t .bar{height:6px;margin-top:4px;border-radius:2px}
+.t .m{font:500 10px/1.4 Geist;color:var(--mute);margin-top:6px}
+.t.warn img{outline:2px solid var(--warn);outline-offset:-2px}.t.bad img{outline:2px solid var(--bad);outline-offset:-2px}
+.jump{flex:none;align-self:center;width:14px;height:14px;border-radius:50%}
+ul.notes{list-style:none;display:grid;gap:8px;max-width:900px}
+ul.notes li{padding:12px 14px;border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:4px}
+ul.notes li.bad{border-left-color:var(--bad)}ul.notes li.ok{border-left-color:var(--ok)}
+pre{background:#ffffff08;border:1px solid var(--line);padding:16px;border-radius:6px;overflow:auto;font:12px/1.5 ui-monospace,monospace;max-height:360px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin:8px 0 16px}
+.legend span{display:flex;align-items:center;gap:6px}.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+</style>
+</head>
+<body>
+<p class="cap">Aesthetic director · runs fully in your browser · nothing is uploaded</p>
+<h1>Photo <em>harmony</em></h1>
+<p class="lead">Drop in your photos. The tool measures each one: brightness key, contrast, saturation, colour temperature, and whether it's monochrome. It flags the jumps that make a portfolio feel unpolished, like a saturated holiday shot next to a black-and-white studio frame, a sudden change in exposure, or near-duplicates. Then it suggests an order and gives you a <code>photos: [...]</code> block to paste into <code>assets/content.js</code>.</p>
+<div class="drop" id="drop"><p>Drop images here or click to choose</p><p class="cap" style="margin-top:8px">JPG / PNG / WebP</p><input type="file" id="file" accept="image/*" multiple hidden></div>
+<p style="margin-top:14px"><button id="cur">Analyse the current site set</button><button class="g" id="clr">Clear</button></p>
+
+<div id="out" hidden>
+  <h2>Your order</h2>
+  <div class="legend cap"><span><i style="background:var(--ok)"></i>smooth transition</span><span><i style="background:var(--warn)"></i>noticeable jump</span><span><i style="background:var(--bad)"></i>clash</span></div>
+  <div class="strip" id="s1"></div>
+  <h2>Suggested sequence</h2>
+  <p class="cap" style="margin-bottom:12px">Grouped into chapters (light key → dark key → colour), then ordered so each next frame is the closest match</p>
+  <div class="strip" id="s2"></div>
+  <h2>Notes</h2>
+  <ul class="notes" id="notes"></ul>
+  <h2>Paste into content.js</h2>
+  <pre id="code"></pre>
+</div>
+
+<script src="../assets/content.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+let items = [];
+
+function analyse(img, name, src) {
+  const c = document.createElement("canvas"), S = 96; c.width = c.height = S;
+  const x = c.getContext("2d", { willReadFrequently: true }); x.drawImage(img, 0, 0, S, S);
+  const d = x.getImageData(0, 0, S, S).data; let L = [], sat = 0, warm = 0, chroma = 0, hist = new Array(16).fill(0);
+  for (let i = 0; i < d.length; i += 4) {
+    const r = d[i], g = d[i + 1], b = d[i + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    const l = .2126 * r + .7152 * g + .0722 * b; L.push(l); hist[Math.min(15, l >> 4)]++;
+    sat += mx ? (mx - mn) / mx : 0; warm += r - b; chroma += mx - mn;
+  }
+  const n = L.length, mean = L.reduce((a, b) => a + b) / n, sd = Math.sqrt(L.reduce((a, b) => a + (b - mean) ** 2, 0) / n);
+  const s = sat / n, w = warm / n, mono = chroma / n < 6;
+  const key = mono || s < .12 ? (mean > 100 ? "light" : "dark") : "colour";
+  return { name, src, img, mean, sd, sat: s, warm: w, mono, key, hist: hist.map(h => h / n), fit: img.naturalWidth > img.naturalHeight * 1.1 ? "landscape" : "portrait" };
+}
+/* perceptual distance between two frames: how jarring is it to place B after A */
+function dist(a, b) {
+  const dl = Math.abs(a.mean - b.mean) / 255, ds = Math.abs(a.sat - b.sat), dw = Math.abs(a.warm - b.warm) / 80, dm = a.mono !== b.mono ? .5 : 0, dc = Math.abs(a.sd - b.sd) / 128;
+  return dl * 1.1 + ds * 1.3 + dw * .6 + dm + dc * .5;
+}
+const histSim = (a, b) => a.hist.reduce((s, v, i) => s + Math.min(v, b.hist[i]), 0);
+const color = d => d < .35 ? "var(--ok)" : d < .7 ? "var(--warn)" : "var(--bad)";
+
+function strip(el, list) {
+  el.innerHTML = "";
+  list.forEach((p, i) => {
+    if (i) { const j = document.createElement("span"); j.className = "jump"; const d = dist(list[i - 1], p); j.style.background = color(d); j.title = "jump " + d.toFixed(2); el.append(j); }
+    const t = document.createElement("div"); t.className = "t" + (p.flag ? " " + p.flag : "");
+    const hue = p.mono ? "#888" : `hsl(${p.warm > 0 ? 30 : 210},${Math.min(100, p.sat * 160)}%,${p.mean / 2.55 * .8}%)`;
+    t.innerHTML = `<img src="${p.src}" alt=""><div class="bar" style="background:${hue}"></div><div class="m">${p.key} · L${Math.round(p.mean)} · S${Math.round(p.sat * 100)}<br>${p.name.slice(0, 18)}</div>`;
+    el.append(t);
+  });
+}
+
+function report() {
+  if (!items.length) return; $("#out").hidden = false;
+  const notes = [];
+  // outliers vs set
+  const sats = items.map(p => p.sat).sort((a, b) => a - b), med = sats[sats.length >> 1];
+  items.forEach(p => { p.flag = ""; if (p.sat > Math.max(.45, med * 2.2)) { p.flag = "bad"; notes.push(["bad", `<b>${p.name}</b>: saturation ${Math.round(p.sat * 100)} is far above the set (median ${Math.round(med * 100)}). It will look like a holiday snap next to your studio work. Desaturate it in grading or cut it.`]); } });
+  // near duplicates
+  for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) if (histSim(items[i], items[j]) > .93 && dist(items[i], items[j]) < .08) notes.push(["", `<b>${items[i].name}</b> and <b>${items[j].name}</b> look near-identical in tone. A pro book shows each look once, so keep the stronger frame.`]);
+  // clashes in current order
+  let clashes = 0; for (let i = 1; i < items.length; i++) if (dist(items[i - 1], items[i]) >= .7) { clashes++; if (clashes <= 6) notes.push(["bad", `Clash: <b>${items[i - 1].name}</b> → <b>${items[i].name}</b> (${items[i - 1].key} → ${items[i].key}). Separate them with a chapter break or reorder.`]); }
+  const mix = new Set(items.map(p => p.key)); if (mix.size === 3) notes.push(["", `Your set mixes light-key, dark-key and colour. That works only as <b>separate chapters</b>. The suggested sequence below does that.`]);
+  const colourShare = items.filter(p => p.key === "colour").length / items.length;
+  if (colourShare > .4 && colourShare < .8) notes.push(["", `${Math.round(colourShare * 100)}% of the set is colour. High-end books usually commit to a direction: mostly monochrome with a short colour coda, or the reverse.`]);
+  const land = items.filter(p => p.fit === "landscape").length; if (land / items.length > .4) notes.push(["", "Lots of landscape frames. Model books are portrait-first; keep landscapes as breathers, about one in five."]);
+  if (!notes.length) notes.push(["ok", "No clashes. This set already flows."]);
+  $("#notes").innerHTML = notes.map(([c, t]) => `<li class="${c}">${t}</li>`).join("");
+  strip($("#s1"), items);
+  // suggested: chapters, then greedy nearest neighbour inside each
+  const order = ["light", "dark", "colour"], seq = [];
+  order.forEach(k => {
+    const pool = items.filter(p => p.key === k && p.flag !== "bad"); if (!pool.length) return;
+    let cur = seq.length ? pool.reduce((a, b) => dist(seq[seq.length - 1], a) < dist(seq[seq.length - 1], b) ? a : b) : pool.reduce((a, b) => a.mean > b.mean ? a : b);
+    const left = new Set(pool); left.delete(cur); seq.push(cur);
+    while (left.size) { let best = null, bd = 9; left.forEach(p => { const d = dist(cur, p); if (d < bd) { bd = d; best = p; } }); left.delete(best); seq.push(best); cur = best; }
+  });
+  strip($("#s2"), seq);
+  $("#code").textContent = "photos: [\n" + seq.map(p => `  { src: "assets/photos/${p.name}", fit: "${p.fit}", key: "${p.key}", caption: "" },`).join("\n") + "\n],";
+}
+
+function load(files) {
+  const ps = [...files].filter(f => f.type.startsWith("image/")).map(f => new Promise(r => { const u = URL.createObjectURL(f), im = new Image(); im.onload = () => r(analyse(im, f.name, u)); im.src = u; }));
+  Promise.all(ps).then(a => { items = items.concat(a); report(); });
+}
+const drop = $("#drop");
+drop.onclick = () => $("#file").click(); $("#file").onchange = e => load(e.target.files);
+drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); }; drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); load(e.dataTransfer.files); };
+$("#clr").onclick = () => { items = []; $("#out").hidden = true; };
+$("#cur").onclick = () => {
+  Promise.all(MODEL.photos.map(p => new Promise(r => { const im = new Image(); im.onload = () => r(analyse(im, p.src.split("/").pop(), im.src)); im.onerror = () => r(null); im.src = "../" + p.src; })))
+    .then(a => { items = a.filter(Boolean); report(); });
+};
+</script>
+</body>
+</html>

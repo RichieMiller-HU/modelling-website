@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" data-base="" class="has-cur">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Richie Miller — Concepts</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+:root{--bg:#0c0c0b;--ink:#ece8e1;--mute:#7d786f;--line:#ece8e11c;--serif:"Instrument Serif",Georgia,serif;--sans:"Geist",system-ui,sans-serif;--g:clamp(16px,2vw,32px)}
+body{font:400 14px/1.5 var(--sans);min-height:100vh;display:flex;flex-direction:column;padding:var(--g)}
+.cap{font:500 10.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+header{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:var(--g);border-bottom:1px solid var(--line)}
+h1{font:400 clamp(40px,6vw,96px)/.9 var(--serif);letter-spacing:-.02em}
+h1 em{color:var(--mute)}
+.grid{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--g);padding:var(--g) 0}
+.c{position:relative;display:flex;flex-direction:column;gap:14px}
+.c .im{position:relative;flex:1;min-height:52vh;overflow:hidden;background:#151513}
+.c .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.6s var(--ease),opacity .8s var(--ease)}
+.c .im img+img{opacity:0}
+.c:hover .im img{transform:scale(1.05)}
+.c:hover .im img+img{opacity:1}
+.c .row{display:flex;justify-content:space-between;align-items:baseline}
+.c h2{font:400 clamp(30px,3vw,48px)/1 var(--serif)}
+.c h2 em{font-style:italic}
+.c p{color:var(--mute);max-width:42ch}
+.c .tag{position:absolute;top:14px;left:14px;z-index:2;background:var(--ink);color:var(--bg);padding:6px 10px;border-radius:99px;font:500 10px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:var(--g)}
+footer a{border-bottom:1px solid var(--line)}footer a:hover{border-color:var(--ink)}
+@media (max-width:860px){.grid{grid-template-columns:1fr}.c .im{min-height:64vh}}
+</style>
+</head>
+<body>
+<header><h1>Richie Miller<br><em>three directions</em></h1><span class="cap">Pick one, or mix them</span></header>
+<main class="grid">
+  <a class="c" href="noir/" data-cursor="Enter"><span class="tag">Recommended</span>
+    <div class="im"><img src="assets/photos/rm-16-sm.jpg" alt=""><img src="assets/photos/rm-18-sm.jpg" alt=""></div>
+    <div class="row"><h2>01 — <em>Noir</em></h2><span class="cap">Dark editorial</span></div>
+    <p>Black, ivory and a Bodoni headline. Studio film in the hero, a pinned horizontal book, and a close-up and the film that both open to full screen as you scroll.</p></a>
+  <a class="c" href="atelier/" data-cursor="Enter">
+    <div class="im"><img src="assets/photos/rm-10-sm.jpg" alt=""><img src="assets/photos/rm-06-sm.jpg" alt=""></div>
+    <div class="row"><h2>02 — <em>Atelier</em></h2><span class="cap">Light, Swiss</span></div>
+    <p>Warm bone paper, a 12-column grid and an oversized name. It opens with a contact-sheet flicker, then an index where hovering a row brings up a photo that follows your cursor.</p></a>
+  <a class="c" href="cinema/" data-cursor="Enter">
+    <div class="im"><img src="assets/photos/rm-02-sm.jpg" alt=""><img src="assets/photos/rm-20-sm.jpg" alt=""></div>
+    <div class="row"><h2>03 — <em>Cinema</em></h2><span class="cap">Film / viewfinder</span></div>
+    <p>A camera viewfinder HUD with REC and timecode. Letterbox bars open over the studio video, the photos stack like scenes in three acts, and measurements roll as end credits.</p></a>
+</main>
+<footer><span class="cap">Edit everything in assets/content.js</span><span><a href="tools/harmony.html">Photo harmony tool →</a>&nbsp;&nbsp;&nbsp;<a href="CREATIVE-DIRECTION.md">Creative direction notes →</a></span></footer>
+<script src="assets/content.js"></script><script src="assets/core.js"></script><script>K.cursor()</script>
+</body>
+</html>
