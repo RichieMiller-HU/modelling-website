@@ -27,7 +27,7 @@
   const FACE = {
     "rm-04": [0.55, 0.24], "rm-05": [0.5, 0.14], "rm-06": [0.5, 0.18], "rm-09": [0.46, 0.18],
     "rm-10": [0.6, 0.16], "rm-12": [0.57, 0.25], "rm-13": [0.62, 0.32], "rm-14": [0.5, 0.18],
-    "rm-16": [0.36, 0.24], "rm-17": [0.5, 0.2], "rm-18": [0.35, 0.3], "rm-19": [0.48, 0.3], "rm-20": [0.48, 0.2],
+    "rm-16": [0.37, 0.225], "rm-17": [0.5, 0.2], "rm-18": [0.35, 0.3], "rm-19": [0.48, 0.3], "rm-20": [0.48, 0.2],
   };
   const faceOf = (src) => FACE[(String(src).match(/rm-\d+/) || [])[0]] || [0.5, 0.3];
 
@@ -395,7 +395,7 @@
     const hasGsap = window.gsap && window.ScrollTrigger;
     const heroEl = $('[data-xp="hero"]'), briefEl = $('[data-xp="brief"]'), filmEl = $('[data-xp="film"]');
     const hero = heroEl && new Expansion(heroEl, { s0: 1.1, push: 0.9, fadeExtras: [$(".hero__meta", heroEl)] });
-    const brief = briefEl && new Expansion(briefEl, { s0: 1.25, push: 0.8 });
+    const brief = briefEl && new Expansion(briefEl, { s0: 1.12, push: 0.8 });
     const filmX = filmEl && new Expansion(filmEl, { s0: 1.2, push: 0.8 });
     const all = [hero, brief, filmX].filter(Boolean);
     all.forEach((x) => x.measure());

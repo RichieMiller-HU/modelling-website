@@ -116,7 +116,7 @@ $("#stats-f").innerHTML = foot(FOLIO.stats[0], FOLIO.stats[1], full, "Measuremen
 $("#toc-p").textContent = `${cap1(word(P.length))} plates in ${word(chapters.length)} chapters: ${chapters.map((c) => c.title.toLowerCase()).join(", ").replace(/, ([^,]*)$/, " and $1")}. ${fine ? "Hover a title to see the frame, select it to turn to its page." : "Tap a title to turn to its page."}`;
 
 /* measurements */
-$("#tbl").innerHTML = M.stats.map((s) => `<div class="tbl-r"><span class="a a-m">${esc(s[0])}</span><span class="v">${esc(s[1])}</span><span class="v i">${esc(s[2] || "")}</span></div>`).join("");
+$("#tbl").innerHTML = M.stats.map((s) => `<div class="tbl-r"><span class="a a-m">${esc(s[0])}</span>${s[2] ? `<span class="v">${esc(s[1])}</span><span class="v i">${esc(s[2])}</span>` : `<span class="v w2">${esc(s[1])}</span>`}</div>`).join("");
 $("#stats-p").innerHTML = M.digitals && M.digitals.length
   ? `Comp-card figures in metric and imperial. Natural-light digitals follow.`
   : `Comp-card figures in metric and imperial. Natural-light digitals are <a class="ul" href="${mail()}">available on request</a>.`;
@@ -151,7 +151,7 @@ chapters.forEach((ch) => {
   rowsEl.insertAdjacentHTML("beforeend", `<div class="toc-ch a"><span>${ch.roman}</span><span>${esc(ch.title)}</span><span>${r.pages ? "pp. " + r.pages : ""}</span></div>`);
   ch.all.forEach((p) => {
     const ref = refOf(p);
-    rowsEl.insertAdjacentHTML("beforeend", `<a class="row" href="#book" data-n="${p.n}"><span class="a n">${pad(p.n)}</span><span class="ti">${esc(p.caption)}</span><span class="a ft">${esc(p.fit)}</span><span class="th"><img src="${SM(p.src)}" alt="" loading="lazy" decoding="async"></span><span class="a pg">${ref === "Cover" ? "Cover" : (fine && innerWidth > 759 ? "p. " : "") + ref.split("–")[0]}</span></a>`);
+    rowsEl.insertAdjacentHTML("beforeend", `<a class="row" href="#book" data-n="${p.n}"><span class="a n">${pad(p.n)}</span><span class="ti">${esc(p.caption)}</span><span class="a ft">${esc(p.fit)}</span><span class="th"><img src="${SM(p.src)}" alt="" loading="lazy" decoding="async"></span><span class="a rf">${ref === "Cover" ? "Cover" : (fine && innerWidth > 759 ? "p. " : "") + ref.split("–")[0]}</span></a>`);
   });
 });
 
@@ -497,7 +497,7 @@ async function intro() {
   const seq = P.filter((p) => p !== cover).map((p) => SM(p.src)).concat([U(cover.src)]);
   const ims = seq.map((s) => { const im = new Image(); im.alt = ""; im.src = s; flick.append(im); return im; });
   const small = innerWidth < 760;
-  const fw = small ? innerWidth * 0.56 : Math.min(innerWidth * 0.22, 320), fh = fw * 1.25;
+  const fw = small ? innerWidth * 0.58 : Math.min(innerWidth * 0.25, innerHeight * 0.48, 400), fh = fw * 1.25;
   gsap.set(flick, { width: fw, height: fh, left: (innerWidth - fw) / 2, top: (innerHeight - fh) / 2 - (small ? 20 : 0) });
   const dec = ims.map((im) => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()));
   await Promise.race([Promise.all([...dec, fontsP]), wait(4500)]);

@@ -215,6 +215,7 @@
   }
 
   /* ---------------- lightbox ---------------- */
+  if (!fine) $(".lb-foot").innerHTML = "<span>Swipe to browse</span><span>Swipe down to close</span>";
   const lb = $(".lb"), lbImg = $(".lb-stage img"), lbN = $("#lb-n"), lbC = $("#lb-c"), lbX = $(".lb-x");
   let lbList = [], lbI = 0, lbFrom = null, lbOpen = false, lbTok = 0;
   const lbShow = (dir = 0) => {
@@ -359,7 +360,7 @@
         const s = clamp((vw - 2 * m - 2 * g - hn1.offsetWidth - hn2.offsetWidth) / vw, 0.28, 0.48);
         return { s, x1: m - hn1.offsetLeft, y1: 0, x2: vw - m - (hn2.offsetLeft + hn2.offsetWidth), y2: 0 };
       }
-      const s = 0.54, fh = vh * s, top = (vh - fh) / 2, g = vh * 0.012;
+      const s = 0.5, fh = vh * s, top = (vh - fh) / 2, g = vh * 0.012;
       return { s, x1: m - hn1.offsetLeft, y1: top - g - (hn1.offsetTop + hn1.offsetHeight), x2: vw - m - (hn2.offsetLeft + hn2.offsetWidth), y2: top + fh + g - hn2.offsetTop };
     };
     const ht = gsap.timeline({ scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom bottom", scrub, invalidateOnRefresh: true } });
@@ -400,8 +401,8 @@
     gsap.set(".film-w", { yPercent: () => (portrait() ? 0 : -50) });
     const ft = gsap.timeline({ scrollTrigger: { trigger: ".film", start: "top top", end: "bottom bottom", scrub, invalidateOnRefresh: true } });
     ft.fromTo(".film-frame", { scale: s0 }, { scale: 1, ease: "power2.inOut", duration: 1 }, 0)
-      .fromTo(".film-w1", { x: () => -wOff(), opacity: 1 }, { x: () => -wOff() - innerWidth * (portrait() ? 0 : 0.08), opacity: 0, ease: "power2.in", duration: 0.55 }, 0)
-      .fromTo(".film-w2", { x: () => wOff(), opacity: 1 }, { x: () => wOff() + innerWidth * (portrait() ? 0 : 0.08), opacity: 0, ease: "power2.in", duration: 0.55 }, 0)
+      .fromTo(".film-w1", { x: () => -wOff(), opacity: 1 }, { x: () => -wOff() - innerWidth * (portrait() ? 0 : 0.08), opacity: () => (portrait() ? 1 : 0), ease: "power2.in", duration: 0.55 }, 0)
+      .fromTo(".film-w2", { x: () => wOff(), opacity: 1 }, { x: () => wOff() + innerWidth * (portrait() ? 0 : 0.08), opacity: () => (portrait() ? 1 : 0), ease: "power2.in", duration: 0.55 }, 0)
       .to({}, { duration: 0.3 });
 
     return () => { cuApply = () => {}; gsap.set([cuF, ".film-frame", ".hero-frame", hn1, hn2, cuImg, ".film-w", words], { clearProps: "all" }); };
@@ -495,14 +496,14 @@
   const loadImg = (s) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = s; });
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   gsap.to(".pre-bar i", { scaleX: 0.7, duration: 1.2, ease: "power2.out" });
-  Promise.race([Promise.all([d.fonts ? d.fonts.ready : 0, loadImg(url(M.video.poster)), wait(650)]), wait(3000)]).then(() => {
+  Promise.race([Promise.all([d.fonts ? d.fonts.ready : 0, loadImg(url(M.video.poster)), wait(420)]), wait(3000)]).then(() => {
     heroV.play().catch(() => {});
     gsap.timeline()
-      .to(".pre-bar i", { scaleX: 1, duration: 0.45, ease: "power2.inOut", overwrite: true })
-      .to(".pre", { yPercent: -100, duration: 1.15, ease: "expo.inOut" }, "+=.08")
+      .to(".pre-bar i", { scaleX: 1, duration: 0.35, ease: "power2.inOut", overwrite: true })
+      .to(".pre", { yPercent: -100, duration: 1.05, ease: "expo.inOut" }, "+=.05")
       .add(() => { html.style.overflow = ""; lenis && lenis.start(); }, "-=.5")
       .to(heroV, { scale: 1, duration: 2, ease: "expo.out" }, "<.2")
-      .to(chars, { yPercent: 0, duration: 1.25, ease: "expo.out", stagger: 0.035 }, "<.2")
+      .to(chars, { yPercent: 0, duration: 1.25, ease: "expo.out", stagger: 0.032 }, "<.05")
       .to(meta, { opacity: 1, duration: 0.9, ease: "power1.out", clearProps: "opacity" }, "<.5")
       .add(() => { const p = $(".pre"); p && p.remove(); ScrollTrigger.refresh(); });
   });

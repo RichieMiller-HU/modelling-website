@@ -196,8 +196,8 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
 /* ---------- lightbox ---------- */
 .lb{position:fixed;inset:0;z-index:150;background:rgba(8,8,7,.97);display:none}
 .lb.open{display:block}
-.lb-stage{position:absolute;inset:calc(var(--m) + 40px) var(--m);display:grid;place-items:center}
-.lb-stage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.lb-stage{position:absolute;inset:calc(var(--m) + 40px) var(--m)}
+.lb-stage img{position:absolute;inset:0;margin:auto;max-width:100%;max-height:100%;width:auto;height:auto;user-select:none;-webkit-user-drag:none}
 .lb-ui{position:absolute;inset:var(--m) var(--m) auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;z-index:2}
 .lb-ui>:last-child{justify-self:end}
 .lb-x{padding:6px 0}
@@ -230,7 +230,8 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
   .hero-name{flex-direction:column;gap:0;font-size:clamp(84px,25vw,260px);line-height:.92}
   .motion .hero{height:150vh}
   .motion .cu{height:150vh}
-  .motion .film{height:150vh}
+  .motion .film{height:135vh}
+  .hero-frame video{object-position:36% 50%}
   .film-frame{inset:auto 0;top:50%;height:56.25vw;margin-top:-28.125vw}
   .film-w{top:auto;left:var(--m);right:auto;font-size:clamp(60px,19vw,180px)}
   .film-w1{bottom:calc(50% + 28.125vw + 20px)}
@@ -261,14 +262,14 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
   .hero-meta .cue{display:none}
   .lb-stage{inset:72px 0 64px}
 }
-@media (min-width:900px){
+@media (min-width:640px){
   html:not(.hz) .book-track{grid-template-columns:repeat(12,minmax(0,1fr))}
   html:not(.hz) .book-intro{grid-column:1/8}
   html:not(.hz) .m-full{grid-column:4/10}html:not(.hz) .m-right{grid-column:7/12}html:not(.hz) .m-left{grid-column:2/7}
   html:not(.hz) .m-pa{grid-column:2/6}html:not(.hz) .m-pb{grid-column:8/12}
   html:not(.hz) .m-bleed{grid-column:2/12;margin-inline:0}html:not(.hz) .m-bleed figcaption{padding-inline:0}
 }
-@media (min-width:900px) and (max-aspect-ratio:1/1){
+@media (min-width:640px) and (max-aspect-ratio:1/1){
   html:not(.hz) .m-full{grid-column:2/12}html:not(.hz) .m-right{grid-column:5/13}html:not(.hz) .m-left{grid-column:1/9}
   html:not(.hz) .m-pa{grid-column:1/7}html:not(.hz) .m-pb{grid-column:7/13}html:not(.hz) .m-bleed{grid-column:1/-1}
 }
