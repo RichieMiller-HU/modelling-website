@@ -81,7 +81,7 @@ html[data-tone=light] .hud{color:var(--ink-2)}
 .bar.t{top:0;transform-origin:50% 0}.bar.b{bottom:0;transform-origin:50% 100%}
 .title{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ink);will-change:transform,opacity}
 .title .lbl{opacity:.82}
-.name{--ls:.2em;font:400 clamp(34px,7.1vw,124px)/1 var(--display);text-transform:uppercase;letter-spacing:var(--ls);margin-right:calc(var(--ls) * -1);margin-block:clamp(16px,2.4vw,34px);font-kerning:normal;white-space:nowrap}
+.name{--ls:.17em;font:400 clamp(34px,7.1vw,124px)/1 var(--display);text-transform:uppercase;letter-spacing:var(--ls);margin-right:calc(var(--ls) * -1);margin-block:clamp(16px,2.4vw,34px);font-kerning:normal;white-space:nowrap}
 .name span{display:inline-block}
 .name .sp{width:.32em}
 .cue{position:absolute;left:50%;bottom:calc(var(--g) + 44px + var(--sab));transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--ink)}
@@ -124,6 +124,7 @@ html[data-tone=light] .hud{color:var(--ink-2)}
   .lbl{font-size:9.5px;letter-spacing:.15em}
   .h-tl,.h-bl{left:26px}.h-tr,.h-br{right:26px}
   .hud .h{gap:1.2em}
+  .p-open video{object-position:24% 50%}
   .p-scene{background:linear-gradient(180deg,var(--bt,var(--pbg)) 22%,var(--bb,var(--pbg)) 78%)}
   .fit-portrait:not(.closeup) .frame{padding:calc(var(--g) + 44px) 0 0;align-items:flex-start;transform-origin:50% 40%}
   .fit-portrait:not(.closeup) .frame img{height:auto;width:min(100%,calc((100svh - 250px) * .667))}
@@ -134,7 +135,7 @@ html[data-tone=light] .hud{color:var(--ink-2)}
   .closeup .scrim{background:linear-gradient(180deg,#0007 0,#0000 14%),linear-gradient(0deg,#000b 0,#0000 42%)}
   .slate{left:var(--hud-x);right:var(--hud-x);bottom:calc(var(--g) + 40px + var(--sab));max-width:none}
   .slate h2{font-size:clamp(34px,10.4vw,52px)}
-  .name{font-size:clamp(26px,9.4vw,60px);--ls:.16em}
+  .name{font-size:clamp(26px,9.6vw,60px);--ls:.14em}
   .act-t{font-size:clamp(32px,10.6vw,72px)}
 }
 
@@ -148,7 +149,7 @@ html[data-tone=light] .hud{color:var(--ink-2)}
 .cr-star .name{margin-block:0;font-size:clamp(30px,5.4vw,92px)}
 .cr-rows{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(22px,3.2vw,52px);row-gap:clamp(10px,1.3vw,16px);align-items:baseline}
 .cr-rows dt{text-align:right;opacity:.55;padding-top:.2em}
-.cr-rows dd{font:400 clamp(22px,2.3vw,34px)/1.15 var(--display);letter-spacing:.005em;font-feature-settings:"lnum" 1}
+.cr-rows dd{font:400 clamp(28px,3vw,44px)/1.12 var(--display);letter-spacing:.005em;font-feature-settings:"lnum" 1}
 .cr-rows dd .imp{font:400 10.5px/1 var(--mono);letter-spacing:.12em;opacity:.55;margin-left:1em;vertical-align:.35em;white-space:nowrap}
 .cr-rows .gap{grid-column:1/-1;height:clamp(18px,3vh,30px)}
 .cr-final{margin-top:34vh;text-align:center;display:flex;flex-direction:column;align-items:center;gap:clamp(22px,3.6vh,40px);margin-bottom:0;max-width:none}
@@ -160,7 +161,8 @@ html[data-tone=light] .hud{color:var(--ink-2)}
 .cr-fin{display:flex;gap:2.2em;justify-content:center;flex-wrap:wrap}
 @media (max-aspect-ratio:9/10){
   .cr-rows{column-gap:18px}
-  .cr-rows dd{font-size:clamp(20px,5.8vw,28px)}
+  .cr-rows dd{font-size:clamp(26px,7.4vw,34px)}
+  .cr-rows dd .pt{display:block}.cr-rows dd .dot{display:none}
   .cr-rows dd .imp{display:block;margin:.5em 0 0;vertical-align:0;font-size:9.5px}
   .cr-final .mail{font-size:clamp(25px,7.6vw,44px)}
   .cr-links{flex-direction:column;align-items:center;gap:18px}
@@ -396,13 +398,13 @@ lb.addEventListener("touchend", e => { const d = e.changedTouches[0].clientX - t
 /* ---------- end credits ---------- */
 const rows = M.stats.map(s => `<dt class="lbl">${esc(s[0])}</dt><dd>${esc(prime(s[1]))}${s[2] ? `<span class="imp">${esc(prime(s[2]))}</span>` : ""}</dd>`).join("");
 const agency = M.agency && M.agency.name ? (M.agency.url ? `<a href="${esc(M.agency.url)}" target="_blank" rel="noopener">${esc(M.agency.name)}</a>` : esc(M.agency.name)) : "";
-const facts = [["Based in", esc(M.city)], ["Available", esc(M.available)], agency && ["Representation", agency]].filter(Boolean)
+const facts = [["Based in", esc(M.city)], ["Available", esc(M.available).split(" · ").map(x => `<span class="pt">${x}</span>`).join('<span class="dot"> · </span>')], agency && ["Representation", agency]].filter(Boolean)
   .map(r => `<dt class="lbl">${r[0]}</dt><dd>${r[1]}</dd>`).join("");
 const clients = M.clients && M.clients.length ? `<div class="cr-block"><p class="lbl mute">Worked with</p><dl class="cr-rows">${M.clients.map((c, i) => `<dt class="lbl">${i ? "" : ""}</dt><dd>${esc(c)}</dd>`).join("")}</dl></div>` : "";
 const comp = M.compCard ? `<a href="${url(M.compCard)}" download>Comp card (PDF)</a>` : `<a href="${mail}">Comp card on request</a>`;
 const [mUser, mHost] = M.email.split("@");
 $("#roll").innerHTML = `
-  <div class="cr-block cr-star"><p class="lbl mute">Starring</p><p class="name" style="--ls:.2em">${esc(full)}</p></div>
+  <div class="cr-block cr-star"><p class="lbl mute">Starring</p><p class="name" style="--ls:.17em">${esc(full)}</p></div>
   <div class="cr-block"><p class="lbl mute">Measurements</p><dl class="cr-rows">${rows}</dl></div>
   <div class="cr-block"><dl class="cr-rows">${facts}</dl></div>
   ${clients}
@@ -480,7 +482,7 @@ intro
   .fromTo(".hud > *", { opacity: 0 }, { opacity: 1, duration: 0.9, stagger: 0.06, ease: "power2.out" }, 0)
   .to(bars, { intro: 1, duration: 1.9, ease: "expo.inOut", onUpdate: renderBars }, 0.25)
   .fromTo(chars, { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 1.5, ease: "power2.out", stagger: { each: 0.055, from: "random" } }, 0.9)
-  .fromTo(nameEl, { "--ls": isTall() ? ".42em" : ".62em" }, { "--ls": isTall() ? ".16em" : ".2em", duration: 3.4, ease: "expo.out" }, 0.9)
+  .fromTo(nameEl, { "--ls": isTall() ? ".4em" : ".56em" }, { "--ls": isTall() ? ".14em" : ".17em", duration: 3.4, ease: "expo.out" }, 0.9)
   .fromTo(["#t-pre", "#t-post"], { opacity: 0, y: 8 }, { opacity: 0.82, y: 0, duration: 1.3, stagger: 0.35, ease: "power3.out" }, 2.0)
   .fromTo(cue, { opacity: 0 }, { opacity: 1, duration: 1.2 }, 2.8)
   .add(() => chars.forEach(c => (c.style.filter = "")));
@@ -519,7 +521,7 @@ for (let i = 1; i < panels.length; i++) {
       .fromTo($(".slate .lbl", p.el), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, t + 0.5);
   }
   tl.to(prev.shade, { opacity: iris ? 0.9 : 0.72, duration: D, ease: "power2.in" }, t);
-  const H = iris ? 0.9 : 1.25;
+  const H = iris ? 0.6 : 0.8;
   if (p.kind === "scene") tl.fromTo($(".frame", p.el), { scale: 1 }, { scale: 1.045, duration: H + D, ease: "none" }, t + D);
   t += D + H;
 }
@@ -539,7 +541,7 @@ function layout(force) {
   if (!force && innerWidth === lastW) return;
   lastW = innerWidth;
   const vh = document.documentElement.clientHeight;
-  unit = vh * (isTall() ? 0.58 : 0.62);
+  unit = vh * (isTall() ? 0.42 : 0.5);
   reel.style.height = `${Math.round(END * unit + vh)}px`;
   const sh = crStage.clientHeight || vh;
   const fin = $("#contact");

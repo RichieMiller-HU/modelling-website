@@ -78,17 +78,6 @@
   });
 
   const photos = (M.photos || []).filter((p) => p && p.src);
-  // statement window: the first landscape of the light chapter reads best in a wide slot
-  const sayImg = $("[data-say] img");
-  if (sayImg) {
-    const p = photos.find((x) => x.key === "light" && x.fit === "landscape") || photos[0];
-    if (p) {
-      sayImg.src = url(p.src);
-      const f = faceOf(p.src);
-      sayImg.style.objectPosition = `${f[0] * 100}% ${f[1] * 100}%`;
-      sayImg.style.transformOrigin = `${f[0] * 100}% ${f[1] * 100 + 8}%`;
-    } else sayImg.parentElement.remove();
-  }
 
   // film
   const film = $("#film");
@@ -132,11 +121,15 @@
     let items = byKey(ch.dataset.key);
     if (!items.length) { ch.hidden = true; return; }
     const startN = order.length + 1;
-    // a chapter that opens with a full-bleed expansion of one of its own frames:
-    // that frame is counted here, captioned on the stage, and not repeated in the grid
-    const stage = ch.previousElementSibling && ch.previousElementSibling.matches(".xp") ? ch.previousElementSibling : null;
-    const stageImg = stage && $(".xp__media img", stage);
-    const lead = stageImg && items.find((p) => stageImg.getAttribute("src") === url(p.src));
+    // a chapter frame that is already shown full bleed by an expansion stage
+    // (M.heroLight in the hero, M.closeUpDark at the light-to-dark turn) is counted
+    // in its chapter, captioned on that stage, and not repeated in the grid
+    let stage = null, lead = null;
+    for (const st of $$(".xp:not([data-lead])")) {
+      const img = $(".xp__media img", st);
+      const hit = img && items.find((p) => img.getAttribute("src") === url(p.src));
+      if (hit) { stage = st; lead = hit; st.dataset.lead = ""; break; }
+    }
     if (lead) {
       const n = order.push(lead);
       items = items.filter((p) => p !== lead);
@@ -400,21 +393,13 @@
     const all = [hero, brief, filmX].filter(Boolean);
     all.forEach((x) => x.measure());
 
-    // say: in-flow opening, like the template's centred effect
-    const say = $("[data-say]");
-    const renderSay = (p) => {
-      const e = ease.io(clamp(p));
-      say.style.setProperty("--open", e.toFixed(4));
-      say.style.setProperty("--s", lerp(2.5, 1.7, e).toFixed(4));
-    };
-
     if (reduce || !hasGsap) {
       document.documentElement.classList.add("reduce");
       hero && hero.render(1, 0);
       brief && brief.render(1, 0);
       $$(".xp__cap").forEach((c) => { c.style.opacity = 1; c.style.visibility = "visible"; });
+      $$(".hero__meta").forEach((m) => (m.style.visibility = "hidden"));
       if (filmX) { filmX.hideWords = true; filmX.render(1, 1); }
-      renderSay(1);
       addEventListener("resize", () => { all.forEach((x) => x.measure()); });
       return;
     }
@@ -449,7 +434,7 @@
         .to(st, { a: 1, duration: 1.7, ease: "expo.inOut", onUpdate: () => hero.render(st.a, st.b) }, 0.55)
         .add(() => heroEl.classList.remove("is-masked"));
       ScrollTrigger.create({
-        trigger: heroEl, pin: true, start: "top top", end: "+=130%",
+        trigger: heroEl, pin: true, start: "top top", end: "+=90%",
         onUpdate: (self) => {
           st.b = self.progress;
           if (st.b > 0) heroEl.classList.remove("is-masked");
@@ -466,16 +451,13 @@
         gate && gate(b);
       },
     });
-    brief && pinned(brief, 210);
+    brief && pinned(brief, 140);
     const filmGate = (b) => {
       if (b > 0.02) { if (video.paused && !userPaused) video.play().catch(() => {}); }
       else if (!video.paused) { video.pause(); video.currentTime = 0; }
     };
-    filmX && pinned(filmX, 210, filmGate);
+    filmX && pinned(filmX, 140, filmGate);
 
-    ScrollTrigger.create({ trigger: say, start: "top 82%", end: "top 18%", onUpdate: (s) => renderSay(s.progress) });
-    renderSay(0);
-    gsap.fromTo(".say__body", { y: 70 }, { y: -50, ease: "none", scrollTrigger: { trigger: say, start: "top bottom", end: "bottom top", scrub: true } });
 
     // nav state
     $$(".bar__nav a").forEach((a) => {

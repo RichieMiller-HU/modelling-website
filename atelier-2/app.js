@@ -255,18 +255,28 @@ function buildFlip() {
   };
   render(0);
   const st = ScrollTrigger.create({
-    trigger: bookEl, start: "top top", end: () => "+=" + Math.max(1, n - 1) * innerHeight, pin: true, anticipatePin: 1,
+    trigger: bookEl, start: "top top", end: () => "+=" + Math.max(1, n - 1) * innerHeight * 0.6, pin: true, anticipatePin: 1,
     onUpdate: (self) => render(self.progress * (n - 1)),
     onRefresh: (self) => render(self.progress * (n - 1)),
   });
   const yFor = (s) => st.start + (n > 1 ? s / (n - 1) : 0) * (st.end - st.start);
-  const onEnd = () => {
+  /* gentle settle: only after the user has fully let go (no input for 450ms, smoothing at rest),
+     only when a leaf is visibly mid-air, and any new wheel/touch input cancels it */
+  let idle = 0, settling = false;
+  const settle = () => {
     if (lbOpen || !st.isActive) return;
-    const t = st.progress * (n - 1), r = Math.round(t);
-    if (Math.abs(t - r) < 0.003) return;
-    scrollToY(yFor(r), 0.6 + 0.6 * Math.abs(t - r));
+    if (lenis && Math.abs(lenis.velocity) > 0.02) { idle = setTimeout(settle, 120); return; }
+    const t = st.progress * (n - 1), r = Math.round(t), f = t - Math.floor(t);
+    if (f < 0.08 || f > 0.92) return;           // inside the dwell: the page already reads as at rest
+    settling = true;
+    if (lenis) lenis.scrollTo(yFor(r), { duration: 1.1, easing: (x) => 1 - Math.pow(1 - x, 3), onComplete: () => (settling = false) });
+    else { window.scrollTo({ top: yFor(r), behavior: "smooth" }); settling = false; }
   };
-  ScrollTrigger.addEventListener("scrollEnd", onEnd);
+  const onScroll = () => { if (settling) return; clearTimeout(idle); idle = setTimeout(settle, 450); };
+  const onInput = () => { clearTimeout(idle); settling = false; };   // Lenis lets fresh user input override a programmatic scroll
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("wheel", onInput, { passive: true });
+  addEventListener("touchstart", onInput, { passive: true });
   const key = (e) => {
     if (lbOpen || !st.isActive || !/Arrow(Left|Right)/.test(e.key)) return;
     e.preventDefault();
@@ -277,7 +287,7 @@ function buildFlip() {
   book = {
     mode: "flip", st,
     goto: (pi) => scrollToY(yFor(Math.floor(pi / 2)), 1.8),
-    kill: () => { ScrollTrigger.removeEventListener("scrollEnd", onEnd); removeEventListener("keydown", key); st.kill(true); },
+    kill: () => { clearTimeout(idle); removeEventListener("scroll", onScroll); removeEventListener("wheel", onInput); removeEventListener("touchstart", onInput); removeEventListener("keydown", key); st.kill(true); },
   };
 }
 

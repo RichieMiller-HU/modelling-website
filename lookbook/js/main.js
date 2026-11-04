@@ -119,22 +119,17 @@ function lookMarkup(p, n, chapterTitle, wide) {
   return fig;
 }
 
-// Which spans close a chapter's last row at `cols` columns: the title cell
-// at 1, 2 (a row's width of two) or 4 (two by two) cells, with or without
-// the first portrait as a two-by-two feature.
+// Which title cell closes a chapter's last row at `cols` columns, with the
+// first portrait always featured two by two. The title takes one cell, a
+// tall one (one by two), a row's width of two, two by two, or a row of its
+// own height above the frames.
+const HEADS = { one: 1, tall: 2, wide: 2, square: 4, row: 0 };
 function pack(photos, cols) {
-  const sum = photos.reduce((a, p) => a + (p.fit === 'landscape' ? 2 : 1), 0);
   const first = photos.findIndex((p) => p.fit !== 'landscape');
-  // On two columns the title takes a row of its own height above the frames.
-  const prefs =
-    cols === 2
-      ? [[0, 1], [0, 0]]
-      : [[1, 0], [1, 1], [2, 0], [2, 1], [4, 0], [4, 1]];
-  for (const [head, feat] of prefs) {
-    if (feat && first < 0) continue;
-    if ((head + sum + feat * 3) % cols === 0) return { head, feature: feat ? first : -1 };
-  }
-  return { head: cols === 2 ? 0 : 1, feature: -1 };
+  const sum = photos.reduce((a, p) => a + (p.fit === 'landscape' ? 2 : 1), 0) + (first < 0 ? 0 : 3);
+  const prefs = cols === 2 ? ['row', 'one', 'tall'] : ['one', 'tall', 'row', 'wide', 'square'];
+  const head = prefs.find((h) => (HEADS[h] + sum) % cols === 0) || (cols === 2 ? 'row' : 'one');
+  return { head, feature: first };
 }
 
 const chaptersEl = $('.book__chapters');
@@ -199,17 +194,18 @@ function layout() {
   cols = now;
   for (const g of groups) {
     const { head, feature } = pack(g.photos, cols);
-    g.head.classList.toggle('head--2', head === 2);
-    g.head.classList.toggle('head--4', head === 4);
-    g.head.classList.toggle('head--row', head === 0);
-    g.head.parentElement.classList.toggle('grid--headed', head === 0);
+    g.head.classList.toggle('head--tall', head === 'tall');
+    g.head.classList.toggle('head--2', head === 'wide');
+    g.head.classList.toggle('head--4', head === 'square');
+    g.head.classList.toggle('head--row', head === 'row');
+    g.head.parentElement.classList.toggle('grid--headed', head === 'row');
     g.cells.forEach((cell, i) => {
       const wide = g.photos[i].fit === 'landscape';
       cell.classList.toggle('cell--feature', i === feature);
       $('img', cell).sizes =
         wide || i === feature
-          ? '(max-width: 760px) 96vw, (max-width: 1100px) 64vw, 48vw'
-          : '(max-width: 760px) 48vw, (max-width: 1100px) 32vw, 24vw';
+          ? '(max-width: 760px) 96vw, 64vw'
+          : '(max-width: 760px) 48vw, 32vw';
     });
   }
 }

@@ -50,11 +50,18 @@
     <div class="facts" id="facts"></div>
   </section>
 
-  <section class="book" id="work" aria-label="Selected work">
+  <section class="ix" id="work" aria-label="Selected work, contents">
+    <div class="ix-h">
+      <h2 class="d-l">Selected work</h2>
+      <p class="mute" id="ix-note"></p>
+    </div>
+    <nav class="ix-rows" id="rows" aria-label="Contents"></nav>
+  </section>
+
+  <section class="book" id="book" aria-label="The book">
     <div class="book-pin">
-      <div class="book-head lbl" aria-hidden="true"><span id="bk-ch"></span><span class="num"><span id="bk-n">01</span> / <span id="bk-t"></span></span></div>
       <div class="book-track" id="track"></div>
-      <div class="book-bar" aria-hidden="true"><i></i></div>
+      <div class="book-head lbl" aria-hidden="true"><span id="bk-ch"></span><span class="book-bar"><i></i></span><span class="num"><span id="bk-n">01</span> / <span id="bk-t"></span></span></div>
     </div>
   </section>
 
@@ -102,6 +109,8 @@
     </div>
   </section>
 </main>
+
+<div class="ix-float" id="float" aria-hidden="true"><div class="ix-float-c" id="float-c"></div></div>
 
 <div class="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
   <div class="lb-ui lbl"><span class="num" id="lb-n"></span><span id="lb-c"></span><button class="lb-x lbl" type="button">Close</button></div>

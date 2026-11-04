@@ -201,46 +201,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   display: flex; justify-content: space-between; align-items: baseline; color: var(--paper);
 }
 .xp__cap .ph__n { margin-right: 18px; }
+.xp--hero .xp__cap { color: var(--ink); }
 .xp__cap .ph__btn--text { display: inline; width: auto; overflow: visible; background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 100% 1px; cursor: zoom-in; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding-bottom: 2px; }
-
-/* ---------- statement (in-flow expansion) ---------- */
-.say {
-  padding: 24vh var(--g) 20vh;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--gap);
-  row-gap: 9vh;
-}
-.say__type {
-  grid-column: 1 / -1;
-  margin: 0;
-  font-family: var(--display);
-  font-weight: 400;
-  font-size: 14.2vw;
-  line-height: 0.86;
-  letter-spacing: -0.04em;
-  white-space: nowrap;
-  --win-w: 2.35em;
-}
-.say__w { display: inline-block; }
-.say__win {
-  position: relative;
-  display: inline-block;
-  width: calc(var(--open, 0) * var(--win-w));
-  height: 0.98em;
-  margin-inline: calc(0.12em + var(--open, 0) * 0.06em);
-  vertical-align: -0.16em;
-  overflow: hidden;
-}
-.say__win img {
-  position: absolute; top: 0; left: 50%;
-  width: var(--win-w); height: 100%; max-width: none;
-  object-fit: cover;
-  transform: translateX(-50%) scale(var(--s, 1.3));
-}
-.say__body { grid-column: 7 / span 5; }
-.say__text { font-size: clamp(19px, 1.65vw, 24px); line-height: 1.38; letter-spacing: -0.005em; margin: 0 0 2.2em; max-width: 30ch; text-wrap: pretty; }
-.say__sig { color: var(--mute); }
 
 /* ---------- book ---------- */
 .chapter { padding: 18vh var(--g) 16vh; }
@@ -290,6 +252,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .s-lone-l { grid-column: 2 / span 5; }
 .s-wide { grid-column: 1 / -1; }
 .s-wide-i { grid-column: 2 / span 10; }
+.s-wide .ph__btn img, .s-wide-i .ph__btn img { aspect-ratio: auto; max-height: 82vh; object-fit: cover; }
 .s-coda { grid-column: 4 / span 6; }
 
 /* reveal: transform only, so lazy images are never inside a hidden or clipped box */
@@ -372,7 +335,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* ---------- tablet ---------- */
 @media (max-width: 1024px) {
   .bar__nav { gap: 22px; }
-  .say__body { grid-column: 5 / span 8; }
   .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .contact__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -411,11 +373,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   .xp__type--film { font-size: 22vw; --win-w: 1.9em; --win-h: 0.72em; }
   .xp-line--r { padding-left: 0.42em; }
 
-  .say { padding: 16vh var(--g) 14vh; row-gap: 6vh; }
-  .say__type { font-size: 25vw; --win-w: 1.95em; white-space: normal; line-height: 0.84; }
-  .say__type .say__w:last-child { display: block; padding-left: 0.62em; }
-  .say__body { grid-column: 3 / -1; }
-  .say__text { font-size: 19px; }
 
   .chapter { padding: 13vh var(--g) 12vh; }
   .sec-head, .ch-head { grid-template-columns: 1fr auto; row-gap: 18px; margin-bottom: 8vh; }

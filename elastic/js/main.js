@@ -36,17 +36,14 @@
   });
 
   // ─────────────── Sequence: chapters light → dark → colour ───────────────
-  // Stable sort by chapter. The hero frame is moved a few places into its chapter
-  // so the book does not open on the picture the visitor has just seen.
+  // Stable sort by chapter. The hero frame is the cover, so the book leaves it out
+  // and no picture appears twice on the page.
   const keyRank = (k) => { const i = ORDER.indexOf(k); return i < 0 ? ORDER.length : i; };
-  const photos = M.photos.map((p, i) => ({ ...p, i })).sort((a, b) => keyRank(a.key) - keyRank(b.key) || a.i - b.i);
-  const heroIdx = photos.findIndex((p) => p.src === M.heroLight);
-  if (heroIdx > -1) {
-    const [h] = photos.splice(heroIdx, 1);
-    const sameKey = photos.filter((p) => p.key === h.key).length;
-    const at = photos.findIndex((p) => p.key === h.key) + Math.min(3, sameKey);
-    photos.splice(Math.max(0, at), 0, h);
-  }
+  const heroSrc = M.heroLight || (M.photos[0] && M.photos[0].src);
+  const photos = M.photos
+    .map((p, i) => ({ ...p, i }))
+    .filter((p) => p.src !== heroSrc)
+    .sort((a, b) => keyRank(a.key) - keyRank(b.key) || a.i - b.i);
 
   // ─────────────── Static text ───────────────
   $('.bar__name').textContent = fullName;
@@ -57,7 +54,7 @@
   $('.hero__role').innerHTML = `${esc(M.role)}<span>${esc(M.city)}</span>`;
   $('.hero__avail').innerHTML = `Available<span>${esc(M.available)}</span>`;
   const heroImg = $('.hero__img');
-  heroImg.src = url(M.heroLight || photos[0].src);
+  heroImg.src = url(heroSrc);
   heroImg.alt = `${fullName}, close-up portrait`;
 
   $('.book__statement').textContent = M.statement;
@@ -316,11 +313,16 @@
 
   const scrollMotion = () => {
     if (reduce) return;
-    // Hero: the name opens outward and the portrait settles back as the book takes over
-    gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
-      .to('.hero__line--first', { xPercent: -16, ease: 'none' }, 0)
-      .to('.hero__line--last', { xPercent: 16, ease: 'none' }, 0)
-      .to('.hero__frame', { scale: 0.9, yPercent: 8, ease: 'none' }, 0);
+    // Hero: the name opens outward and the portrait settles back as the book takes over.
+    // Phones get a much smaller drift so "Miller" never leaves the screen.
+    const heroMM = gsap.matchMedia();
+    heroMM.add({ wide: '(min-width: 48em)', narrow: '(max-width: 47.99em)' }, (ctx) => {
+      const drift = ctx.conditions.wide ? 16 : 4;
+      gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
+        .to('.hero__line--first', { xPercent: -drift, ease: 'none' }, 0)
+        .to('.hero__line--last', { xPercent: drift, ease: 'none' }, 0)
+        .to('.hero__frame', { scale: 0.9, yPercent: 8, ease: 'none' }, 0);
+    });
 
     // Reveals
     $$('[data-reveal]').forEach((r) => {

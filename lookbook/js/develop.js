@@ -29,9 +29,9 @@ export const motion = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0
 const CONFIG = {
   duration: 0.85, // seconds for the card to cross the look on hover
   ease: 'power1.out',
-  reveal: 1.7, // seconds for a frame to develop out of its card
+  reveal: 0.9, // seconds for a frame to develop out of its card
   revealEase: 'power2.inOut',
-  pull: 0.72, // how far ahead of the sweep the near tones fill, as a share of the look
+  pull: 0.4, // how far ahead of the sweep the near tones fill, as a share of the look
   light: 0.18, // the hairline of light along the edge, 0 to 1
   rest: 1600, // ms a look keeps its context after it comes to rest
 };

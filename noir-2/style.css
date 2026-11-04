@@ -112,28 +112,56 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
 
 /* ---------- the book: horizontal (desktop, fine pointer) ---------- */
 .hz .book-pin{position:sticky;top:0;height:100vh;overflow:hidden}
-.hz .book-head{display:flex;justify-content:space-between;position:absolute;left:var(--m);right:var(--m);top:calc(var(--nav-h) + 8px);z-index:2}
-.hz .book-head>:last-child{text-align:right}
-.hz .book-bar{display:block;position:absolute;left:var(--m);right:var(--m);bottom:var(--m);height:1px;background:var(--line)}
+.hz .book-head{display:flex;align-items:center;position:absolute;left:var(--m);right:var(--m);bottom:var(--m);z-index:2}
+.hz .book-head>:first-child{min-width:10em}
+.hz .book-head>:last-child{min-width:5em;text-align:right}
+.hz .book-bar{display:block;flex:1;height:1px;background:var(--line);margin:0 clamp(20px,2.4vw,40px)}
 .hz .book-bar i{display:block;height:100%;background:var(--ink);transform-origin:left;transform:scaleX(0)}
 .hz .book-track{position:absolute;top:0;left:0;height:100%;display:flex;flex-wrap:nowrap;align-items:center;gap:0;padding:0 0 0 var(--m);will-change:transform;width:max-content}
 .hz .book-track>*{flex:none;margin-right:clamp(40px,4.4vw,80px)}
 .hz .book-intro{width:clamp(280px,26vw,440px);align-self:center;margin-right:clamp(64px,8vw,140px);padding:0}
-.hz .chap{margin:0 clamp(40px,4.4vw,80px) 0 clamp(24px,3vw,56px);height:calc(var(--hL) + 30px);transform:translateY(23px);display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:12px;border-top:0;border-left:1px solid var(--line);padding:0 0 0 18px;width:auto}
+.hz .chap{margin:0 clamp(40px,4.4vw,80px) 0 clamp(24px,3vw,56px);height:calc(var(--hL) + 30px);transform:translateY(5px);display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:12px;border-top:0;border-left:1px solid var(--line);padding:0 0 0 18px;width:auto}
 .hz .chap .lbl.mute{margin-top:auto}
 .hz .chap-1{margin-left:0}
-.hz .book-track{--hL:min(60vh,44vw)}
+.hz .book-track{--hL:min(76vh,52vw);--c:calc(50vh - 10px)}
 .hz .ph{--h:var(--hL);align-self:center}
 .hz .ph .clip{height:var(--h);width:auto;aspect-ratio:var(--ar,2/3)}
 .hz .ph img{width:114%;max-width:none;margin-left:-7%}
-.hz .ph.d-m{--h:min(44vh,32vw)}
-.hz .ph.d-land{--h:min(42vh,29vw)}
-.hz .ph.a-e{align-self:flex-end;margin-bottom:calc(50vh - 8px - var(--hL) / 2)}
-.hz .ph.a-s{align-self:flex-start;margin-top:calc(50vh + 8px - var(--hL) / 2)}
+.hz .ph.d-m{--h:min(58vh,40vw)}
+.hz .ph.d-land{--h:min(52vh,36vw)}
+.hz .ph.a-e{align-self:flex-end;margin-bottom:calc(100vh - var(--c) - var(--hL) / 2)}
+.hz .ph.a-s{align-self:flex-start;margin-top:calc(var(--c) - var(--hL) / 2)}
 .hz .ph figcaption{position:absolute;left:0;right:0;top:100%}
-.hz .ph.a-c{transform:translateY(8px)}
+.hz .ph.a-c{transform:translateY(-10px)}
 .hz .book-end{width:1px;margin-right:0}
 .ph .clip img{transition:transform 1.4s var(--ease)}
+
+/* ---------- contents index ---------- */
+.ix{padding:0 var(--m) var(--sec)}
+.ix-h{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:end;padding-bottom:clamp(40px,7vh,88px)}
+.ix-h h2{grid-column:1/8}
+.ix-h p{grid-column:9/13;max-width:32ch}
+.ix-rows{display:block;border-bottom:1px solid var(--line)}
+.ix-ch,.ix-row{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:baseline}
+.ix-ch{padding:14px 0 12px;border-top:1px solid var(--ink);margin-top:clamp(36px,6vh,72px)}
+.ix-ch:first-child{margin-top:0}
+.ix-ch>:first-child{grid-column:1/2}.ix-ch>:nth-child(2){grid-column:2/8}.ix-ch>:last-child{grid-column:11/13;text-align:right}
+.ix-row{padding:15px 0 13px;border-top:1px solid var(--line);cursor:pointer}
+.ix-ch+.ix-row{border-top:0}
+.ix-row>*{transition:opacity .6s var(--ease)}
+.ix-row .n{grid-column:1/2}
+.ix-row .ti{grid-column:2/9;font:400 clamp(26px,2.6vw,42px)/1.04 var(--serif);letter-spacing:-.01em;transition:transform .9s var(--ease),opacity .6s var(--ease)}
+.ix-row .ft{grid-column:9/11;text-transform:capitalize}
+.ix-row .go{grid-column:12/13;justify-self:end;width:16px;height:16px;align-self:center;opacity:0;transform:translateX(-8px);transition:opacity .5s var(--ease),transform .7s var(--ease)}
+.ix-row .go svg{width:100%;height:100%;display:block}
+.ix-rows.hov .ix-row>*{opacity:.25}
+.ix-rows.hov .ix-row.on>*{opacity:1}
+.ix-row.on .ti{transform:translateX(clamp(12px,1.6vw,28px))}
+.ix-row.on .go,.ix-row:focus-visible .go{opacity:1;transform:none}
+.ix-float{position:fixed;left:0;top:0;z-index:80;width:clamp(200px,16vw,280px);aspect-ratio:4/5;pointer-events:none;visibility:hidden;will-change:transform}
+.ix-float-c{position:absolute;inset:0;overflow:hidden;clip-path:inset(50% 50% 50% 50%);background:var(--bg2)}
+.ix-float img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 28%;clip-path:inset(0 0 100% 0)}
+@media (hover:none),(pointer:coarse){.ix-float{display:none}.ix-row .go{opacity:.55;transform:none}}
 
 /* ---------- close-up ---------- */
 .cu{position:relative;height:100svh}
@@ -233,10 +261,12 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
   .motion .cu{height:150vh}
   .motion .film{height:135vh}
   .hero-frame video{object-position:36% 50%}
-  .film-frame{inset:auto 0;top:50%;height:56.25vw;margin-top:-28.125vw}
-  .film-w{top:auto;left:var(--m);right:auto;font-size:clamp(60px,19vw,180px)}
-  .film-w1{bottom:calc(50% + 28.125vw + 20px)}
-  .film-w2{top:calc(50% + 28.125vw + 20px);left:auto;right:var(--m)}
+  .film-pin{--fh:min(100vw,58svh)}
+  .film-frame{inset:auto 0;top:50%;height:var(--fh);margin-top:calc(var(--fh) / -2)}
+  .film-frame video{object-position:36% 50%}
+  .film-w{top:auto;left:var(--m);right:auto;font-size:clamp(60px,19vw,150px)}
+  .film-w1{bottom:calc(50% + var(--fh) / 2 + 14px)}
+  .film-w2{top:calc(50% + var(--fh) / 2 + 14px);left:auto;right:var(--m)}
 }
 @media (max-width:899px){
   .grid{grid-template-columns:repeat(6,minmax(0,1fr))}
@@ -255,6 +285,13 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
   .foot>:nth-child(2){text-align:right}
   .foot>:last-child{grid-column:1/-1;text-align:left}
   .dg{grid-template-columns:1fr 1fr}
+  .ix-h{display:block}.ix-h p{margin-top:18px}
+  .ix-ch,.ix-row{grid-template-columns:34px minmax(0,1fr) auto;column-gap:12px}
+  .ix-ch>*,.ix-row>*{grid-column:auto!important}
+  .ix-ch>:last-child{text-align:right}
+  .ix-row{padding:12px 0 11px;align-items:center}
+  .ix-row .ti{font-size:clamp(22px,6vw,30px)}
+  .ix-row .ft{display:none}
 }
 @media (max-width:599px){
   .nav nav a.opt{display:none}

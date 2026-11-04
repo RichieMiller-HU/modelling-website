@@ -27,8 +27,13 @@
 
   /* chapters, in the order they first appear in content.js (light → dark → colour) */
   const order = [...new Set(M.photos.map((p) => p.key))];
-  const photos = order.flatMap((k) => M.photos.filter((p) => p.key === k));
-  const N = photos.length;
+  const all = order.flatMap((k) => M.photos.filter((p) => p.key === k));
+  /* the close-up gets its own full-bleed scene, so it is not repeated inside the book */
+  let cuEntry = M.closeUpDark ? all.find((p) => p.src === M.closeUpDark) || { src: M.closeUpDark, fit: "portrait", key: "dark", caption: "Close-up" } : null;
+  const photos = all.filter((p) => p !== cuEntry);
+  /* page order: the book, then the close-up. Numbering, lightbox and contents all follow it */
+  const seq = cuEntry ? [...photos, cuEntry] : photos;
+  const N = seq.length;
 
   /* ---------------- content ---------------- */
   const masked = (text) => [...text].map((c) => `<span class="mk"><span>${c}</span></span>`).join("");
@@ -55,7 +60,6 @@
   const track = $("#track");
   const hzAtBuild = isHz();
   const chapNames = order.map((k) => KEYS[k] || cap1(k));
-  track.innerHTML = `<div class="book-intro"><h2 class="d-l">Selected work</h2><p>${cap1(word(N))} frames in ${word(order.length)} chapters: ${chapNames.join(", ").toLowerCase()}. Select any image to see it large.</p></div>`;
   let gi = 0;
   order.forEach((k, ci) => {
     const list = photos.filter((p) => p.key === k);
@@ -98,17 +102,17 @@
     const img = $("img", f);
     const setAr = () => { if (img.naturalWidth) { const r = `${img.naturalWidth}/${img.naturalHeight}`; f.firstChild.style.setProperty("--ar", r); f.style.setProperty("--ar", r); refreshSoon(); } };
     img.complete ? setAr() : img.addEventListener("load", setAr, { once: true });
-    f.addEventListener("click", () => lightbox(photos, i, f));
-    f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(photos, i, f); } });
+    f.addEventListener("click", () => lightbox(seq, i, f));
+    f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(seq, i, f); } });
     return f;
   }
 
   /* close-up */
-  const cuSrc = M.closeUpDark || photos[0].src;
-  const cuIdx = Math.max(0, photos.findIndex((p) => p.src === cuSrc));
+  const cuIdx = cuEntry ? seq.indexOf(cuEntry) : 0;
+  const cuSrc = seq[cuIdx].src;
   const cuImg = $("#cu-img"), cuF = $("#cu-frame");
-  cuImg.src = url(cuSrc); cuImg.alt = photos[cuIdx] ? photos[cuIdx].caption : "Close-up";
-  $("#cu-c").textContent = `${pad(cuIdx + 1)} / ${pad(N)} — ${photos[cuIdx] ? photos[cuIdx].caption : ""}`;
+  cuImg.src = url(cuSrc); cuImg.alt = seq[cuIdx].caption || "Close-up";
+  $("#cu-c").textContent = `${pad(cuIdx + 1)} / ${pad(N)} — ${seq[cuIdx].caption || ""}`;
   /* where the eyes sit in the close-up frame, as a fraction of the image (x, y) */
   const CU_FOCUS = [0.36, 0.25];
   let cuDim = [2, 3], cuApply = () => {};
@@ -125,7 +129,7 @@
   const cuLayout = () => { const g = cuGeo(); cuImg.style.objectPosition = `${g.pos[0]}% ${g.pos[1]}%`; cuApply(); };
   cuImg.addEventListener("load", () => { cuDim = [cuImg.naturalWidth, cuImg.naturalHeight]; cuLayout(); });
   addEventListener("resize", cuLayout);
-  const openCu = () => lightbox(photos, cuIdx, cuF);
+  const openCu = () => lightbox(seq, cuIdx, cuF);
   cuF.addEventListener("click", openCu);
   cuF.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCu(); } });
 

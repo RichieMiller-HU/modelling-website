@@ -41,7 +41,7 @@
   --display: 'Nyght Serif', Georgia, serif;
   --gutter: 24px;
   --gap: max(12px, 1.2vw);
-  --cols: 4;
+  --cols: 3;
   --top: 76px;
   --space: clamp(96px, 11vw, 190px);
   --ease: cubic-bezier(0.6, 0, 0.2, 1);
@@ -203,14 +203,14 @@ video {
   }
 }
 
-/* The frame: fixed, set on the four columns of the grid below it, and
-   inverted against whatever passes beneath. */
+/* The frame: fixed, set on the three columns of the book below it (each
+   halved), and inverted against whatever passes beneath. */
 .frame {
   position: fixed;
   inset: 0 0 auto;
   z-index: 50;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: var(--gap);
   align-items: baseline;
   padding: 22px var(--gutter);
@@ -224,7 +224,20 @@ video {
 }
 
 .frame__name {
+  grid-column: 1 / 3;
   font-weight: 500;
+}
+
+.frame__nav {
+  grid-column: 3 / 5;
+}
+
+.frame__where {
+  grid-column: 5;
+}
+
+.frame__cta {
+  grid-column: 6;
 }
 
 .frame__nav {
@@ -375,6 +388,10 @@ dt {
 
 .cell--feature {
   grid-column: span 2;
+  grid-row: span 2;
+}
+
+.head--tall {
   grid-row: span 2;
 }
 
@@ -736,17 +753,8 @@ dt {
   margin-top: 28px;
 }
 
-.foot__row span:nth-child(2) {
-  grid-column: 2 / 4;
-}
-
 .foot__row a:last-child {
   justify-self: end;
-}
-
-.foot__row span a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 /* Lightbox ---------------------------------------------------------------- */
@@ -833,14 +841,8 @@ dt {
 /* Tablet ------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {
-  :root {
-    --cols: 3;
-  }
   .frame__where {
     display: none;
-  }
-  .frame {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .hero {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -877,9 +879,6 @@ dt {
   .head__title {
     font-size: clamp(48px, 9cqw, 110px);
   }
-  .foot__row span:nth-child(2) {
-    grid-column: 2;
-  }
 }
 
 /* Phones ------------------------------------------------------------------ */
@@ -896,6 +895,10 @@ dt {
   .frame {
     grid-template-columns: 1fr auto;
     padding: 18px var(--gutter);
+  }
+  .frame__name,
+  .frame__cta {
+    grid-column: auto;
   }
   .frame__nav {
     display: none;
@@ -960,7 +963,7 @@ dt {
     grid-column: 1 / -1;
   }
   .film__frame {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 16 / 9;
   }
   .stats__list {
     row-gap: 32px;
@@ -986,11 +989,6 @@ dt {
   }
   .foot__row {
     grid-template-columns: 1fr auto;
-    row-gap: 6px;
-  }
-  .foot__row span:nth-child(2) {
-    grid-column: 1 / -1;
-    grid-row: 2;
   }
 
   .lb__bar {
