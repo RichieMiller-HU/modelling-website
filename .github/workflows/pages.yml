@@ -28,7 +28,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir _site
-          rsync -a --exclude '.git' --exclude '.github' --exclude '_site' ./ _site/
+          rsync -a --exclude '.git' --exclude '.github' --exclude '_site' --exclude '*.md' --exclude '.gitignore' ./ _site/
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
