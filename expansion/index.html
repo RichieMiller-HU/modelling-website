@@ -1,0 +1,162 @@
+<!doctype html>
+<!--
+  Richie Miller — "Expansion" concept.
+  Scroll-driven image expansion out of typography adapted from
+  Codrops "On-Scroll Expanding Image Animation within Typography"
+  (https://github.com/codrops/ImageExpansionTypography), MIT licence, see LICENSE-template.txt.
+  Typefaces: Coconat by Collletttivo & Sara Lavazza (SIL OFL 1.1) and Host Grotesk by Element Type (SIL OFL 1.1), see fonts/.
+  Motion: GSAP + ScrollTrigger (GreenSock standard licence), Lenis (MIT).
+-->
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Richie Miller — Model</title>
+  <meta name="description" content="Richie Miller, model. Book, film, measurements and bookings." />
+  <meta name="theme-color" content="#EEEAE3" />
+  <link rel="preload" href="fonts/Coconat-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/host-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+  <script>document.documentElement.className = "js";</script>
+</head>
+<body>
+  <a class="skip" href="#book">Skip to the book</a>
+
+  <header class="bar" id="bar">
+    <a class="bar__name" href="#top" data-m="fullname">Richie Miller</a>
+    <nav class="bar__nav" aria-label="Sections">
+      <a href="#book">Book</a>
+      <a href="#film">Film</a>
+      <a href="#measurements">Measurements</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="bar__cta" data-mailto href="#contact">Enquire</a>
+  </header>
+
+  <main id="top">
+    <!-- 1 · HERO: the name opens, the close-up expands to full bleed -->
+    <section class="xp xp--hero ground-paper" data-xp="hero" aria-label="Introduction">
+      <div class="xp__media" aria-hidden="true">
+        <img data-m-src="heroLight" alt="" width="1333" height="2000" fetchpriority="high" decoding="async" data-face="0.58 0.22" />
+      </div>
+      <h1 class="xp__type xp__type--hero">
+        <span class="xp-line"><span class="xp-w" data-m="first">Richie</span></span><span class="xp-win" aria-hidden="true"></span><span class="xp-line"><span class="xp-w" data-m="last">Miller</span></span>
+      </h1>
+      <div class="hero__meta label">
+        <span><span data-m="role">Model</span></span>
+        <span>Based in <span data-m="city">Budapest</span></span>
+        <span class="hero__avail">Available <span data-m="available">Europe · Worldwide</span></span>
+        <span class="hero__cue">Scroll</span>
+      </div>
+    </section>
+
+    <!-- 2 · STATEMENT: in-flow expansion between words -->
+    <section class="say ground-paper" aria-label="About">
+      <h2 class="say__type" data-say>
+        <span class="say__w">Up</span><span class="say__win" aria-hidden="true"><img alt="" width="900" height="600" decoding="async" data-photo="rm-12" data-face="0.57 0.26" /></span><span class="say__w">close.</span>
+      </h2>
+      <div class="say__body">
+        <p class="say__text" data-m="statement"></p>
+        <p class="label say__sig"><span data-m="fullname"></span> — <span data-m="role"></span>, <span data-m="city"></span></p>
+      </div>
+    </section>
+
+    <!-- 3 · THE BOOK -->
+    <section class="book" id="book" aria-label="The book">
+      <div class="chapter ground-paper" data-key="light" data-no="I" data-title="High key"></div>
+
+      <!-- the light-to-dark turn: the low-key close-up expands out of the words -->
+      <div class="xp xp--brief ground-ink" data-xp="brief">
+        <div class="xp__media" aria-hidden="true">
+          <img data-m-src="closeUpDark" alt="" width="1333" height="2000" decoding="async" data-face="0.36 0.26" />
+        </div>
+        <h2 class="xp__type xp__type--brief">
+          <span class="xp-line"><span class="xp-w">On</span> <span class="xp-w">set,</span></span>
+          <span class="xp-line xp-line--i"><span class="xp-w">on</span> <span class="xp-w">time,</span></span>
+          <span class="xp-line"><span class="xp-w">on</span><span class="xp-win" aria-hidden="true"></span><span class="xp-w">brief.</span></span>
+        </h2>
+      </div>
+
+      <div class="chapter ground-ink" data-key="dark" data-no="II" data-title="Low key"></div>
+      <div class="chapter chapter--coda ground-ink" data-key="colour" data-no="III" data-title="Colour"></div>
+    </section>
+
+    <!-- 4 · FILM: the window in the words becomes the screen -->
+    <section class="xp xp--film ground-ink" id="film" data-xp="film" aria-label="Studio film">
+      <div class="xp__media" aria-hidden="true">
+        <video data-m-video muted loop playsinline preload="auto" data-face="0.44 0.34"></video>
+      </div>
+      <h2 class="xp__type xp__type--film">
+        <span class="xp-line"><span class="xp-w">In</span><span class="xp-win" aria-hidden="true"></span></span><span class="xp-line xp-line--r"><span class="xp-w">motion.</span></span>
+      </h2>
+      <div class="film__meta label">
+        <span>Studio film</span>
+        <button class="film__toggle" type="button" aria-pressed="false" hidden>Pause</button>
+      </div>
+    </section>
+
+    <!-- 5 · DIGITALS (rendered only when content.js has them) -->
+    <section class="digitals ground-paper" id="digitals" aria-label="Digitals" hidden>
+      <header class="sec-head"><p class="label">Digitals</p><h2 class="sec-title">Unretouched</h2></header>
+      <div class="digitals__grid"></div>
+    </section>
+
+    <!-- 6 · MEASUREMENTS -->
+    <section class="stats ground-paper" id="measurements" aria-label="Measurements">
+      <header class="sec-head">
+        <p class="label">Measurements</p>
+        <h2 class="sec-title">Comp card</h2>
+        <p class="label sec-head__aside">Metric <span class="muted">/ Imperial</span></p>
+      </header>
+      <dl class="stats__grid" id="stats"></dl>
+    </section>
+
+    <!-- 7 · CLIENTS (rendered only when content.js has them) -->
+    <section class="clients ground-paper" id="clients" aria-label="Clients" hidden>
+      <header class="sec-head"><p class="label">Selected clients</p></header>
+      <ul class="clients__list"></ul>
+    </section>
+
+    <!-- 8 · CONTACT -->
+    <section class="contact ground-ink" id="contact" aria-label="Contact">
+      <p class="label">Bookings</p>
+      <a class="contact__mail" data-mailto href="#"><span data-m="email-a"></span><wbr /><span data-m="email-b"></span></a>
+      <div class="contact__grid">
+        <div><p class="label muted">Instagram</p><p><a data-m-ig href="#" target="_blank" rel="noopener"></a></p></div>
+        <div><p class="label muted">Representation</p><p data-m-agency></p></div>
+        <div><p class="label muted">Comp card</p><p data-m-comp></p></div>
+        <div><p class="label muted">Based in</p><p><span data-m="city"></span>, available <span data-m="available-lc"></span></p></div>
+      </div>
+      <div class="contact__actions">
+        <button class="copy" type="button" data-copy>Copy email</button>
+      </div>
+      <footer class="foot label">
+        <span><span data-m="fullname"></span> — <span data-m="role"></span></span>
+        <a href="#top" class="foot__top">Back to top</a>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+    <figure class="lb__fig">
+      <img class="lb__img" alt="" />
+    </figure>
+    <div class="lb__bar label">
+      <span class="lb__count"></span>
+      <span class="lb__cap"></span>
+      <span class="lb__ctrl">
+        <button type="button" class="lb__prev">Prev</button>
+        <button type="button" class="lb__next">Next</button>
+        <button type="button" class="lb__close">Close</button>
+      </span>
+    </div>
+  </div>
+
+  <script src="../assets/content.js"></script>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/lenis.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
