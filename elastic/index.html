@@ -1,0 +1,129 @@
+<!doctype html>
+<!--
+  Richie Miller — model book, concept "Elastic".
+  The book's multi-column scroll is adapted from Codrops' "Elastic Grid Scroll"
+  (https://github.com/codrops/ElasticGridScroll, MIT licence, see LICENSE-template.txt):
+  columns are dealt from a CSS-defined column count and each gets its own ScrollSmoother lag.
+  GSAP 3.15 (ScrollTrigger, ScrollSmoother) vendored in js/ under the GSAP standard licence.
+  Fonts: Libre Caslon Display and Host Grotesk, SIL Open Font License 1.1 (fonts/OFL-*.txt).
+-->
+<html lang="en" class="is-loading">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Richie Miller — Model</title>
+<meta name="description" content="Richie Miller, model. Portfolio, film, measurements and booking.">
+<meta property="og:title" content="Richie Miller — Model">
+<meta property="og:image" content="../assets/photos/rm-10.jpg">
+<meta name="theme-color" content="#ebe7e0">
+<link rel="preload" href="fonts/libre-caslon-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/host-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="bar" aria-label="Site">
+  <a class="bar__name" href="#top" data-to="#top"></a>
+  <p class="bar__chapter" aria-live="polite"><span></span></p>
+  <nav class="bar__nav" aria-label="Sections">
+    <a href="#book" data-to="#book">Book</a>
+    <a href="#film" data-to="#film">Film</a>
+    <a href="#measurements" data-to="#measurements">Measurements</a>
+    <a href="#contact" data-to="#contact">Contact</a>
+  </nav>
+</header>
+
+<div id="smooth-wrapper">
+  <main id="smooth-content">
+
+    <section class="hero" id="top" aria-label="Introduction">
+      <figure class="hero__frame">
+        <div class="hero__clip"><img class="hero__img" alt="" fetchpriority="high" decoding="async"></div>
+      </figure>
+      <h1 class="hero__name">
+        <span class="hero__line hero__line--first"><span class="hero__word"></span></span>
+        <span class="hero__line hero__line--last"><span class="hero__word"></span></span>
+      </h1>
+      <div class="hero__meta">
+        <p class="hero__role"></p>
+        <p class="hero__avail"></p>
+      </div>
+    </section>
+
+    <section class="book" id="book" aria-labelledby="book-title">
+      <div class="book__head">
+        <h2 class="label" id="book-title">The book</h2>
+        <p class="book__statement" data-reveal></p>
+        <ol class="book__index" data-reveal></ol>
+      </div>
+      <div class="grid" role="list"></div>
+    </section>
+
+    <section class="digitals" id="digitals" aria-labelledby="digitals-title" hidden>
+      <h2 class="label" id="digitals-title">Digitals</h2>
+      <div class="digitals__row"></div>
+    </section>
+
+    <section class="film" id="film" aria-labelledby="film-title">
+      <div class="film__head">
+        <h2 class="label" id="film-title">Film</h2>
+        <p class="film__title" data-reveal>In motion</p>
+        <p class="film__note" data-reveal>Studio, behind the scenes</p>
+      </div>
+      <div class="film__stage">
+        <div class="film__frame">
+          <video class="film__video" muted loop playsinline preload="none" aria-label="Studio film"></video>
+          <button class="film__toggle" type="button" aria-pressed="false"><span>Play</span></button>
+        </div>
+      </div>
+      <p class="film__time"><span class="film__cur">0:00</span> <span class="film__dur"></span></p>
+    </section>
+
+    <section class="clients" id="clients" aria-labelledby="clients-title" hidden>
+      <h2 class="label" id="clients-title">Selected clients</h2>
+      <ul class="clients__list"></ul>
+    </section>
+
+    <section class="stats" id="measurements" aria-labelledby="stats-title">
+      <div class="stats__head">
+        <h2 class="label" id="stats-title">Measurements</h2>
+        <p class="stats__lede" data-reveal>Comp card</p>
+      </div>
+      <dl class="stats__grid"></dl>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <h2 class="label" id="contact-title">Bookings</h2>
+      <a class="contact__mail" data-reveal></a>
+      <div class="contact__rows">
+        <div class="contact__row" data-reveal><p class="label">Email</p><p><button class="contact__copy" type="button">Copy address</button></p></div>
+        <div class="contact__row" data-reveal><p class="label">Instagram</p><p><a class="contact__ig" target="_blank" rel="noopener"></a></p></div>
+        <div class="contact__row" data-reveal><p class="label">Representation</p><p class="contact__agency"></p></div>
+        <div class="contact__row" data-reveal><p class="label">Comp card</p><p class="contact__comp"></p></div>
+      </div>
+      <footer class="foot">
+        <p class="foot__base"></p>
+        <p class="foot__copy"></p>
+        <a class="foot__top" href="#top" data-to="#top">Back to top</a>
+      </footer>
+    </section>
+
+  </main>
+</div>
+
+<div class="lb" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <div class="lb__bg"></div>
+  <p class="lb__count"></p>
+  <p class="lb__cap"></p>
+  <button class="lb__close" type="button">Close</button>
+  <button class="lb__prev" type="button" aria-label="Previous photo"><span>Prev</span></button>
+  <button class="lb__next" type="button" aria-label="Next photo"><span>Next</span></button>
+</div>
+
+<script src="../assets/content.js"></script>
+<script src="js/gsap.min.js"></script>
+<script src="js/ScrollTrigger.min.js"></script>
+<script src="js/ScrollSmoother.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
