@@ -86,6 +86,7 @@
       sayImg.src = url(p.src);
       const f = faceOf(p.src);
       sayImg.style.objectPosition = `${f[0] * 100}% ${f[1] * 100}%`;
+      sayImg.style.transformOrigin = `${f[0] * 100}% ${f[1] * 100 + 8}%`;
     } else sayImg.parentElement.remove();
   }
 
@@ -404,7 +405,7 @@
     const renderSay = (p) => {
       const e = ease.io(clamp(p));
       say.style.setProperty("--open", e.toFixed(4));
-      say.style.setProperty("--s", lerp(1.45, 1.02, e).toFixed(4));
+      say.style.setProperty("--s", lerp(2.5, 1.7, e).toFixed(4));
     };
 
     if (reduce || !hasGsap) {
