@@ -40,9 +40,9 @@ body{font:400 14px/1.5 var(--sans)}
 .hero-txt{grid-column:1/6;align-self:center;display:flex;flex-direction:column;gap:28px}
 .hero-txt p.lead{font:400 clamp(28px,3vw,46px)/1.05 var(--serif);letter-spacing:-.01em;max-width:15ch}
 .hero-txt p.lead em{font-style:italic}
-.hero-img{grid-column:6/13;grid-row:1;position:relative;overflow:hidden;height:calc(100svh - var(--g)*4.6 - 17.6vw);min-height:380px}
+.hero-img{grid-column:6/13;grid-row:1;position:relative;overflow:hidden;height:calc(100svh - var(--g)*4.6 - 16.4vw);min-height:380px}
 .hero-img img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;transform-origin:50% 40%}
-.hero-name{grid-column:1/13;grid-row:2;font:500 19.6vw/.8 var(--sans);letter-spacing:-.07em;white-space:nowrap;pointer-events:none;color:var(--ink);margin:0 0 -.06em -.05em}
+.hero-name{grid-column:1/13;grid-row:2;font:400 18.2vw/.8 var(--sans);letter-spacing:-.05em;white-space:nowrap;pointer-events:none;color:var(--ink);margin:0 0 -.06em -.05em}
 .hero-name .sx{padding-bottom:.12em}
 .chip{display:inline-flex;align-items:center;gap:10px;width:max-content;padding:10px 16px;border:1px solid var(--line);border-radius:99px;font:500 12px/1 var(--sans)}
 .chip i{width:7px;height:7px;border-radius:50%;background:#5f8a5a;box-shadow:0 0 0 0 #5f8a5a88;animation:ping 2s infinite}
@@ -51,7 +51,7 @@ body{font:400 14px/1.5 var(--sans)}
 /* index list with cursor-follow image */
 .idx{padding:22vh var(--g) 14vh}
 .row-h{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--g);padding-bottom:14px;border-bottom:1px solid var(--ink)}
-.row{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--g);align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line);cursor:pointer;position:relative;transition:color .4s}
+.row{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--g);align-items:baseline;padding:26px 0;border-bottom:1px solid var(--line);cursor:pointer;position:relative;transition:color .4s}
 .row .n{grid-column:1/2}.row .t{grid-column:2/8;font:400 clamp(32px,4.4vw,72px)/1 var(--serif);letter-spacing:-.02em;transition:transform .6s var(--ease),font-style .6s}
 .row .k{grid-column:8/11}.row .y{grid-column:11/13;text-align:right}
 .idx-list:hover .row{color:#1a181640}
@@ -70,7 +70,7 @@ body{font:400 14px/1.5 var(--sans)}
 .ed img{width:100%;height:auto;transition:transform 1.6s var(--ease)}
 .ed figure:hover img{transform:scale(1.035)}
 .ed figcaption{display:flex;justify-content:space-between;margin-top:10px}
-.ed .q{grid-column:2/8;font:400 clamp(30px,3.6vw,58px)/1.04 var(--serif);letter-spacing:-.015em;align-self:center;padding:14vh 0}
+.ed .q{grid-column:2/8;font:400 clamp(30px,3.6vw,58px)/1.04 var(--serif);letter-spacing:-.015em;align-self:center;padding:8vh 0}
 .ed .q em{font-style:italic;color:var(--mute)}
 
 /* film card */
@@ -100,7 +100,7 @@ body{font:400 14px/1.5 var(--sans)}
 .stats div span:first-child{color:var(--mute)}
 .stats small{color:var(--mute);margin-left:6px}
 .dg{grid-column:6/13;display:grid;grid-template-columns:1fr 1fr;gap:var(--g)}
-.dg figure{cursor:pointer;background:var(--card);padding:10px 10px 14px}
+.dg figure{cursor:pointer}
 .dg .clip{overflow:hidden;aspect-ratio:4/5}
 .dg img{width:100%;height:100%;object-fit:cover;filter:grayscale(.15) contrast(.98)}
 .dg figcaption{display:flex;justify-content:space-between;margin-top:10px}
@@ -162,7 +162,7 @@ body{font:400 14px/1.5 var(--sans)}
   </section>
 
   <section class="idx" id="index">
-    <div class="row-h"><span class="cap" style="grid-column:1/2">No.</span><span class="cap" style="grid-column:2/8">Series</span><span class="cap" style="grid-column:8/11">Type</span><span class="cap" style="grid-column:11/13;text-align:right">Year</span></div>
+    <div class="row-h"><span class="cap" style="grid-column:1/2">No.</span><span class="cap" style="grid-column:2/8">Series</span><span class="cap" style="grid-column:8/11">Light</span><span class="cap" style="grid-column:11/13;text-align:right">Format</span></div>
     <div class="idx-list" id="rows"></div>
   </section>
 
@@ -173,7 +173,7 @@ body{font:400 14px/1.5 var(--sans)}
     <div class="film-c" data-cursor="Play" id="film-c"><video muted loop playsinline preload="metadata"></video><span class="play">Play</span></div>
   </section>
 
-  <section class="dc" id="digitals">
+  <section class="dc" id="digitals"><!-- digitals hidden by JS when empty -->
     <div class="dc-h">
       <span class="cap">Digitals & measurements</span>
       <h2 data-reveal>As <em>is.</em></h2>
@@ -213,7 +213,7 @@ const full = `${M.first} ${M.last}`;
 const P = M.photos;
 
 $("#nav-n").innerHTML = `${full}<span>${M.role}, ${M.city}</span>`;
-$("#sup-n").textContent = pad(8);
+$("#sup-n").textContent = pad(Math.min(8, P.length));
 $("#avail").textContent = `Available for bookings — ${M.available}`;
 $("#lead").innerHTML = M.statement.replace(/^([^.]+\.)/, "<em>$1</em>");
 $("#hero-meta").textContent = M.stats.slice(0, 3).map(s => `${s[0]} ${s[1]}`).join("  ·  ");
@@ -223,12 +223,11 @@ $("#hero-img").src = url(heroP.src); $("#hero-img").alt = `${full} — ${heroP.c
 $(".hero-img").onclick = () => lightbox(P, P.indexOf(heroP));
 
 /* index rows: group photos into series */
-const types = ["Editorial", "Campaign", "Portrait", "Tailoring", "Test", "Motion"];
 const rows = $("#rows"), float = $("#float");
-const pick = [0, 1, 3, 8, 10, 11, 16, 17].filter(i => P[i]);
+const pick = [0, 2, 3, 6, 7, 9, 10, 12].filter(i => P[i]);
 pick.forEach((i, n) => { const p = P[i];
   const r = document.createElement("div"); r.className = "row"; r.tabIndex = 0; r.dataset.cursor = "Open";
-  r.innerHTML = `<span class="cap n">${pad(n + 1)}</span><span class="t">${p.caption}</span><span class="cap k">${types[i % types.length]}</span><span class="cap y">${2026 - (i % 3)}</span><div class="th"><img src="${sm(p.src)}" alt="" loading="lazy"></div>`;
+  r.innerHTML = `<span class="cap n">${pad(n + 1)}</span><span class="t">${p.caption}</span><span class="cap k">${{ light: "High key", dark: "Low key", colour: "Colour" }[p.key]}</span><span class="cap y">${p.fit}</span><div class="th"><img src="${sm(p.src)}" alt="" loading="lazy"></div>`;
   r.onclick = () => lightbox(P, i); r.onkeydown = e => { if (e.key === "Enter") lightbox(P, i); };
   const im = new Image(); im.src = sm(p.src); im.alt = ""; float.append(im);
   r.addEventListener("pointerenter", () => { $$("img", float).forEach((x, j) => x.classList.toggle("on", j === n)); });
@@ -252,14 +251,14 @@ if (fine && !reduce) {
 
 /* editorial grid — hand-tuned asymmetric layout with parallax speeds */
 const layout = [
-  ["1/7", 0, .06], ["8/13", "22vh", -.05], null, ["3/11", "4vh", .03], ["1/6", "10vh", .07], ["7/13", 0, -.04], ["2/8", "12vh", -.03], ["9/13", "30vh", .06], ["4/10", "8vh", .04], ["1/6", "6vh", -.05], ["7/12", "24vh", .05], ["2/7", 0, .02], ["8/13", "-6vh", -.04]
+  ["1/7", 0, .05], ["8/13", "10vh", -.04], null, ["3/11", "4vh", .03], ["1/6", "6vh", .05], ["7/13", 0, -.03], ["2/8", "8vh", -.03], ["9/13", "10vh", .04], ["4/10", "4vh", .03], ["1/6", "6vh", -.04], ["7/12", "10vh", .04], ["2/7", 0, .02], ["8/13", "-4vh", -.03]
 ];
 const ed = $("#ed"); let k = 0;
 layout.forEach((L, i) => {
   if (!L) { const q = document.createElement("p"); q.className = "q"; q.dataset.reveal = ""; q.innerHTML = `Not just a face — <em>a presence on set.</em> Knows his light, finds his angle, gives the photographer options.`; ed.append(q); return; }
   if (P[k] === heroP) k++; const p = P[k], idx = k++; if (!p) return;
   const f = document.createElement("figure"); f.style.gridColumn = L[0]; f.style.marginTop = L[1]; f.dataset.speed = L[2]; f.dataset.cursor = "View";
-  f.innerHTML = `<div class="clip" data-reveal="clip"><img src="${url(p.src)}" alt="${full} — ${p.caption}" loading="lazy" decoding="async"></div><figcaption><span class="cap ink">${p.caption}</span><span class="cap">${pad(idx + 1)}</span></figcaption>`;
+  f.innerHTML = `<div class="clip" data-reveal="clip"><img src="${url(p.src)}" alt="${full} — ${p.caption}" decoding="async"></div><figcaption><span class="cap ink">${p.caption}</span><span class="cap">${pad(idx + 1)}</span></figcaption>`;
   f.onclick = () => lightbox(P, idx); ed.append(f);
 });
 const figs = $$("#ed figure");
@@ -276,6 +275,7 @@ $("#m-x").onclick = closeM; addEventListener("keydown", e => e.key === "Escape" 
 /* digitals + stats */
 $("#stats").innerHTML = M.stats.map(s => `<div><span>${s[0]}</span><span>${s[1]}${s[2] ? `<small>${s[2]}</small>` : ""}</span></div>`).join("");
 const dg = $("#dg");
+if (!M.digitals.length) { dg.remove(); $(".dc-h").style.gridColumn = "1/13"; $(".dc-h h2").innerHTML = "Measure<em>ments</em>"; $(".dc-h > span.cap").textContent = "Comp card"; $(".dc-h p").textContent = "Digitals available on request."; $(".stats").style.gridTemplateColumns = "repeat(4,1fr)"; $('.nav a[href="#digitals"]').textContent = "Stats"; }
 M.digitals.forEach((p, i) => { const f = document.createElement("figure"); f.dataset.cursor = "View"; f.dataset.reveal = ""; f.style.setProperty("--d", i * 100 + "ms"); f.innerHTML = `<div class="clip"><img src="${url(p.src)}" alt="Digital — ${p.caption}" loading="lazy"></div><figcaption><span class="cap ink">${p.caption}</span><span class="cap">D${pad(i + 1)}</span></figcaption>`; f.onclick = () => lightbox(M.digitals, i); dg.append(f); });
 
 if (M.clients.length) { const s = M.clients.map(c => `<span>${c}</span>`).join(""); $("#mq").innerHTML = `<div class="mq-t">${s}${s}${s}${s}</div>`; } else $("#mq").remove();

@@ -47,7 +47,8 @@ body{font:300 12px/1.5 var(--mono);letter-spacing:.04em}
 .scene img{width:100%;height:100%;object-fit:cover}
 .scene.portrait img{object-fit:contain;background:var(--bg)}
 .scene .blur{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(60px) brightness(.45) saturate(.8);transform:scale(1.2)}
-.scene.portrait .main{position:relative;height:100%;width:auto;margin:0 auto;object-fit:cover;aspect-ratio:2/3;max-width:100%}
+.scene.portrait .scene-in{display:grid;place-items:center}.scene.portrait .main{position:relative;height:86vh;width:auto;object-fit:cover;aspect-ratio:2/3;max-width:92vw}
+@media (max-width:700px){.scene.landscape .scene-in{display:grid;place-items:center}.scene.landscape img{object-fit:contain;height:auto}.scene.portrait .main{height:auto;width:92vw}}
 .slate{position:absolute;left:calc(var(--g) + 34px);bottom:calc(var(--g) + 40px);z-index:2;color:#fff;text-shadow:0 1px 18px #0008}
 .slate h2{font:300 clamp(40px,6vw,96px)/.9 var(--serif);letter-spacing:-.02em;margin-top:10px}
 .slate h2 em{font-style:italic}
@@ -75,11 +76,10 @@ body{font:300 12px/1.5 var(--mono);letter-spacing:.04em}
 </style>
 </head>
 <body>
-<div class="grain" style="--grain:.09"></div>
-<div class="vig"></div>
+<div class="grain" style="--grain:.05"></div>
 <div class="hud" aria-hidden="true"><i></i><i></i><i></i><i></i>
   <div class="tl mono"><span class="rec"><b></b>REC</span><span id="hud-scene">Scene 00</span></div>
-  <div class="tr mono">4K · 24 FPS · 1/50 · ƒ1.8 · ISO 800</div>
+  <div class="tr mono" id="hud-count"></div>
   <div class="bl mono"><span id="hud-name"></span><span>Studio</span><span id="hud-city"></span></div>
   <div class="br mono" id="tc">00:00:00:00</div>
 </div>
@@ -126,7 +126,7 @@ chapters.forEach(([k, act, name]) => {
   ps.forEach(p => {
     sc++; const s = document.createElement("section"); s.className = "scene " + p.fit; s.dataset.scene = `Scene ${pad(sc)}`;
     const i = M.photos.indexOf(p);
-    s.innerHTML = `<div class="scene-in">${p.fit === "portrait" ? `<div class="blur" style="background-image:url('${url(p.src).replace(/\.jpg$/, "-sm.jpg")}')"></div>` : ""}<img class="main" src="${url(p.src)}" alt="${full} — ${p.caption}" loading="lazy" decoding="async"></div><div class="slate"><span class="mono">Scene ${pad(sc)} · Take ${1 + (sc * 7) % 4}</span><h2>${p.caption.replace(/(\S+)$/, "<em>$1</em>")}</h2></div>`;
+    s.innerHTML = `<div class="scene-in"><img class="main" src="${url(p.src)}" alt="${full} — ${p.caption}" loading="lazy" decoding="async"></div><div class="slate"><span class="mono">Scene ${pad(sc)} · ${{ light: "High key", dark: "Low key", colour: "Colour" }[p.key]}</span><h2>${p.caption.replace(/(\S+)$/, "<em>$1</em>")}</h2></div>`;
     s.style.cursor = "zoom-in"; s.onclick = () => lightbox(M.photos, i);
     wrap.append(s); list.push(s);
   });
@@ -138,7 +138,8 @@ let started = false;
 onFrame(() => {
   const p = pinProgress(open);
   /* letterbox: closed → 2.39:1 on load → fully open while scrolling */
-  const base = started ? 0.5 - 0.5 / 2.39 * (innerWidth / innerHeight) : 0.5;
+  const ratio = innerWidth < 700 ? 4 / 5 : 2.39;
+  const base = started ? 0.5 - 0.5 / ratio * (innerWidth / innerHeight) : 0.5;
   const bar = Math.max(0, lerp(clamp(base, 0, .5), 0, clamp(p * 1.6)));
   bt.style.transform = `translateY(${-(1 - bar * 2) * 100}%)`; bb.style.transform = `translateY(${(1 - bar * 2) * 100}%)`;
   title.style.opacity = 1 - clamp(p * 2.2); title.style.transform = `scale(${1 + p * .15})`;
@@ -153,6 +154,7 @@ if (!reduce) onFrame(() => list.forEach((s, i) => {
 }));
 
 /* HUD: scene label + running timecode */
+$("#hud-count").textContent = `${sc} scenes · ${M.city}`;
 const hs = $("#hud-scene"), tc = $("#tc"); const t0 = performance.now();
 onFrame(() => { let cur = "Opening"; for (const s of list) if (s.getBoundingClientRect().top <= innerHeight * .5) cur = s.dataset.scene; hs.textContent = cur; });
 (function tick() { const t = (performance.now() - t0) / 1000; tc.textContent = [Math.floor(t / 3600), Math.floor(t / 60) % 60, Math.floor(t) % 60, Math.floor((t % 1) * 24)].map(pad).join(":"); requestAnimationFrame(tick); })();

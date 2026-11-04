@@ -8,22 +8,28 @@ Bookers and casting directors spend about 20 seconds on a site. In order of impo
 
 1. **Big, current, portrait-first images.** Your face within the first second.
 2. **Measurements (comp-card stats)** in metric and imperial: height, chest, waist, inseam, suit, shoe, hair, eyes. ✅ in every concept, toggle in Noir.
-3. **Digitals / polaroids.** Natural light, plain fitted tee, no retouching, no styling, shot front, profile, three-quarter and full length. Agencies trust these more than editorials. ⚠️ *You don't have real ones yet; the current ones are stand-ins.*
+3. **Digitals / polaroids.** Natural light, plain fitted tee, no retouching, no styling, shot front, profile, three-quarter and full length. Agencies trust these more than editorials. ⚠️ *You don't have real ones yet, so the section is hidden until `digitals` in `content.js` has photos.*
 4. **Motion.** A 10–30 s studio clip shows how you move, which no still can. ✅ (the placeholder film is cut from your stills; swap in your real BTS video).
 5. **One-tap booking.** `mailto:` with a prefilled subject, copy-to-clipboard email, Instagram, agency link, downloadable **comp card PDF**.
-6. **Selected clients / publications** as proof. Leave the list empty until you have real names; fake ones hurt.
+6. **Selected clients / publications** as proof. Hidden while `clients: []`. Never put fake names or made-up years or series labels on the site; a casting director reads that as lying.
 7. Fast and mobile-perfect. Most bookers open your link from Instagram on a phone.
 
 ## 2. The honest photo audit (your 40 images)
 
 **Your real assets are the two studio sessions.** The high-key white set (05–13) and the low-key black set (14–21) are consistent and well lit. They clearly come from a professional shoot. That's the book.
 
-| Keep (book) | Keep (accent / colour coda) | Cut from the book |
-|---|---|---|
-| 05, 06, 07, 08, 09, 10, 11, 12, 13 (white studio) | 04 (glasses, library: warm, editorial) | 23, 24, 25, 26 (laptop café: lifestyle and four near-duplicates) |
-| 14, 15, 16, 17, 18, 19, 20, 21 (black studio) | 31 (olive shirt, grey seamless: closest to digitals) | 29, 30, 33, 35, 36, 37, 38 (phone/holiday shots; several still show Instagram "1/7" carousel badges) |
-| | 02 (candlelight couple: cinematic, use once at most) | 01, 03, 22, 27, 28, 34 (travel: fine for Instagram, not for a book) |
-| | | 39, 40 (casual B&W: off-brief) |
+**The book (13 frames, live in `content.js`):**
+- High key: 10, 06, 05, 12, 13, 09
+- Low key: 16, 18, 14, 20, 19, 17
+- Colour coda: 04
+
+**Cut, and why:**
+- Near-duplicates: 07 (vs 06), 11 (vs 12), 15 (vs 14), 21 (vs 20). Each look should appear once.
+- 02 (candlelight couple): reads as AI-composited at 1024 px. Anyone in the industry will spot it. Don't use it anywhere.
+- 31 (olive shirt): flat e-commerce light. Reshoot it as a proper digital.
+- 01, 03, 22–30, 33–38: holiday and phone shots (sunsets, cocktails, pool, motorbike), and several still show Instagram "1/7" carousel badges. Fine for Instagram, not for a book.
+- 26 (odd crop), 40 (graphic tee in an office). 39 (street outerwear) is the only one worth keeping in reserve.
+- Styling note: the dog tag and watch appear in nearly every frame. Take them off for the next shoot.
 
 **Why the old site felt "not polished":** it put saturated sunsets, turquoise pools and phone shots right next to monochrome studio frames. The eye reads each jump in exposure, saturation or temperature as a lack of editing. High-end books are about **restraint and sequence**:
 
@@ -42,6 +48,7 @@ Bookers and casting directors spend about 20 seconds on a site. In order of impo
 3. **A close-up beauty series.** Tight crops on jaw, eyes and hands with a watch. Grooming and fragrance clients book from these.
 4. **Movement.** Walk-to-camera, jacket over shoulder, turn. Film it at the same time for the hero video.
 5. **One colour campaign look**, colour-graded to the same warm, muted palette as 04 so the colour coda matches.
+6. **Delivery size:** ask photographers for 3000 px+ on the long edge. Your current 2000 px files are slightly soft as full-screen retina heroes.
 
 Grade everything to one look: muted, slightly warm blacks, no orange skin, and no HDR or heavy clarity.
 
@@ -53,7 +60,7 @@ Grade everything to one look: muted, slightly warm blacks, no orange skin, and n
 | Signature effect | Hero video shrinks while the name splits; horizontal pinned book; close-up and film open to full screen as you scroll | Contact-sheet flicker intro that flies into the hero; cursor-follow image index | Viewfinder HUD, REC and timecode; letterbox opens; scenes stack; credits roll |
 | Best when | The book is mostly low-key / B&W (yours is) | You add more light, natural editorials | The studio video is strong |
 
-**Recommendation: Noir as the main site.** It suits your strongest photos, gives you the "he knows what he's doing" feeling, and the dark ground hides the tone differences between shoots.
+**Recommendation.** An independent art-director review (Fable) picked **Atelier**: the bone ground makes the white-studio set sing, the cursor-follow index is the most agency-grade effect, and it holds up best on a phone. **Noir** has the single most expensive moment and suits the low-key set. **Cinema** is the most playful; keep it for a "film" sub-page, or once you have strong video. Two good options: launch Atelier, or launch Noir and borrow Atelier's index list.
 
 ## 5. To go live
 

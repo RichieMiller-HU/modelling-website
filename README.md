@@ -2,8 +2,8 @@
 
 Static, dependency-free, no build step. Open `index.html` to pick a concept.
 
-- `noir/` — dark editorial (recommended)
-- `atelier/` — light Swiss editorial
+- `noir/` — dark editorial (most dramatic)
+- `atelier/` — light Swiss editorial (art director’s pick)
 - `cinema/` — film / viewfinder
 - `tools/harmony.html` — photo colour-harmony & sequencing checker
 - `assets/content.js` — **the only file you need to edit** (stats, contacts, photo list, video)

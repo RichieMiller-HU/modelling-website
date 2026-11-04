@@ -35,41 +35,32 @@ window.MODEL = {
   // Never put a saturated holiday photo next to a monochrome studio frame.
   // `fit` = "portrait" | "landscape";  `key` = "light" | "dark" | "colour".
   photos: [
-    { src: "assets/photos/rm-06.jpg",  fit: "portrait",  key: "light",  caption: "Studio White I" },
     { src: "assets/photos/rm-10.jpg",  fit: "portrait",  key: "light",  caption: "Close-up" },
+    { src: "assets/photos/rm-06.jpg",  fit: "portrait",  key: "light",  caption: "Studio White" },
     { src: "assets/photos/rm-05.jpg",  fit: "portrait",  key: "light",  caption: "Full length" },
-    { src: "assets/photos/rm-11.jpg",  fit: "landscape", key: "light",  caption: "Shades" },
-    { src: "assets/photos/rm-07.jpg",  fit: "portrait",  key: "light",  caption: "Studio White II" },
-    { src: "assets/photos/rm-13.jpg",  fit: "portrait",  key: "light",  caption: "Profile" },
     { src: "assets/photos/rm-12.jpg",  fit: "landscape", key: "light",  caption: "The Table" },
+    { src: "assets/photos/rm-13.jpg",  fit: "portrait",  key: "light",  caption: "Profile" },
     { src: "assets/photos/rm-09.jpg",  fit: "portrait",  key: "light",  caption: "Stool" },
-    { src: "assets/photos/rm-16.jpg",  fit: "portrait",  key: "dark",   caption: "Low Key — Close-up" },
-    { src: "assets/photos/rm-14.jpg",  fit: "portrait",  key: "dark",   caption: "Low Key I" },
+    { src: "assets/photos/rm-16.jpg",  fit: "portrait",  key: "dark",   caption: "Low Key Close-up" },
     { src: "assets/photos/rm-18.jpg",  fit: "landscape", key: "dark",   caption: "Crossed" },
-    { src: "assets/photos/rm-20.jpg",  fit: "portrait",  key: "dark",   caption: "Movement I" },
-    { src: "assets/photos/rm-15.jpg",  fit: "portrait",  key: "dark",   caption: "Low Key II" },
-    { src: "assets/photos/rm-21.jpg",  fit: "portrait",  key: "dark",   caption: "Movement II" },
+    { src: "assets/photos/rm-14.jpg",  fit: "portrait",  key: "dark",   caption: "Low Key" },
+    { src: "assets/photos/rm-20.jpg",  fit: "portrait",  key: "dark",   caption: "Movement" },
     { src: "assets/photos/rm-19.jpg",  fit: "landscape", key: "dark",   caption: "Reclined" },
     { src: "assets/photos/rm-17.jpg",  fit: "portrait",  key: "dark",   caption: "Chair" },
     { src: "assets/photos/rm-04.jpg",  fit: "portrait",  key: "colour", caption: "The Reader" },
-    { src: "assets/photos/rm-31.jpg",  fit: "portrait",  key: "colour", caption: "Olive" },
-    { src: "assets/photos/rm-02.jpg",  fit: "portrait",  key: "colour", caption: "Candlelight" },
   ],
   heroLight: "assets/photos/rm-10.jpg",   // used by light concepts (Atelier)
   closeUpDark: "assets/photos/rm-16.jpg", // used by dark concepts (Noir, Cinema)
 
   // Digitals / polaroids. TODO: shoot real ones — natural light, plain fitted tee, no retouching,
   // front / profile / three-quarter / full length. Agencies ask for these first. Placeholders below.
-  digitals: [
-    { src: "assets/photos/rm-31.jpg", caption: "Front" },
-    { src: "assets/photos/rm-13.jpg", caption: "Profile" },
-    { src: "assets/photos/rm-15.jpg", caption: "Three-quarter" },
-    { src: "assets/photos/rm-05.jpg", caption: "Full length" },
-  ],
+  // Empty = section hidden. Add 4 real ones (front, profile, three-quarter, full length) like:
+  // { src: "assets/photos/digital-front.jpg", caption: "Front" },
+  digitals: [],
 
   // The studio behind-the-scenes clip. Keep it short (10–30 s), muted, H.264 MP4, ≤ 8 MB.
   video: { src: "assets/video/studio.mp4", poster: "assets/video/studio-poster.jpg" },
 
-  // Selected clients / publications. Leave empty to hide the section.
-  clients: ["Client One", "Studio Two", "Magazine Three", "Brand Four", "Label Five"], // TODO
+  // Selected clients / publications. 
+  clients: [], // TODO: add real names only, e.g. ["Brand", "Magazine"]. Empty = hidden.
 };
