@@ -171,7 +171,10 @@
     const avail = ctMail.parentNode.clientWidth;
     if (t) ctMail.style.fontSize = `${Math.min(340, (100 * avail) / (t + arr + gap)) - 0.5}px`;
   };
-  fitCta(); addEventListener("resize", fitCta); d.fonts && d.fonts.ready.then(fitCta);
+  fitCta(); addEventListener("resize", fitCta);
+  /* refit once the display face is really in use (fonts.ready can resolve before it is even requested) */
+  if (d.fonts && d.fonts.load) d.fonts.load('400 100px "Caslon RM"', "Book").then(fitCta, fitCta);
+  new ResizeObserver(fitCta).observe(ctMail.parentNode);
   const cm = $("#c-mail"); cm.href = mail(); cm.textContent = M.email;
   const ig = $("#c-ig"); ig.href = `https://instagram.com/${M.instagram}`; ig.textContent = "@" + M.instagram;
   const ag = $("#c-ag");
