@@ -320,7 +320,20 @@
 
   /* nav: wordmark appears once the hero name is gone; current section underline */
   const navMark = $(".nav-mark");
-  ScrollTrigger.create({ start: () => $(".profile").offsetTop - innerHeight * 0.6, end: "max", onToggle: (s) => navMark.classList.toggle("on", s.isActive) });
+  const scrim = $(".nav-scrim");
+  let pastHero = false, overBleed = 0;
+  const setScrim = () => scrim.classList.toggle("on", pastHero && overBleed === 0);
+  /* the wordmark steps aside while a large heading passes directly beneath it */
+  let covered = 0;
+  const setMark = () => navMark.classList.toggle("on", pastHero && covered === 0);
+  ScrollTrigger.create({ start: () => $(".profile").offsetTop - innerHeight * 0.6, end: "max", onToggle: (s) => { pastHero = s.isActive; setMark(); setScrim(); } });
+  const navBand = () => navMark.getBoundingClientRect().bottom + 14;
+  $$(".ix-h h2, .meas-h h2, .dg-sec h2, .ct-big").forEach((el) => ScrollTrigger.create({
+    trigger: el, start: () => `top ${navBand()}px`, end: "bottom 6px",
+    onToggle: (s) => { covered = Math.max(0, covered + (s.isActive ? 1 : -1)); setMark(); },
+  }));
+  /* full-bleed scenes keep the image untouched: the difference-blended nav reads on its own there */
+  [".cu", ".film"].forEach((sel) => ScrollTrigger.create({ trigger: sel, start: "top 12%", end: "bottom top", onToggle: (s) => { overBleed += s.isActive ? 1 : -1; overBleed = Math.max(0, overBleed); setScrim(); } }));
   [["#work", ".ix", ".book"], ["#film", ".film"], ["#measurements", ".meas"], ["#contact", ".ct"]].forEach(([h, s, e]) => {
     const link = $(`.nav a[href="${h}"]`), sec = $(s); if (!link || !sec) return;
     ScrollTrigger.create({ trigger: sec, endTrigger: e ? $(e) : sec, start: "top 50%", end: "bottom 50%", onToggle: (st) => link.setAttribute("aria-current", st.isActive) });

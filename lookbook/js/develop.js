@@ -31,6 +31,8 @@ const CONFIG = {
   ease: 'power1.out',
   reveal: 0.9, // seconds for a frame to develop out of its card
   revealEase: 'power2.inOut',
+  hoverSoft: 0.04, // the hover keeps a drawn edge, only just feathered
+  hoverBlur: 1.2, // and reads slightly softer tones than the original, so the edge never breaks into specks
   revealSoft: 0.24, // the reveal's edge is feathered over this share of the sweep, so it dissolves rather than cuts
   revealBlur: 1.6, // and reads the photograph's tones this many mip levels softer, so no grain breaks into islands
   pull: 0.4, // how far ahead of the sweep the near tones fill, as a share of the look
@@ -69,7 +71,7 @@ uniform float uLead;
 uniform float uTrail;
 uniform float uLight;
 uniform vec3 uRim;
-uniform float uSoft; // 0: a crisp edge (hover); above: a feathered one (reveal)
+uniform float uSoft; // how far the edge is feathered, as a share of the sweep
 uniform float uBlur; // extra mip levels on the tones
 
 out vec4 color;
@@ -195,8 +197,8 @@ export class Plate {
   // The uniforms that differ between the reveal and the hover.
   mode(reveal) {
     const gl = this.gl || this.pending;
-    gl.uniform1f(this.u.uSoft, reveal ? CONFIG.revealSoft : 0);
-    gl.uniform1f(this.u.uBlur, reveal ? CONFIG.revealBlur : 0);
+    gl.uniform1f(this.u.uSoft, reveal ? CONFIG.revealSoft : CONFIG.hoverSoft);
+    gl.uniform1f(this.u.uBlur, reveal ? CONFIG.revealBlur : CONFIG.hoverBlur);
     gl.uniform1f(this.u.uLight, reveal ? 0 : CONFIG.light);
   }
 
