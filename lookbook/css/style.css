@@ -1,0 +1,1006 @@
+/* Richie Miller · Lookbook.
+   Layout, card and loader adapted from Codrops' Lookbook Hover Effects
+   (MIT, ../LICENSE-template.txt). */
+
+/* Nyght Serif Light (Maksym Kobuzan, SIL OFL) for names, numbers and titles:
+   the template's own display face, a hairline-contrast serif cut for big
+   sizes. Schibsted Grotesk (SIL OFL) for everything small: a compact,
+   slightly condensed grotesk that holds up at 13px, as the template's text
+   face did, without its ubiquity. */
+@font-face {
+  font-family: 'Nyght Serif';
+  src: url('../fonts/NyghtSerif-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  src: url('../fonts/SchibstedGrotesk-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  src: url('../fonts/SchibstedGrotesk-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --paper: #f2f2f0;
+  --ink: #0f0e0e;
+  --bg: var(--paper);
+  --text: var(--ink);
+  --font: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --display: 'Nyght Serif', Georgia, serif;
+  --gutter: 24px;
+  --gap: max(12px, 1.2vw);
+  --cols: 4;
+  --top: 76px;
+  --space: clamp(96px, 11vw, 190px);
+  --ease: cubic-bezier(0.6, 0, 0.2, 1);
+  font-size: 13px;
+}
+
+html[data-tone='dark'] {
+  --bg: #0c0b0a;
+  --text: #e9e4da;
+}
+
+html[data-tone='warm'] {
+  --bg: #120d0a;
+  --text: #ece2d4;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.002em;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition:
+    background-color 0.9s var(--ease),
+    color 0.9s var(--ease);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+p,
+h1,
+h2,
+h3,
+ul,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+.muted {
+  opacity: 0.55;
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.skip {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 300;
+  padding: 8px 12px;
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(-200%);
+}
+
+.skip:focus {
+  transform: none;
+}
+
+.noscript {
+  padding: var(--gutter);
+}
+
+.for-touch {
+  display: none;
+}
+
+@media (hover: none) {
+  .for-touch {
+    display: inline;
+  }
+  .for-fine {
+    display: none;
+  }
+}
+
+/* Loader: the template's hairline, until the fonts and the first frame
+   are in. */
+.js .loading::before,
+.js .loading::after {
+  content: '';
+  position: fixed;
+  z-index: 1000;
+}
+
+.js .loading::before {
+  inset: 0;
+  background: var(--paper);
+}
+
+.js .loading::after {
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 1px;
+  margin-left: -60px;
+  background: var(--ink);
+  transform-origin: 0 50%;
+  animation: loading 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes loading {
+  from {
+    transform: scaleX(0.1);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* The frame: fixed, set on the four columns of the grid below it, and
+   inverted against whatever passes beneath. */
+.frame {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+  align-items: baseline;
+  padding: 22px var(--gutter);
+  color: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.frame a {
+  pointer-events: auto;
+}
+
+.frame__name {
+  font-weight: 500;
+}
+
+.frame__nav {
+  display: flex;
+  gap: 16px;
+}
+
+.frame__cta {
+  justify-self: end;
+}
+
+.frame a:hover {
+  opacity: 0.6;
+}
+
+.wrap {
+  padding-inline: var(--gutter);
+  container-type: inline-size;
+}
+
+/* Hero -------------------------------------------------------------------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  column-gap: var(--gap);
+  min-height: 100svh;
+  padding: var(--top) var(--gutter) var(--gutter);
+  container-type: inline-size;
+}
+
+.hero__name {
+  grid-column: 1 / 3;
+  grid-row: 1;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: 18.2cqw;
+  line-height: 0.8;
+  letter-spacing: -0.025em;
+  margin-left: -0.04em;
+}
+
+.hero__name .line {
+  display: block;
+  overflow: hidden;
+  padding: 0.07em 0 0.03em;
+  margin: -0.07em 0 -0.03em;
+}
+
+.hero__name .char {
+  display: inline-block;
+  will-change: transform;
+}
+
+.hero__look {
+  grid-column: 3 / 5;
+  grid-row: 1 / 3;
+  height: calc(100svh - var(--top) - var(--gutter));
+  min-height: 520px;
+}
+
+.hero__look .look__img {
+  object-position: 50% 18%;
+}
+
+.hero__look .look__card {
+  background: var(--paper);
+}
+
+.hero__foot {
+  grid-column: 1 / 3;
+  grid-row: 2;
+  align-self: end;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gap);
+  row-gap: 40px;
+}
+
+.hero__statement {
+  grid-column: 1 / 3;
+  max-width: 21ch;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(24px, 2.35cqw, 36px);
+  line-height: 1.08;
+  letter-spacing: -0.012em;
+}
+
+.hero__facts {
+  grid-column: 1 / 3;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gap);
+}
+
+dt {
+  opacity: 0.55;
+}
+
+/* The book ---------------------------------------------------------------- */
+
+.book {
+  padding-top: var(--space);
+}
+
+.book__intro {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--gap);
+  padding-bottom: 22px;
+}
+
+.book__intro h2 {
+  font-weight: 500;
+}
+
+.book__hint {
+  grid-column: -2;
+  justify-self: end;
+  text-align: right;
+}
+
+.chapter + .chapter {
+  padding-top: calc(var(--space) * 0.7);
+}
+
+/* Four columns of 2:3 cells. Landscapes take two, a chapter's feature two
+   by two, and the chapter's title takes a cell of its own; js/main.js picks
+   the spans so each chapter closes its last row. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  grid-auto-rows: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols) * 1.5);
+  grid-auto-flow: row dense;
+  gap: var(--gap);
+}
+
+.cell {
+  min-width: 0;
+  min-height: 0;
+}
+
+.cell--wide {
+  grid-column: span 2;
+}
+
+.cell--feature {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.head--2 {
+  grid-column: span 2;
+}
+
+.grid--headed {
+  grid-template-rows: auto;
+}
+
+.head--row {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  padding-bottom: 14px;
+}
+
+.head--row .head__index {
+  grid-column: 1 / -1;
+}
+
+.grid .head--row .head__meta {
+  margin: 0;
+  text-align: right;
+  padding-bottom: 0.2em;
+}
+
+.lb__chapter {
+  margin-left: 0.6em;
+}
+
+.head--4 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+}
+
+.head__index {
+  font-weight: 500;
+}
+
+.head__title {
+  margin-top: 14px;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(56px, 7cqw, 128px);
+  line-height: 0.84;
+  letter-spacing: -0.02em;
+  margin-left: -0.03em;
+}
+
+.head__meta {
+  margin-top: 22px;
+}
+
+.grid .head__meta {
+  margin-top: auto;
+}
+
+.row .head__title {
+  font-size: clamp(48px, 5.8cqw, 104px);
+}
+
+.chapter--light {
+  --card: #121110;
+  --card-text: #efebe3;
+}
+
+.chapter--dark {
+  --card: #e9e4da;
+  --card-text: #141210;
+}
+
+.chapter--colour {
+  --card: #4a2418;
+  --card-text: #f0e6d8;
+}
+
+/* A look: the photograph, the card the effect brings over it, and the
+   button that opens it large. */
+.look {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  container-type: size;
+}
+
+.is-developed {
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+.look__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Cut to nothing, except as the veil a frame develops out of. The WebGL
+   effect paints this layout onto its canvas; screen readers read it here. */
+.look__card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: min(7cqw, 5cqh);
+  background: var(--card);
+  color: var(--card-text);
+  clip-path: inset(0 0 100% 0);
+}
+
+.is-veiled .look__card,
+.is-carded .look__card {
+  clip-path: inset(0);
+}
+
+/* Without WebGL 2, a plain wipe. */
+.plain .look__card {
+  transition: clip-path 0.8s var(--ease);
+}
+
+.no-js .look__card {
+  clip-path: inset(0 0 100% 0);
+}
+
+.look__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.look__label {
+  font-weight: 500;
+}
+
+.look__num {
+  margin-top: 0.06em;
+  margin-left: -0.04em;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: min(38cqw, 26cqh);
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+}
+
+.look__pieces {
+  margin-top: auto;
+  line-height: 1.35;
+}
+
+.look__open {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.look__open:focus-visible {
+  outline-offset: -6px;
+  outline-color: var(--card-text);
+}
+
+/* Film -------------------------------------------------------------------- */
+
+.film,
+.stats,
+.contact,
+.clients,
+.digitals {
+  padding-top: var(--space);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.row > .head {
+  grid-column: 1;
+}
+
+.film__frame {
+  position: relative;
+  grid-column: 2 / -1;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  overflow: hidden;
+}
+
+.film__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.film__toggle {
+  position: absolute;
+  left: 18px;
+  bottom: 16px;
+  color: #fff;
+  mix-blend-mode: difference;
+  padding: 6px 0;
+}
+
+.film__toggle::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 9px;
+  border: 1px solid currentColor;
+  vertical-align: 0.02em;
+}
+
+.film__toggle[aria-pressed='true']::before {
+  background: currentColor;
+}
+
+/* Measurements ------------------------------------------------------------ */
+
+.stats__list {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gap);
+  row-gap: 44px;
+}
+
+.stat {
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.stat dd {
+  margin-top: 18px;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(38px, 3.9cqw, 64px);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.stat dd.is-word {
+  font-size: clamp(30px, 2.9cqw, 46px);
+}
+
+.stat .unit {
+  margin-left: 0.18em;
+  font-family: var(--font);
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.stat .alt {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font);
+  font-size: 1rem;
+  letter-spacing: 0;
+  opacity: 0.55;
+  min-height: 1.4em;
+}
+
+/* Clients ----------------------------------------------------------------- */
+
+.clients__list {
+  grid-column: 2 / -1;
+  columns: 3;
+  font-family: var(--display);
+  font-size: clamp(28px, 2.6cqw, 42px);
+  line-height: 1.2;
+}
+
+/* Contact ----------------------------------------------------------------- */
+
+.contact__body {
+  grid-column: 2 / -1;
+}
+
+.contact__mail {
+  display: inline-block;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(32px, 5.3cqw, 96px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  padding-bottom: 0.08em;
+  transition: background-size 0.6s var(--ease);
+  overflow-wrap: anywhere;
+}
+
+.contact__mail:hover,
+.contact__mail:focus-visible {
+  background-size: 100% 1px;
+}
+
+.contact__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gap);
+  row-gap: 24px;
+  margin-top: 64px;
+}
+
+.contact__list div {
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.contact__list dd {
+  margin-top: 4px;
+}
+
+.contact__list a {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 1px;
+}
+
+.contact__list a:hover {
+  opacity: 0.6;
+}
+
+/* Footer: the name again, edge to edge. */
+.foot {
+  padding-top: var(--space);
+  padding-bottom: var(--gutter);
+}
+
+.foot__name {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: 18.6cqw;
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  margin-left: -0.04em;
+}
+
+.foot__row {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--gap);
+  margin-top: 28px;
+}
+
+.foot__row span:nth-child(2) {
+  grid-column: 2 / 4;
+}
+
+.foot__row a:last-child {
+  justify-self: end;
+}
+
+.foot__row span a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Lightbox ---------------------------------------------------------------- */
+
+.lb {
+  --lb-bg: var(--paper);
+  --lb-text: var(--ink);
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  color: var(--lb-text);
+  overscroll-behavior: contain;
+  touch-action: pan-y pinch-zoom;
+}
+
+.lb[data-key='dark'] {
+  --lb-bg: #0c0b0a;
+  --lb-text: #e9e4da;
+}
+
+.lb[data-key='colour'] {
+  --lb-bg: #120d0a;
+  --lb-text: #ece2d4;
+}
+
+.lb[hidden] {
+  display: none;
+}
+
+.lb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--lb-bg);
+  opacity: var(--lb-fade, 1);
+  transition: background-color 0.6s var(--ease);
+}
+
+.lb__stage {
+  position: absolute;
+  inset: 0;
+}
+
+.lb__img {
+  position: absolute;
+  transform-origin: 0 0;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.lb__bar {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+  align-items: baseline;
+  padding: 22px var(--gutter);
+}
+
+.lb__cap {
+  grid-column: 1 / 3;
+  display: flex;
+  gap: var(--gap);
+}
+
+.lb__num {
+  min-width: 4.5em;
+  font-variant-numeric: tabular-nums;
+}
+
+.lb__ctrl {
+  grid-column: 3 / 5;
+  display: flex;
+  justify-content: flex-end;
+  gap: 24px;
+}
+
+.lb__ctrl button:hover {
+  opacity: 0.6;
+}
+
+/* Tablet ------------------------------------------------------------------ */
+
+@media (max-width: 1100px) {
+  :root {
+    --cols: 3;
+  }
+  .frame__where {
+    display: none;
+  }
+  .frame {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .hero {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .hero__name {
+    font-size: 26cqw;
+    grid-column: 1 / -1;
+  }
+  .hero__look {
+    grid-column: 2 / 4;
+    grid-row: 2;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+    margin-top: 28px;
+  }
+  .hero__foot {
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: 1fr;
+  }
+  .hero__statement,
+  .hero__facts {
+    grid-column: 1;
+  }
+  .hero__facts {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+  .stats__list,
+  .contact__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .head__title {
+    font-size: clamp(48px, 9cqw, 110px);
+  }
+  .foot__row span:nth-child(2) {
+    grid-column: 2;
+  }
+}
+
+/* Phones ------------------------------------------------------------------ */
+
+@media (max-width: 760px) {
+  :root {
+    --cols: 2;
+    --gutter: 16px;
+    --gap: 10px;
+    --top: 64px;
+    --space: 96px;
+  }
+
+  .frame {
+    grid-template-columns: 1fr auto;
+    padding: 18px var(--gutter);
+  }
+  .frame__nav {
+    display: none;
+  }
+
+  .hero {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: 0;
+    padding-bottom: 0;
+  }
+  .hero__name {
+    font-size: 38.5cqw;
+    margin-left: -0.05em;
+  }
+  .hero__look {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 20px;
+  }
+  .hero__foot {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 22px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 22px;
+  }
+  .hero__statement {
+    grid-column: 1 / -1;
+    font-size: 25px;
+  }
+  .hero__facts {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gap);
+  }
+
+  .book__intro {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 4px;
+  }
+  .book__hint {
+    grid-column: 1 / -1;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .head__title {
+    font-size: clamp(44px, 15cqw, 72px);
+  }
+  .grid .head {
+    padding-right: 4px;
+  }
+
+  .row > .head {
+    grid-column: 1 / -1;
+    margin-bottom: 16px;
+  }
+  .film__frame,
+  .stats__list,
+  .contact__body,
+  .clients__list {
+    grid-column: 1 / -1;
+  }
+  .film__frame {
+    aspect-ratio: 4 / 5;
+  }
+  .stats__list {
+    row-gap: 32px;
+  }
+  .stat dd {
+    font-size: 44px;
+  }
+  .stat dd.is-word {
+    font-size: 32px;
+  }
+  .clients__list {
+    columns: 2;
+  }
+  .contact__mail {
+    font-size: 8.9cqw;
+  }
+  .contact__list {
+    margin-top: 40px;
+  }
+
+  .foot__name {
+    font-size: 18.4cqw;
+  }
+  .foot__row {
+    grid-template-columns: 1fr auto;
+    row-gap: 6px;
+  }
+  .foot__row span:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lb__bar {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+    padding: 16px var(--gutter) max(16px, env(safe-area-inset-bottom));
+  }
+  .lb__cap,
+  .lb__ctrl {
+    grid-column: 1;
+  }
+  .lb__ctrl {
+    justify-content: space-between;
+  }
+}

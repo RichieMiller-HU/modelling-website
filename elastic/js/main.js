@@ -76,10 +76,9 @@
   let portraitN = 0;
   const items = photos.map((p, n) => {
     const land = p.fit === 'landscape';
-    const w = land ? 1 : WIDTHS[portraitN++ % WIDTHS.length];
+    const pn = land ? -1 : portraitN++; // portrait ordinal, picks a width from WIDTHS
     const ar = land ? 2 / 3 : 3 / 2; // height / width of the frame
     const fig = el('figure', 'item');
-    fig.style.setProperty('--w', w);
     fig.style.setProperty('--ar', land ? '3 / 2' : '2 / 3');
     fig.dataset.key = p.key;
     const fullW = land ? 2000 : 1333, smW = land ? 900 : 600;
@@ -93,7 +92,7 @@
     if (img.complete && img.naturalWidth) done(); else { img.addEventListener('load', done); img.addEventListener('error', done); }
     $('button', fig).addEventListener('click', () => openLightbox(n));
     grid.appendChild(fig);
-    return { fig, img, w, ar, photo: p, n };
+    return { fig, img, w: 1, pn, ar, photo: p, n };
   });
 
   // ─────────────── Elastic grid ───────────────
@@ -111,26 +110,53 @@
     items.forEach(({ fig }) => { fig.classList.remove('item--r'); grid.appendChild(fig); });
   };
 
+  /** Row gap in px, as the CSS custom property resolves at this width. */
+  const rowGap = () => {
+    const g = getComputedStyle(document.documentElement).getPropertyValue('--r-gap').trim();
+    return g.endsWith('vw') ? (parseFloat(g) * innerWidth) / 100 : parseFloat(g) || 40;
+  };
+
   /**
    * Deal items to the shortest column (in column-width units), keeping the reading order,
-   * with staggered column starts. Smaller frames lean toward the centre of the page.
+   * with staggered column starts. The width rhythm is rotated until the columns end closest
+   * together, so whatever the photo count the grid never trails off into one long column.
    */
   const deal = (n) => {
-    const styles = getComputedStyle(document.documentElement);
-    const colW = (grid.clientWidth - parseFloat(getComputedStyle(grid).paddingLeft) * 2 - parseFloat(getComputedStyle(grid).columnGap) * (n - 1)) / n;
-    const g = styles.getPropertyValue('--r-gap').trim();
-    const rGap = g.endsWith('vw') ? (parseFloat(g) * innerWidth) / 100 : parseFloat(g) || 40;
-    const unitGap = rGap / colW;
+    const gs = getComputedStyle(grid);
+    const colW = (grid.clientWidth - parseFloat(gs.paddingLeft) * 2 - parseFloat(gs.columnGap) * (n - 1)) / n;
+    const unitGap = rowGap() / colW;
     const offsets = n >= 3 ? [0, 0.5, 0.2, 0.35, 0.1] : n === 2 ? [0, 0.42] : [0];
-    const heights = Array.from({ length: n }, (_, i) => offsets[i] || 0);
-    const cols = Array.from({ length: n }, () => []);
-    items.forEach((it) => {
-      let c = 0;
-      for (let i = 1; i < n; i++) if (heights[i] < heights[c] - 0.02) c = i;
-      cols[c].push(it);
-      heights[c] += it.w * it.ar + 0.08 + unitGap;
+    let best = null;
+    for (let rot = 0; rot < WIDTHS.length; rot++) {
+      const heights = Array.from({ length: n }, (_, i) => offsets[i] || 0);
+      const cols = Array.from({ length: n }, () => []);
+      const ws = items.map((it) => (it.pn < 0 || n === 1 ? 1 : WIDTHS[(it.pn + rot) % WIDTHS.length]));
+      items.forEach((it, k) => {
+        let c = 0;
+        for (let i = 1; i < n; i++) if (heights[i] < heights[c] - 0.02) c = i;
+        cols[c].push(it);
+        heights[c] += ws[k] * it.ar + 0.08 + unitGap;
+      });
+      const slack = Math.max(...heights) - Math.min(...heights);
+      if (!best || slack < best.slack - 0.01) best = { slack, cols, ws };
+    }
+    items.forEach((it, k) => { it.w = best.ws[k]; it.fig.style.setProperty('--w', it.w); });
+    return { cols: best.cols, offsets, colW };
+  };
+
+  /** Let the shorter columns breathe (wider row gaps) so all columns end on one line at rest. */
+  const justify = () => {
+    const cols = $$('.grid__column', grid);
+    cols.forEach((c) => (c.style.rowGap = ''));
+    const base = rowGap();
+    const hs = cols.map((c) => c.offsetHeight);
+    const target = Math.max(...hs);
+    cols.forEach((c, i) => {
+      const k = c.children.length;
+      if (k < 2) return;
+      const extra = Math.min((target - hs[i]) / (k - 1), base * 1.6);
+      c.style.rowGap = `${base + extra}px`;
     });
-    return { cols, offsets, colW };
   };
 
   const buildGrid = () => {
@@ -157,6 +183,7 @@
       c.dataset.lag = lag;
     });
     grid.appendChild(frag);
+    justify();
     if (!reduce) $$('.grid__column', grid).forEach((c) => lagEffects.push(...smoother.effects(c, { speed: 1, lag: +c.dataset.lag })));
     ScrollTrigger.refresh();
   };
@@ -323,7 +350,9 @@
   const setText = (i) => {
     $('.lb__count', lb).textContent = `${pad(i + 1)} / ${pad(items.length)}`;
     const p = items[i].photo;
-    $('.lb__cap', lb).textContent = `${p.caption || ''} — ${CHAPTER[p.key] || ''}`;
+    const ch = CHAPTER[p.key] || '';
+    const cap = p.caption || '';
+    $('.lb__cap', lb).textContent = !ch || cap.toLowerCase().includes(ch.toLowerCase()) ? cap : `${cap} — ${ch}`;
   };
   const makeImg = (it) => {
     const im = el('img', 'lb__img');
@@ -403,15 +432,15 @@
     else if (e.key === 'ArrowRight') step(1);
     else if (e.key === 'ArrowLeft') step(-1);
     else if (e.key === 'Tab') { // keep focus inside the viewer
-      const f = $$('button', lb);
+      const f = $$('button:not([tabindex="-1"])', lb);
       const i = f.indexOf(document.activeElement);
       e.preventDefault();
       f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
     }
   }
   $('.lb__close', lb).addEventListener('click', closeLightbox);
-  $('.lb__prev', lb).addEventListener('click', () => step(-1));
-  $('.lb__next', lb).addEventListener('click', () => step(1));
+  ['.lb__prev', '.lb__p'].forEach((s) => $(s, lb).addEventListener('click', () => step(-1)));
+  ['.lb__next', '.lb__n'].forEach((s) => $(s, lb).addEventListener('click', () => step(1)));
   let tx = 0, ty = 0;
   lb.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
   lb.addEventListener('touchend', (e) => {
@@ -425,7 +454,7 @@
   let rt;
   addEventListener('resize', () => {
     clearTimeout(rt);
-    rt = setTimeout(() => { if (getColumnCount() !== currentColumnCount) buildGrid(); }, 120);
+    rt = setTimeout(() => { if (getColumnCount() !== currentColumnCount) buildGrid(); else { justify(); ScrollTrigger.refresh(); } }, 120);
   });
 
   // ─────────────── Start ───────────────

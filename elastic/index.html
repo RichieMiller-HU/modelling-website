@@ -68,7 +68,7 @@
       <div class="film__head">
         <h2 class="label" id="film-title">Film</h2>
         <p class="film__title" data-reveal>In motion</p>
-        <p class="film__note" data-reveal>Studio, behind the scenes</p>
+        <p class="film__note" data-reveal>Studio session</p>
       </div>
       <div class="film__stage">
         <div class="film__frame">
@@ -86,8 +86,8 @@
 
     <section class="stats" id="measurements" aria-labelledby="stats-title">
       <div class="stats__head">
-        <h2 class="label" id="stats-title">Measurements</h2>
-        <p class="stats__lede" data-reveal>Comp card</p>
+        <p class="label">Comp card</p>
+        <h2 class="stats__lede" id="stats-title" data-reveal>Measurements</h2>
       </div>
       <dl class="stats__grid"></dl>
     </section>
@@ -116,8 +116,9 @@
   <p class="lb__count"></p>
   <p class="lb__cap"></p>
   <button class="lb__close" type="button">Close</button>
-  <button class="lb__prev" type="button" aria-label="Previous photo"><span>Prev</span></button>
-  <button class="lb__next" type="button" aria-label="Next photo"><span>Next</span></button>
+  <button class="lb__prev" type="button" tabindex="-1" aria-hidden="true"></button>
+  <button class="lb__next" type="button" tabindex="-1" aria-hidden="true"></button>
+  <p class="lb__nav"><button class="lb__p" type="button" aria-label="Previous photo">Prev</button><span aria-hidden="true">/</span><button class="lb__n" type="button" aria-label="Next photo">Next</button></p>
 </div>
 
 <script src="../assets/content.js"></script>

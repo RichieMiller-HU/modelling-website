@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" class="intro-on">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Richie Miller — Model, Budapest</title>
+<meta name="description" content="Richie Miller, model, Budapest. The book, a studio film, measurements and bookings.">
+<meta property="og:title" content="Richie Miller — Model">
+<meta property="og:image" content="../assets/photos/rm-10.jpg">
+<meta name="theme-color" content="#ebe6de">
+<!--
+  Atelier II. Original code, no template adapted.
+  Fonts: Newsreader (Production Type) and Schibsted Grotesk (Bakken & Baeck), SIL OFL 1.1, see fonts/OFL-*.txt.
+  Libraries: GSAP 3.15.1 + ScrollTrigger, SplitText, CustomEase (GreenSock standard no-charge licence, vendor/LICENSE-gsap.txt);
+             Lenis 1.3.27 (MIT, darkroom.engineering, vendor/LICENSE-lenis.txt).
+-->
+<link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>
+  (function(){var d=document.documentElement;if(matchMedia("(prefers-reduced-motion: reduce)").matches){d.classList.remove("intro-on");d.classList.add("no-intro")}})();
+</script>
+</head>
+<body>
+<div class="intro" aria-hidden="true">
+  <div class="intro-bg"></div>
+  <div class="intro-f" id="flick"></div>
+  <div class="intro-c"><span class="nm" id="i-name"></span><span class="a tn" id="i-n">00</span></div>
+</div>
+<div class="tooth" aria-hidden="true"></div>
+
+<header class="nav a" id="nav">
+  <a class="nav-n" href="#top" id="nav-n">Richie Miller</a>
+  <span class="nav-r" id="nav-r"></span>
+  <nav aria-label="Primary"><ul id="nav-l"></ul></nav>
+  <button class="nav-b ul" id="nav-b" aria-expanded="false" aria-controls="menu">Menu</button>
+</header>
+<div class="menu" id="menu" aria-hidden="true">
+  <ol id="menu-l"></ol>
+  <div class="a a-m" id="menu-f"></div>
+</div>
+
+<main id="top">
+  <!-- Cover -->
+  <section class="cover" aria-label="Cover">
+    <div class="cv-l">
+      <div class="cv-meta a">
+        <span><span class="a-m">Model</span><br><span id="cv-city"></span></span>
+        <span><span class="a-m">Available</span><br><span id="cv-av"></span></span>
+      </div>
+      <p class="cv-st"><span class="m" id="cv-st"></span></p>
+    </div>
+    <figure class="cv-img" id="cv-img" data-cursor="View" role="button" tabindex="0"><img id="cv-im" alt="" fetchpriority="high"></figure>
+    <h1 class="cv-name" id="cv-name"></h1>
+    <div class="cv-foot a a-m" aria-hidden="true">Cover</div>
+  </section>
+
+  <!-- Contents -->
+  <section class="sec toc" id="contents" aria-labelledby="toc-t">
+    <div class="grid toc-h">
+      <h2 class="xl" id="toc-t" data-lines>Contents</h2>
+      <p class="t" id="toc-p" data-fade></p>
+    </div>
+    <div class="rows" id="rows"></div>
+    <div class="foot" id="toc-f"></div>
+  </section>
+
+  <!-- The book -->
+  <section class="book" id="book" aria-label="The book"></section>
+
+  <!-- Film -->
+  <section class="sec film" id="film" aria-labelledby="film-t">
+    <div class="grid film-h">
+      <h2 class="xl" id="film-t" data-lines>Studio film</h2>
+      <p class="t" data-fade>Motion, posture, presence. A muted preview runs here; open it for sound. <span class="a tn" id="film-d"></span></p>
+    </div>
+    <div class="film-v" id="film-v" data-cursor="Play" role="button" tabindex="0" aria-label="Play the studio film with sound">
+      <video muted loop playsinline preload="metadata"></video>
+    </div>
+    <div class="film-c a"><span class="a-m">Studio session</span><button class="ul" id="film-b">Play with sound</button></div>
+    <div class="foot" id="film-f"></div>
+  </section>
+
+  <!-- Measurements -->
+  <section class="sec stats" id="stats" aria-labelledby="stats-t">
+    <div class="grid stats-g">
+      <div class="stats-l">
+        <h2 class="xl" id="stats-t" data-lines>Measure&shy;ments</h2>
+        <p class="t" id="stats-p" data-fade></p>
+      </div>
+      <div class="stats-r" data-fade>
+        <div class="tbl-h a a-m"><span>Comp card</span><span>Metric</span><span>Imperial</span></div>
+        <div id="tbl"></div>
+      </div>
+    </div>
+    <div class="foot" id="stats-f"></div>
+  </section>
+
+  <!-- Back cover -->
+  <section class="sec back" id="contact" aria-labelledby="bk-t">
+    <div class="grid bk-top"><p class="a a-m" id="bk-t">Bookings</p></div>
+    <a class="bk-mail" id="bk-mail" data-cursor="Write"></a>
+    <div class="bk-act a">
+      <a class="ul" id="bk-m">Booking enquiry</a>
+      <button class="ul" id="bk-copy">Copy address</button>
+      <a class="ul" id="bk-ig" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <div class="grid bk-info">
+      <div><span class="a a-m">Based</span><span class="t" id="bk-city"></span></div>
+      <div><span class="a a-m">Available</span><span class="t" id="bk-av"></span></div>
+      <div><span class="a a-m">Representation</span><span class="t" id="bk-ag"></span></div>
+      <div><span class="a a-m">Comp card</span><span class="t" id="bk-cc"></span></div>
+    </div>
+    <div class="bk-name" id="bk-name" aria-hidden="true"></div>
+    <div class="bk-col a a-m"><span id="bk-c"></span><span>Set in Newsreader and Schibsted Grotesk.</span><a class="ul" href="#top" id="bk-top">Back to the cover</a></div>
+  </section>
+</main>
+
+<div class="float" id="float" aria-hidden="true"><div class="float-c" id="float-c"></div></div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div class="lb-bg"></div>
+  <div class="lb-w" id="lb-w"><img alt=""></div>
+  <div class="lb-ui a">
+    <button class="lb-p" aria-label="Previous photo" data-cursor="Prev"></button>
+    <button class="lb-n" aria-label="Next photo" data-cursor="Next"></button>
+    <button class="lb-x ul" id="lb-x">Close</button>
+    <div class="lb-c"><span class="cap" id="lb-cap"></span><span class="tn" id="lb-i"></span></div>
+  </div>
+</div>
+<div class="fm" id="fm" role="dialog" aria-modal="true" aria-label="Studio film"><video controls playsinline preload="none"></video><button class="a ul" id="fm-x">Close</button></div>
+
+<script src="../assets/content.js"></script>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/SplitText.min.js"></script>
+<script src="vendor/CustomEase.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
