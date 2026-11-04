@@ -261,7 +261,7 @@ function buildFlip() {
   });
   const yFor = (s) => st.start + (n > 1 ? s / (n - 1) : 0) * (st.end - st.start);
   const onEnd = () => {
-    if (lbOpen || !st.isActive || window.__noSnap) return;
+    if (lbOpen || !st.isActive) return;
     const t = st.progress * (n - 1), r = Math.round(t);
     if (Math.abs(t - r) < 0.003) return;
     scrollToY(yFor(r), 0.6 + 0.6 * Math.abs(t - r));
@@ -292,7 +292,8 @@ function buildDeck() {
     if (i === dps.length - 1) return;
     tws.push(gsap.timeline({ scrollTrigger: { trigger: deck, start: () => top() + i * H(), end: () => top() + (i + 1) * H(), scrub: true, invalidateOnRefresh: true } })
       .to($(".pg", dp), { scale: 0.9, yPercent: -2, ease: "none" }, 0)
-      .to($(".dim", dp), { opacity: 0.5, ease: "none" }, 0));
+      .to($(".dim", dp), { opacity: 0.5, ease: "none" }, 0)
+      .fromTo($$(".bleed img, .plate img, .op-n", dps[i + 1]), { scale: 1.1 }, { scale: 1, ease: "none" }, 0));
   });
   book = {
     mode: "deck", st: null,
@@ -460,8 +461,8 @@ function choreography() {
     onSplit: (s) => gsap.from(s.lines, { yPercent: 105, duration: 1.4, stagger: 0.09, ease: "o", scrollTrigger: { trigger: el, start: "top 88%", once: true } }),
   }));
   $$("[data-fade]").forEach((el) => gsap.from(el, { opacity: 0, y: 26, duration: 1.4, ease: "o", scrollTrigger: { trigger: el, start: "top 90%", once: true } }));
-  ScrollTrigger.batch(".toc-ch, .row", { start: "top 94%", once: true, onEnter: (els) => gsap.from(els, { opacity: 0, y: 22, duration: 1, stagger: 0.03, ease: "o", overwrite: true }) });
-  ScrollTrigger.batch(".tbl-r, .bk-info > div", { start: "top 94%", once: true, onEnter: (els) => gsap.from(els, { opacity: 0, y: 18, duration: 1, stagger: 0.06, ease: "o" }) });
+  ScrollTrigger.batch(".toc-ch, .row", { start: "top 94%", once: true, onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 1, stagger: 0.03, ease: "o", clearProps: "opacity,transform" }) });
+  ScrollTrigger.batch(".tbl-r, .bk-info > div", { start: "top 94%", once: true, onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 1, stagger: 0.06, ease: "o", clearProps: "opacity,transform" }) });
   /* cover image drifts and grows as the cover leaves */
   gsap.fromTo(cvIm, { scale: 1, yPercent: 0 }, { scale: 1.12, yPercent: 5, ease: "none", transformOrigin: "50% 100%", scrollTrigger: { trigger: ".cover", start: "top top", end: "bottom top", scrub: true } });
   gsap.to(cvName, { yPercent: -22, ease: "none", scrollTrigger: { trigger: ".cover", start: "top top", end: "bottom top", scrub: true } });

@@ -1,54 +1,70 @@
 <!doctype html>
-<html lang="en" data-base="" class="has-cur">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Richie Miller — Concepts</title>
+<title>Richie Miller — Directions</title>
 <meta name="robots" content="noindex">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/base.css">
 <style>
-:root{--bg:#0c0c0b;--ink:#ece8e1;--mute:#7d786f;--line:#ece8e11c;--serif:"Instrument Serif",Georgia,serif;--sans:"Geist",system-ui,sans-serif;--g:clamp(16px,2vw,32px)}
-body{font:400 14px/1.5 var(--sans);min-height:100vh;display:flex;flex-direction:column;padding:var(--g)}
-.cap{font:500 10.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
-header{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:var(--g);border-bottom:1px solid var(--line)}
-h1{font:400 clamp(40px,6vw,96px)/.9 var(--serif);letter-spacing:-.02em}
-h1 em{color:var(--mute)}
-.grid{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--g);padding:var(--g) 0}
-.c{position:relative;display:flex;flex-direction:column;gap:14px}
-.c .im{position:relative;flex:1;min-height:52vh;overflow:hidden;background:#151513}
-.c .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.6s var(--ease),opacity .8s var(--ease)}
-.c .im img+img{opacity:0}
-.c:hover .im img{transform:scale(1.05)}
-.c:hover .im img+img{opacity:1}
-.c .row{display:flex;justify-content:space-between;align-items:baseline}
-.c h2{font:400 clamp(30px,3vw,48px)/1 var(--serif)}
-.c h2 em{font-style:italic}
-.c p{color:var(--mute);max-width:42ch}
-.c .tag{position:absolute;top:14px;left:14px;z-index:2;background:var(--ink);color:var(--bg);padding:6px 10px;border-radius:99px;font:500 10px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase}
-footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:var(--g)}
-footer a{border-bottom:1px solid var(--line)}footer a:hover{border-color:var(--ink)}
-@media (max-width:860px){.grid{grid-template-columns:1fr}.c .im{min-height:64vh}}
+@font-face{font-family:"Caslon Display";src:url("elastic/fonts/libre-caslon-display-latin-400-normal.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Host Grotesk";src:url("elastic/fonts/host-grotesk-latin-400-normal.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Host Grotesk";src:url("elastic/fonts/host-grotesk-latin-500-normal.woff2") format("woff2");font-weight:500;font-display:swap}
+:root{--bg:#ebe7e0;--ink:#141311;--mute:#8a847a;--line:#14131122;--g:clamp(18px,2.4vw,40px);--ease:cubic-bezier(.16,1,.3,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--ink);font:400 14px/1.45 "Host Grotesk",sans-serif;padding:var(--g)}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:baseline;font-weight:500}
+.top span:last-child{color:var(--mute);font-weight:400}
+h1{font:400 clamp(64px,13vw,220px)/.86 "Caslon Display",serif;letter-spacing:-.025em;margin:14vh 0 10vh}
+h2{font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;border-bottom:1px solid var(--ink);padding-bottom:12px;margin-top:9vh}
+h2 span:last-child{color:var(--mute);letter-spacing:0;text-transform:none;font-weight:400}
+.row{display:grid;grid-template-columns:3rem 1fr 1.1fr 9rem;gap:var(--g);align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line);transition:color .5s var(--ease)}
+.row .n{color:var(--mute);font-variant-numeric:tabular-nums}
+.row .t{font:400 clamp(34px,4.2vw,64px)/1 "Caslon Display",serif;letter-spacing:-.015em;transition:transform .7s var(--ease)}
+.row .d{color:var(--mute);max-width:48ch}
+.row .b{text-align:right;color:var(--mute)}
+.list:hover .row{color:#14131155}.list .row:hover{color:var(--ink)}.row:hover .t{transform:translateX(14px)}
+.pv{position:fixed;left:0;top:0;width:min(20vw,280px);aspect-ratio:4/5;pointer-events:none;opacity:0;transition:opacity .35s;z-index:5;overflow:hidden}
+.pv.on{opacity:1}.pv img{width:100%;height:100%;object-fit:cover}
+.foot{display:flex;justify-content:space-between;margin-top:12vh;color:var(--mute)}
+.foot a{color:var(--ink);border-bottom:1px solid var(--line)}
+@media (max-width:760px){.row{grid-template-columns:2rem 1fr}.row .d{grid-column:2}.row .b{display:none}h1{margin:10vh 0 6vh}.foot{flex-direction:column;gap:10px}}
+@media (hover:none){.pv{display:none}}
 </style>
 </head>
 <body>
-<header><h1>Richie Miller<br><em>three directions</em></h1><span class="cap">Pick one, or mix them</span></header>
-<main class="grid">
-  <a class="c" href="noir/" data-cursor="Enter"><span class="tag">Most dramatic</span>
-    <div class="im"><img src="assets/photos/rm-16-sm.jpg" alt=""><img src="assets/photos/rm-18-sm.jpg" alt=""></div>
-    <div class="row"><h2>01 — <em>Noir</em></h2><span class="cap">Dark editorial</span></div>
-    <p>Black, ivory and a Bodoni headline. Studio film in the hero, a pinned horizontal book, and a close-up and the film that both open to full screen as you scroll.</p></a>
-  <a class="c" href="atelier/" data-cursor="Enter"><span class="tag">Art director’s pick</span>
-    <div class="im"><img src="assets/photos/rm-10-sm.jpg" alt=""><img src="assets/photos/rm-06-sm.jpg" alt=""></div>
-    <div class="row"><h2>02 — <em>Atelier</em></h2><span class="cap">Light, Swiss</span></div>
-    <p>Warm bone paper, a 12-column grid and an oversized name. It opens with a contact-sheet flicker, then an index where hovering a row brings up a photo that follows your cursor.</p></a>
-  <a class="c" href="cinema/" data-cursor="Enter">
-    <div class="im"><img src="assets/photos/rm-20-sm.jpg" alt=""><img src="assets/photos/rm-04-sm.jpg" alt=""></div>
-    <div class="row"><h2>03 — <em>Cinema</em></h2><span class="cap">Film / viewfinder</span></div>
-    <p>A camera viewfinder HUD with REC and timecode. Letterbox bars open over the studio video, the photos stack like scenes in three acts, and measurements roll as end credits.</p></a>
-</main>
-<footer><span class="cap">Edit everything in assets/content.js</span><span><a href="tools/harmony.html">Photo harmony tool →</a></span></footer>
-<script src="assets/content.js"></script><script src="assets/core.js"></script><script>K.cursor()</script>
+<header class="top"><span>Richie Miller</span><span>Portfolio directions — draft</span></header>
+<h1>Nine<br>directions</h1>
+
+<h2><span>Round two — refined</span><span>v2 of round one</span></h2>
+<div class="list">
+  <a class="row" href="cinema-2/" data-img="assets/photos/rm-16-sm.jpg"><span class="n">01</span><span class="t">Cinema II</span><span class="d">Viewfinder HUD, letterbox opening, iris act cards, scenes that wipe in, a real end-credit roll.</span><span class="b">Film / title cards</span></a>
+  <a class="row" href="atelier-2/" data-img="assets/photos/rm-06-sm.jpg"><span class="n">02</span><span class="t">Atelier II</span><span class="d">A lay-flat photo book: contents, folios, chapter openers, pages turning over the spine in 3D.</span><span class="b">Printed book</span></a>
+  <a class="row" href="noir-2/" data-img="assets/photos/rm-18-sm.jpg"><span class="n">03</span><span class="t">Noir II</span><span class="d">Dark fashion-house editorial: split name over the film, a pinned book in three chapters, an eye-slit close-up.</span><span class="b">Dark editorial</span></a>
+</div>
+
+<h2><span>Round two — from templates</span><span>Codrops, MIT</span></h2>
+<div class="list">
+  <a class="row" href="lookbook/" data-img="assets/photos/rm-10-sm.jpg"><span class="n">04</span><span class="t">Lookbook</span><span class="d">A four-column lookbook. Photos develop out of their card through a silhouette moment.</span><span class="b">LookbookHoverEffects</span></a>
+  <a class="row" href="elastic/" data-img="assets/photos/rm-14-sm.jpg"><span class="n">05</span><span class="t">Elastic</span><span class="d">Columns drift at different speeds. The page turns from bone to black with the low-key set.</span><span class="b">ElasticGridScroll</span></a>
+  <a class="row" href="expansion/" data-img="assets/photos/rm-13-sm.jpg"><span class="n">06</span><span class="t">Expansion</span><span class="d">“Richie [eyes] Miller”. Close-ups open out of the words to full bleed.</span><span class="b">ImageExpansionTypography</span></a>
+</div>
+
+<h2><span>Round one</span><span>archive</span></h2>
+<div class="list">
+  <a class="row" href="cinema/" data-img="assets/photos/rm-20-sm.jpg"><span class="n">07</span><span class="t">Cinema</span><span class="d">The original viewfinder concept.</span><span class="b">v1</span></a>
+  <a class="row" href="atelier/" data-img="assets/photos/rm-05-sm.jpg"><span class="n">08</span><span class="t">Atelier</span><span class="d">Bone paper, flicker intro, cursor index.</span><span class="b">v1</span></a>
+  <a class="row" href="noir/" data-img="assets/photos/rm-17-sm.jpg"><span class="n">09</span><span class="t">Noir</span><span class="d">Dark editorial with horizontal book.</span><span class="b">v1</span></a>
+</div>
+
+<footer class="foot"><span>Content for every direction lives in assets/content.js</span><a href="tools/harmony.html">Photo harmony tool</a></footer>
+<div class="pv" id="pv"><img alt=""></div>
+<script>
+const pv=document.getElementById("pv"),im=pv.querySelector("img");let x=0,y=0,cx=0,cy=0;
+document.querySelectorAll(".row").forEach(r=>{r.addEventListener("pointerenter",()=>{im.src=r.dataset.img;pv.classList.add("on")});r.addEventListener("pointerleave",()=>pv.classList.remove("on"))});
+addEventListener("pointermove",e=>{x=e.clientX;y=e.clientY});
+(function l(){cx+=(x-cx)*.15;cy+=(y-cy)*.15;pv.style.transform=`translate3d(${cx+30}px,${cy-pv.offsetHeight/2}px,0)`;requestAnimationFrame(l)})();
+</script>
 </body>
 </html>
