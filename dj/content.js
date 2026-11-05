@@ -35,7 +35,7 @@ window.DJ = {
 
   // Contact. TODO: both are placeholders.
   email: "booking@richiemiller.com",
-  instagram: "richiemiller",       // handle without @
+  instagram: "",                   // no DJ Instagram yet; add the handle (without @) when it exists and the link appears
   // Listening links: none exist yet (client confirmed). Leave empty to hide; add real URLs when they exist.
   soundcloud: "",
   mixcloud: "",
