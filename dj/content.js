@@ -57,10 +57,21 @@ window.DJ = {
     liveMobile: "assets/video/club-hands",                                 // 720×1280 (0.7 MB)
     bio: "assets/video/club-groove",                                       // 720×1280 (1.9 MB), desktop only; poster on phones
   },
-  // PHOTOS. TODO: the client's DJ photo zip never arrived. When real photos exist, drop them in assets/photos/
-  // and list them here as { src: "assets/photos/name" (without extension; provide name.jpg and name-sm.jpg), alt, w, h }.
-  // While this list is empty, the page uses the `stills` below (frames pulled from the footage).
-  photos: [],
+  // PHOTOS. Real photos from the client: a studio session shot on a phone in 2022 (frames with other people left out).
+  // Cropped and graded as one series (ink-blue shadows, scarlet mids; two frames in scarlet mono). Each needs
+  // assets/photos/<name>.jpg (1800px long edge) and <name>-sm.jpg (800px). fit: "portrait" (4:5) | "landscape" (3:2).
+  // While this list is empty, the page falls back to the `stills` below (frames pulled from the footage).
+  photos: [
+    { src: "assets/photos/rm-01-groove", fit: "portrait",  w: 1440, h: 1800, caption: "Studio session, 2022", alt: "Richie Miller in headphones at the decks, one hand on the jog wheel, the other raised" },
+    { src: "assets/photos/rm-02-decks",  fit: "landscape", w: 1800, h: 1200, caption: "Studio session, 2022", alt: "Leaning over two Pioneer decks and the mixer" },
+    { src: "assets/photos/rm-03-above",  fit: "portrait",  w: 1440, h: 1800, caption: "Studio session, 2022", alt: "Seen from above, hands on the decks, headphones on" },
+    { src: "assets/photos/rm-04-cue",    fit: "landscape", w: 1800, h: 1200, caption: "Studio session, 2022", alt: "Holding a headphone to one ear while cueing on the mixer" },
+    { src: "assets/photos/rm-05-jog",    fit: "portrait",  w: 1440, h: 1800, caption: "Studio session, 2022", alt: "Close on the decks, both hands working the jog wheel" },
+    { src: "assets/photos/rm-06-mixer",  fit: "landscape", w: 1800, h: 1199, caption: "Studio session, 2022", alt: "Looking down at the mixer, adjusting a fader" },
+    { src: "assets/photos/rm-07-front",  fit: "portrait",  w: 1440, h: 1800, caption: "Studio session, 2022", alt: "Front-on behind the decks, mid-mix" },
+    { src: "assets/photos/rm-08-look",   fit: "portrait",  w: 1441, h: 1800, caption: "Studio session, 2022", alt: "Looking up at the camera from the decks, hands on the controls" },
+    { src: "assets/photos/rm-09-hand",   fit: "portrait",  w: 1441, h: 1800, caption: "Studio session, 2022", alt: "A hand raised over the mixer under red light" },
+  ],
 
   // Still frames pulled from the footage, used only while `photos` is empty.
   stills: [
