@@ -108,13 +108,42 @@
     });
   });
 
-  /* ---------- stills ---------- */
-  const stillsTrack = $('#stillsTrack');
-  ((C.photos && C.photos.length) ? C.photos : (C.stills || [])).forEach((p, i) => {
-    const li = document.createElement('li'); li.className = (p.w > p.h ? 'l' : 'p') + ' grain';
-    li.innerHTML = `<img src="${esc(p.src)}-sm.jpg" alt="${esc(p.alt || '')}" width="${p.w}" height="${p.h}" loading="lazy" decoding="async"><span class="n cap">${pad(i + 1)}</span>`;
-    stillsTrack.appendChild(li);
-  });
+  /* ---------- photos (real) / stills (footage fallback) ---------- */
+  const photos = (C.photos || []).filter((p) => p && p.src);
+  const stillsTrack = $('#stillsTrack'), stillsEl = $('#stills');
+  const phTrack = $('#phTrack'), phSec = $('#photos');
+  if (photos.length) {
+    // Real photos take over; the footage stills strip would only repeat the idea, so it goes.
+    if (stillsEl) stillsEl.remove();
+    phSec.hidden = false;
+    const nav = $('[data-nav-photos]'); if (nav) nav.hidden = false;
+    const bIdx = $('[data-bio-idx]'); if (bIdx) bIdx.textContent = '04';
+    const dIdx = $('[data-dates-idx]'); if (dIdx) dIdx.textContent = '05';
+    const caps = Array.from(new Set(photos.map((p) => p.caption).filter(Boolean)));
+    const note = $('[data-photo-note]'); if (note) { if (caps.length === 1) note.textContent = caps[0] + '.'; else note.remove(); }
+    photos.forEach((p, i) => {
+      const land = p.fit ? p.fit === 'landscape' : p.w > p.h;
+      const li = document.createElement('li'); li.className = 'ph ' + (land ? 'l' : 'p');
+      li.innerHTML = `
+        <button class="ph-btn grain" type="button" data-i="${i}" aria-label="Open photo ${i + 1} of ${photos.length}: ${esc(p.alt || p.caption || '')}">
+          <img src="${esc(p.src)}-sm.jpg" srcset="${esc(p.src)}-sm.jpg 800w, ${esc(p.src)}.jpg 1800w" sizes="${land ? '(min-width: 900px) 62vw, 88vw' : '(min-width: 900px) 42vw, 70vw'}" alt="${esc(p.alt || '')}" width="${p.w || (land ? 1800 : 1440)}" height="${p.h || (land ? 1200 : 1800)}" loading="${i < 2 ? 'eager' : 'lazy'}" decoding="async">
+          <span class="n cap">${pad(i + 1)}</span>
+        </button>
+        <p class="ph-cap cap"><span>${esc(p.caption || '')}</span><span>${pad(i + 1)} / ${pad(photos.length)}</span></p>`;
+      phTrack.appendChild(li);
+    });
+    // the line of type the strip slides through
+    const run = $('#phRun');
+    const runUnit = `<span>${esc(caps[0] || 'Studio session')}</span><i></i><span class="o">${esc(alias)}</span><i></i>`;
+    if (run) run.innerHTML = runUnit.repeat(4);
+  } else {
+    if (phSec) phSec.remove();
+    (C.stills || []).forEach((p, i) => {
+      const li = document.createElement('li'); li.className = (p.w > p.h ? 'l' : 'p') + ' grain';
+      li.innerHTML = `<img src="${esc(p.src)}-sm.jpg" alt="${esc(p.alt || '')}" width="${p.w}" height="${p.h}" loading="lazy" decoding="async"><span class="n cap">${pad(i + 1)}</span>`;
+      stillsTrack.appendChild(li);
+    });
+  }
 
   /* ---------- video helpers ---------- */
   const srcOf = (v) => v + '.mp4', posterOf = (v) => v + '.jpg';
@@ -324,15 +353,73 @@
       clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
       scrollTrigger: { trigger: '#liveStage', start: 'top 70%', end: 'top -40%', scrub: 0.5 },
     });
-    // stills: pinned horizontal scrub on desktop; native horizontal scroll on phones
-    if (DESKTOP) {
-      const stills = $('#stills');
+    // photos / stills: pinned horizontal scrub on desktop; native horizontal scroll on phones
+    if (DESKTOP && photos.length) {
+      const stage = $('#phStage'), run = $('#phRun');
+      const dist = () => Math.max(0, phTrack.scrollWidth - window.innerWidth);
+      const tl = gsap.timeline({ scrollTrigger: { trigger: stage, start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1 } });
+      tl.to(phTrack, { x: () => -dist(), ease: 'none' }, 0);
+      if (run) tl.fromTo(run, { x: () => -window.innerWidth * 0.1 }, { x: () => -dist() * 0.45 - window.innerWidth * 0.1, ease: 'none' }, 0);
+    }
+    if (DESKTOP && !photos.length && stillsEl) {
       const dist = () => Math.max(0, stillsTrack.scrollWidth - window.innerWidth);
       gsap.to(stillsTrack, {
         x: () => -dist(), ease: 'none',
-        scrollTrigger: { trigger: stills, start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1 },
+        scrollTrigger: { trigger: stillsEl, start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1 },
       });
     }
+  }
+
+  /* ---------- full-screen photo viewer: click, arrows, Esc, swipe ---------- */
+  const viewer = $('#viewer');
+  if (viewer && photos.length) {
+    const vImg = $('#viewerImg'), vCap = $('#viewerCap'), vN = $('#viewerN');
+    let cur = 0, opener = null, hideT = 0;
+    const preload = (i) => { const im = new Image(); im.src = photos[(i + photos.length) % photos.length].src + '.jpg'; };
+    const show = (i, dir) => {
+      cur = (i + photos.length) % photos.length; const p = photos[cur];
+      vImg.classList.remove('in'); vImg.style.setProperty('--dx', (dir || 0) * 40 + 'px');
+      vImg.src = p.src + '-sm.jpg';                       // instant, then the full-size file
+      const full = new Image(); full.onload = () => { if (photos[cur] === p) vImg.src = full.src; }; full.src = p.src + '.jpg';
+      vImg.alt = p.alt || ''; vImg.width = p.w || 1440; vImg.height = p.h || 1800;
+      vCap.textContent = p.caption || ''; vN.textContent = `${pad(cur + 1)} / ${pad(photos.length)}`;
+      requestAnimationFrame(() => requestAnimationFrame(() => vImg.classList.add('in')));
+      preload(cur + 1); preload(cur - 1);
+    };
+    const open = (i, from) => {
+      clearTimeout(hideT);
+      opener = from || document.activeElement; viewer.hidden = false; document.documentElement.classList.add('viewing');
+      if (lenis) lenis.stop();
+      show(i, 0); requestAnimationFrame(() => viewer.classList.add('open'));
+      $('#viewerClose').focus({ preventScroll: true });
+    };
+    const close = () => {
+      viewer.classList.remove('open'); document.documentElement.classList.remove('viewing');
+      if (lenis) lenis.start();
+      hideT = setTimeout(() => { viewer.hidden = true; }, REDUCED ? 0 : 320);
+      if (opener && opener.focus) opener.focus({ preventScroll: true });
+    };
+    phTrack.addEventListener('click', (e) => { const b = e.target.closest('.ph-btn'); if (b) open(+b.dataset.i, b); });
+    $('#viewerPrev').addEventListener('click', (e) => { e.stopPropagation(); show(cur - 1, -1); });
+    $('#viewerNext').addEventListener('click', (e) => { e.stopPropagation(); show(cur + 1, 1); });
+    $('#viewerClose').addEventListener('click', close);
+    viewer.addEventListener('click', (e) => { if (e.target === viewer || e.target.classList.contains('viewer-fig')) close(); });
+    document.addEventListener('keydown', (e) => {
+      if (viewer.hidden || !viewer.classList.contains('open')) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); show(cur + 1, 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); show(cur - 1, -1); }
+      else if (e.key === 'Tab') { // keep focus inside the dialog
+        const f = $$('button', viewer); const k = f.indexOf(document.activeElement);
+        e.preventDefault(); f[(k + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+      }
+    });
+    let sx = null, sy = 0;
+    viewer.addEventListener('pointerdown', (e) => { sx = e.clientX; sy = e.clientY; });
+    viewer.addEventListener('pointerup', (e) => {
+      if (sx === null) return; const dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) show(cur + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    });
   }
 
   /* ---------- pause everything when the tab is hidden ---------- */
