@@ -12,13 +12,13 @@ window.DJ = {
   name: "Richie Miller",
   alias: "Richie Miller",
   role: "DJ",
-  city: "Budapest",
+  city: "Gran Canaria",
 
   // Shown as a small line under the name. TODO: confirm wording with the client.
   status: "Booking open",
 
   // One-line bio. Honest, no invented history. TODO: client to edit in his own words.
-  bio: "Budapest-based DJ. House in its progressive, tribal and big-room shades, played to be felt in a room. Booking open.",
+  bio: "Gran Canaria-based DJ. House in its progressive, tribal and big-room shades, played to be felt in a room. Booking open.",
   bioIsPlaceholder: true,   // shows a small "placeholder" tag next to the bio until set to false
 
   // Genres: the client's own list (confirmed 2026-11-05). Rendered only while genresConfirmed is true. He may add more.
@@ -46,7 +46,7 @@ window.DJ = {
   pressKit: { label: "Press kit & rider", mode: "request" },   // mode: "request" | "url"; add `url` when a PDF exists
 
   // Upcoming dates. None yet (client confirmed: new DJ, no gigs booked). Empty = section hidden. Example row:
-  // { date: "2026-12-31", venue: "Venue name", city: "Budapest", url: "https://..." }
+  // { date: "2026-12-31", venue: "Venue name", city: "Las Palmas", url: "https://..." }
   dates: [],
 
   // Footage (all real B-roll supplied by the client; re-encoded, muted).
@@ -62,14 +62,14 @@ window.DJ = {
   // assets/photos/<name>.jpg (1800px long edge) and <name>-sm.jpg (800px). fit: "portrait" (4:5) | "landscape" (3:2).
   // While this list is empty, the page falls back to the `stills` below (frames pulled from the footage).
   photos: [
-    { src: "assets/photos/rm-01-groove", fit: "portrait",  w: 1440, h: 1800, caption: "Studio session, 2022", alt: "Richie Miller in headphones at the decks, one hand on the jog wheel, the other raised" },
-    { src: "assets/photos/rm-02-decks",  fit: "landscape", w: 1800, h: 1200, caption: "Studio session, 2022", alt: "Leaning over two Pioneer decks and the mixer" },
-    { src: "assets/photos/rm-03-above",  fit: "portrait",  w: 1440, h: 1800, caption: "Studio session, 2022", alt: "Seen from above, hands on the decks, headphones on" },
-    { src: "assets/photos/rm-04-cue",    fit: "landscape", w: 1800, h: 1200, caption: "Studio session, 2022", alt: "Holding a headphone to one ear while cueing on the mixer" },
-    { src: "assets/photos/rm-05-jog",    fit: "portrait",  w: 1440, h: 1800, caption: "Studio session, 2022", alt: "Close on the decks, both hands working the jog wheel" },
-    { src: "assets/photos/rm-06-mixer",  fit: "landscape", w: 1800, h: 1199, caption: "Studio session, 2022", alt: "Looking down at the mixer, adjusting a fader" },
-    { src: "assets/photos/rm-07-front",  fit: "portrait",  w: 1440, h: 1800, caption: "Studio session, 2022", alt: "Front-on behind the decks, mid-mix" },
-    { src: "assets/photos/rm-08-look",   fit: "portrait",  w: 1441, h: 1800, caption: "Studio session, 2022", alt: "Looking up at the camera from the decks, hands on the controls" },
+    { src: "assets/photos/rm-01-groove", fit: "portrait",  w: 1440, h: 1800, caption: "Studio session", alt: "Richie Miller in headphones at the decks, one hand on the jog wheel, the other raised" },
+    { src: "assets/photos/rm-02-decks",  fit: "landscape", w: 1800, h: 1200, caption: "Studio session", alt: "Leaning over two Pioneer decks and the mixer" },
+    { src: "assets/photos/rm-03-above",  fit: "portrait",  w: 1440, h: 1800, caption: "Studio session", alt: "Seen from above, hands on the decks, headphones on" },
+    { src: "assets/photos/rm-04-cue",    fit: "landscape", w: 1800, h: 1200, caption: "Studio session", alt: "Holding a headphone to one ear while cueing on the mixer" },
+    { src: "assets/photos/rm-05-jog",    fit: "portrait",  w: 1440, h: 1800, caption: "Studio session", alt: "Close on the decks, both hands working the jog wheel" },
+    { src: "assets/photos/rm-06-mixer",  fit: "landscape", w: 1800, h: 1199, caption: "Studio session", alt: "Looking down at the mixer, adjusting a fader" },
+    { src: "assets/photos/rm-07-front",  fit: "portrait",  w: 1440, h: 1800, caption: "Studio session", alt: "Front-on behind the decks, mid-mix" },
+    { src: "assets/photos/rm-08-look",   fit: "portrait",  w: 1441, h: 1800, caption: "Studio session", alt: "Looking up at the camera from the decks, hands on the controls" },
   ],
 
   // Still frames pulled from the footage, used only while `photos` is empty.

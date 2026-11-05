@@ -8,7 +8,7 @@ window.MODEL = {
   first: "Richie",
   last: "Miller",
   role: "Model",
-  city: "Budapest",               // TODO: your base
+  city: "Gran Canaria",               // TODO: your base
   available: "Europe · Worldwide",
   email: "booking@richiemiller.com", // TODO
   instagram: "richiemiller",        // TODO: handle without @

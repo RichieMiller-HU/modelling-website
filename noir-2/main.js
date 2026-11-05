@@ -216,8 +216,8 @@
   $("#f-l").textContent = `© ${new Date().getFullYear()} ${full}`;
   const clock = $("#clock");
   const tick = () => {
-    if (!/budapest/i.test(M.city)) { clock.textContent = M.available; return; }
-    try { clock.textContent = `${M.city} ${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Budapest" }).format(new Date())}`; } catch (e) { clock.textContent = M.city; }
+    if (!/gran canaria|canary/i.test(M.city)) { clock.textContent = M.available; return; }
+    try { clock.textContent = `${M.city} ${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Atlantic/Canary" }).format(new Date())}`; } catch (e) { clock.textContent = M.city; }
   };
   tick(); setInterval(tick, 30000);
 

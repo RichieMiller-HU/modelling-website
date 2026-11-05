@@ -4,7 +4,7 @@ For whoever (human or AI) continues this project. Read this first, then `CREATIV
 
 ## 1. What this is
 
-A static portfolio site for **Richie Miller**, model and (soon) actor, Budapest. No framework, no build step: plain HTML, CSS and JS. Every page reads its content from **one file, `assets/content.js`**, so changing a measurement, the email, or the photo list updates every concept at once.
+A static portfolio site for **Richie Miller**, model and (soon) actor, Gran Canaria (Canary Islands). No framework, no build step: plain HTML, CSS and JS. Every page reads its content from **one file, `assets/content.js`**, so changing a measurement, the email, or the photo list updates every concept at once.
 
 Live preview (GitHub Pages, deployed automatically on every push to the branch): https://richiemiller-hu.github.io/modelling-website/
 
