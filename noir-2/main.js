@@ -23,7 +23,7 @@
   const touch = !fine;                 /* coarse pointer or no hover: phones and tablets */
   const T = touch ? 0.55 : 1;          /* motion runs shorter on touch */
   /* the opening still: a high-key studio frame. A concept choice for Noir; the book itself still comes from content.js */
-  const HERO_SRC = "assets/photos/rm-06.jpg";
+  const HERO_SRC = "assets/photos/rm-d04.jpg";
   const loadScript = (src) => new Promise((res, rej) => { if (d.querySelector(`script[src="${src}"]`)) return res(); const sc = d.createElement("script"); sc.src = src; sc.onload = res; sc.onerror = rej; d.head.append(sc); });
 
   history.scrollRestoration = "manual";
@@ -486,7 +486,8 @@
       if (!portrait()) {
         const g = vw * 0.024;
         const s = clamp((vw - 2 * m - 2 * g - hn1.offsetWidth - hn2.offsetWidth) / vw, 0.28, 0.48);
-        return { s, x1: m - hn1.offsetLeft, y1: 0, x2: vw - m - (hn2.offsetLeft + hn2.offsetWidth), y2: 0 };
+        const yc = vh / 2 - (hn1.offsetTop + hn1.offsetHeight / 2); /* up to the frame's centre line */
+        return { s, x1: m - hn1.offsetLeft, y1: yc, x2: vw - m - (hn2.offsetLeft + hn2.offsetWidth), y2: yc };
       }
       const s = 0.5, fh = vh * s, top = (vh - fh) / 2, g = vh * 0.012;
       return { s, x1: m - hn1.offsetLeft, y1: top - g - (hn1.offsetTop + hn1.offsetHeight), x2: vw - m - (hn2.offsetLeft + hn2.offsetWidth), y2: top + fh + g - hn2.offsetTop };
