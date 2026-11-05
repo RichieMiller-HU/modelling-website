@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Richie Miller — DJ, Budapest</title>
+<meta name="description" content="Richie Miller, DJ, Budapest. Recorded sets, footage and bookings.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#08070b">
+<link rel="preload" href="fonts/big-shoulders-display-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/sometype-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<!--
+  Richie Miller — DJ site. Static, no build step. All copy lives in content.js.
+  Fonts: Big Shoulders Display + Sometype Mono (SIL OFL, see fonts/).
+  Libraries: GSAP 3 + ScrollTrigger (GSAP standard licence), Lenis (MIT), see js/.
+-->
+</head>
+<body class="no-js">
+<script>document.body.classList.remove('no-js')</script>
+
+<a class="skip" href="#sets">Skip to sets</a>
+
+<header class="bar" id="bar">
+  <a class="bar-mark" href="#top" data-alias>Richie Miller</a>
+  <p class="bar-meta cap"><span data-role>DJ</span><i class="sep"></i><span data-city>Budapest</span></p>
+  <nav class="bar-nav cap" aria-label="Sections">
+    <a href="#sets">Sets</a>
+    <a href="#live">Live</a>
+    <a href="#dates" data-nav-dates hidden>Dates</a>
+    <a href="#booking">Booking</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero-wrap" aria-label="Intro">
+    <div class="hero" id="hero">
+      <div class="hero-media" id="heroMedia" aria-hidden="true"></div>
+
+      <!-- The veil: an ink layer with the name cut out of it, so the footage bleeds through the letters. -->
+      <svg class="veil" id="veil" aria-hidden="true" focusable="false">
+        <defs>
+          <mask id="veilMask" maskUnits="userSpaceOnUse">
+            <rect class="veil-full" width="100%" height="100%" fill="#fff"/>
+            <g id="veilText" class="veil-text" fill="#000">
+              <text id="veilL1" x="0" y="0"></text>
+              <text id="veilL2" x="0" y="0"></text>
+            </g>
+            <circle id="torch" cx="-999" cy="-999" r="0" fill="#000"/>
+          </mask>
+        </defs>
+        <rect class="veil-ink" width="100%" height="100%" mask="url(#veilMask)"/>
+        <!-- thin outline of the letters, on top, so they stay readable over dark frames -->
+        <g id="veilOutline" class="veil-outline" fill="none">
+          <text id="outL1" x="0" y="0"></text>
+          <text id="outL2" x="0" y="0"></text>
+        </g>
+      </svg>
+
+      <h1 class="sr" data-alias>Richie Miller</h1>
+
+      <div class="hero-ui">
+        <p class="hero-status cap"><i class="dot" aria-hidden="true"></i><span data-status>Booking open</span></p>
+        <p class="hero-where cap"><span data-role>DJ</span> — <span data-city>Budapest</span></p>
+        <p class="hero-scroll cap" aria-hidden="true">Scroll</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MARQUEE (scrubs with scroll) ============ -->
+  <div class="marquee" id="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marqueeTrack"></div>
+  </div>
+
+  <!-- ============ SETS ============ -->
+  <section class="sec sets" id="sets">
+    <header class="sec-head">
+      <p class="cap idx">01</p>
+      <h2 class="h-display">Sets</h2>
+      <p class="sec-sub mono">Recorded sets on YouTube. Tap to play; the player loads only when you do.</p>
+    </header>
+    <ol class="set-grid" id="setGrid"></ol>
+  </section>
+
+  <!-- ============ LIVE ============ -->
+  <section class="sec live" id="live">
+    <header class="sec-head">
+      <p class="cap idx">02</p>
+      <h2 class="h-display">Live</h2>
+      <p class="sec-sub mono">Club and studio footage. Muted loops.</p>
+    </header>
+    <div class="live-stage" id="liveStage">
+      <figure class="live-frame" id="liveFrame">
+        <video class="live-video" id="liveVideo" muted playsinline loop preload="none" disablepictureinpicture></video>
+        <figcaption class="live-cap mono"><span class="cap">Studio session</span><span class="tc" id="liveTc" aria-hidden="true">00:00:00</span></figcaption>
+      </figure>
+    </div>
+    <div class="stills" id="stills" aria-label="Stills from the footage">
+      <ul class="stills-track" id="stillsTrack"></ul>
+    </div>
+  </section>
+
+  <!-- ============ BIO ============ -->
+  <section class="sec bio" id="bio">
+    <div class="bio-grid">
+      <div class="bio-text">
+        <p class="cap idx">03</p>
+        <p class="bio-line h-display" data-bio></p>
+        <ul class="bio-genres cap" data-genres hidden></ul>
+        <dl class="bio-facts mono">
+          <div><dt class="cap">Based</dt><dd data-city>Budapest</dd></div>
+          <div><dt class="cap">Role</dt><dd data-role>DJ</dd></div>
+          <div><dt class="cap">Sets online</dt><dd data-setcount>3</dd></div>
+        </dl>
+        <ul class="listen cap" data-listen hidden></ul>
+      </div>
+      <figure class="bio-media" id="bioMedia">
+        <video class="bio-video" id="bioVideo" muted playsinline loop preload="none" disablepictureinpicture></video>
+        <img class="bio-poster" id="bioPoster" alt="" width="720" height="1280">
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ DATES (hidden while empty) ============ -->
+  <section class="sec dates" id="dates" hidden>
+    <header class="sec-head">
+      <p class="cap idx">04</p>
+      <h2 class="h-display">Dates</h2>
+    </header>
+    <ol class="date-list mono" id="dateList"></ol>
+  </section>
+
+  <!-- ============ BOOKING ============ -->
+  <section class="sec booking" id="booking">
+    <p class="cap idx">Booking</p>
+    <h2 class="book-word" id="bookWord" aria-label="Book Richie Miller">BOOK<span class="book-name" data-alias-short>RICHIE</span></h2>
+    <div class="book-row">
+      <a class="book-mail" id="mailLink" href="#">booking@richiemiller.com</a>
+      <ul class="book-links cap" id="bookLinks"></ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p class="foot-mark" data-alias>Richie Miller</p>
+  <p class="mono foot-copy">© <span data-year>2026</span> <span data-name>Richie Miller</span> · <span data-city>Budapest</span></p>
+  <a class="foot-back cap" id="backLink" href="../entry/">← Model · Actor</a>
+</footer>
+
+<script src="content.js"></script>
+<script src="js/gsap.min.js"></script>
+<script src="js/ScrollTrigger.min.js"></script>
+<script src="js/lenis.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

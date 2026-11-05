@@ -77,3 +77,40 @@ Grade everything to one look: muted, slightly warm blacks, no orange skin, and n
 
 3. Add a comp card PDF and set `compCard` in `content.js`.
 4. Deploy: it's a static site with no build step. Use Netlify, Vercel, Cloudflare Pages or GitHub Pages, then point `model.richiemiller.com` at it. Make the chosen concept the root `index.html` (or redirect `/` → `/noir/`).
+
+## 6. Book v2 (from the full studio originals)
+
+Re-edited from the 125 full-resolution files of the two studio sessions (52 unique frames after removing byte-identical duplicates and burst twins). Brief: "sexy, masculine, very good for the website, give a model feeling", black and white. Exports are `rm-dNN.jpg` (2400 px long edge) with `-sm` 900 px versions; `rm-10`, `rm-16` and `rm-18` were re-exported from the same frames at the new resolution so the hero / close-up references in every concept keep working.
+
+**High key (8)**
+1. `rm-d01` IMG_3013 — hands at the collar, eyes straight to lens, no smile. Jaw, hands, stillness. The hero (also `rm-10` / `heroLight`).
+2. `rm-d02` IMG_2969 — full length against the wall, arms crossed, legs crossed, confident smile. The one warm frame in the chapter.
+3. `rm-d03` IMG_2960 — chin on hand close-up, direct gaze. Grooming / watch frame.
+4. `rm-d04` IMG_2989 — buttoning the shirt, forearms, eyes to lens. The sexiest mid-shot of the set.
+5. `rm-d05` IMG_3042 — sunglasses at the white table, landscape. The chapter's breather.
+6. `rm-d06` IMG_3006 — hands behind the neck, head tilted, half smile. Close-up with attitude.
+7. `rm-d07` IMG_2945 — hands behind the back, three-quarter, smirk. Posture frame.
+8. `rm-d08` IMG_3055 — glasses, chin on hand, eyes to lens. Eyewear / "intelligent" look; closes the light chapter.
+
+**Low key (8)**
+9. `rm-d09` IMG_3288 — chin on fist on the chair back (also `rm-16` / `closeUpDark`).
+10. `rm-d10` IMG_3189 — beige overshirt, full length, hands in pockets, slight smirk.
+11. `rm-d11` IMG_3262 — white tee, hands behind the back. Physique, direct.
+12. `rm-d12` IMG_3310 — arms crossed on the chair back, tightest close-up of the shoot. Eyes. (`rm-18` is the landscape twin, IMG_3316, kept for the concepts that need a landscape.)
+13. `rm-d13` IMG_3277 — hand on neck, looking down. The quiet, sexy beat.
+14. `rm-d14` IMG_3402 — overshirt, movement, arms out, eyes up to lens. Cropped to lose the lighting rail.
+15. `rm-d15` IMG_3234 — dark jacket, hand behind the head, hand in pocket.
+16. `rm-d16` IMG_3368 — coat, collar up, straight to lens. Closes the dark chapter.
+
+**Coda (1)**
+17. `rm-d17` IMG_3124 — white shirt on grey, arms crossed, cropped to portrait. Chosen over `rm-04` (the reader): 3124 is a real studio frame of him with the same beard and hair as the rest of the book, lit the same way; `rm-04` is warmer, softer, in glasses and a waistcoat, and reads as a different person and a different source. The book should end on him, not on a mood.
+
+**Rhythm:** close-up → full length → close-up → mid → landscape → close-up → mid → mid | close-up → full → mid → close-up → mid → full → mid → mid | coda. Five real close-ups (d01, d03, d06, d09, d12), four full lengths, one landscape, every pose once.
+
+**Rejected, and why**
+- Burst twins: 2961 (vs 2960), 2988 (vs 2989), 3016 (the smiling collar frame, vs 3013: the brief asked for confident, not cute), 3196 (vs 3189), 3239 (vs 3234), 3301 / 3285 / 3316 (vs 3310: same crossed-arms-on-chair pose), 3043 / 3030 (vs 3042), 3053 (vs 3055), 3003 (full-length version of the buttoning pose; 2989 has the face bigger).
+- Looking down / eyes closed: 2929, 2946, 2947 (full length leaning, no eye contact), 2972, 2982, 2985 (sleeve adjustment on the stool), 3078 (holding sunglasses), 3380, 3393.
+- Too cute or too casual for a model book: 2962, 2963, 2964, Richie22 (big smile, arms crossed: one warm smile per chapter is enough, 2969 carries it), 2986 (hands clasped on the stool), 3356, 3268, 3371 (laughing in the coat).
+- Weaker versions of a pose already in: 2949 (hand on chin, standing), 3047 (sunglasses, looking away: strong, but the same pose as d05), 3247 (jacket, arm across), 3362 (coat, full length, static), 3387 (finger on chin).
+- 3353-black: a 4480 px phone-style re-edit, not an original.
+- Styling note stands: watch and dog tag are in every frame. Remove them for the next shoot.
