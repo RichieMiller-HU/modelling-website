@@ -7,24 +7,23 @@
    ============================================================ */
 
 window.DJ = {
-  // Artist name as shown everywhere. TODO: if a DJ alias is chosen, put it in `alias`
-  // (it replaces the name in the hero and the marquee; `name` stays for the footer/legal).
+  // Artist name as shown everywhere. Client confirmed: no alias, he performs as Richie Miller.
+  // If that ever changes, put the alias in `alias` (hero, marquee, booking); `name` stays for the footer.
   name: "Richie Miller",
-  alias: "Richie Miller",          // TODO: DJ alias (defaults to the real name)
+  alias: "Richie Miller",
   role: "DJ",
   city: "Budapest",
 
   // Shown as a small line under the name. TODO: confirm wording with the client.
   status: "Booking open",
 
-  // One-line bio. TODO: placeholder written for the draft — replace with the client's own words.
-  bio: "Long sets, built on the floor rather than the laptop: house with a deep, melodic pull, and the patience to let a room arrive.",
-  bioIsPlaceholder: true,
+  // One-line bio. Honest, no invented history. TODO: client to edit in his own words.
+  bio: "Budapest-based DJ. House in its progressive, tribal and big-room shades, played to be felt in a room. Booking open.",
+  bioIsPlaceholder: true,   // shows a small "placeholder" tag next to the bio until set to false
 
-  // Genres. NOT confirmed by the client. They are rendered only when genresConfirmed is true.
-  // TODO: confirm genres. (The three published sets are titled deep / afro / melodic house.)
-  genres: ["Deep House", "Afro House", "Melodic House"],
-  genresConfirmed: false,
+  // Genres: the client's own list (confirmed 2026-11-05). Rendered only while genresConfirmed is true. He may add more.
+  genres: ["Progressive House", "Tribal House", "Big Room", "Dance House"],
+  genresConfirmed: true,
 
   // Recorded sets (YouTube). Titles were fetched from YouTube's oEmbed on 2026-11-05 and are the real titles.
   // Order: newest first (as supplied). `title` may contain emoji; the page strips them for display.
@@ -37,7 +36,7 @@ window.DJ = {
   // Contact. TODO: both are placeholders.
   email: "booking@richiemiller.com",
   instagram: "richiemiller",       // handle without @
-  // Listening links: leave empty to hide. TODO: add real URLs when they exist.
+  // Listening links: none exist yet (client confirmed). Leave empty to hide; add real URLs when they exist.
   soundcloud: "",
   mixcloud: "",
   spotify: "",
@@ -46,7 +45,7 @@ window.DJ = {
   // Press kit / technical rider. "On request" opens a prefilled email.
   pressKit: { label: "Press kit & rider", mode: "request" },   // mode: "request" | "url"; add `url` when a PDF exists
 
-  // Upcoming dates. Empty = section hidden. Example row:
+  // Upcoming dates. None yet (client confirmed: new DJ, no gigs booked). Empty = section hidden. Example row:
   // { date: "2026-12-31", venue: "Venue name", city: "Budapest", url: "https://..." }
   dates: [],
 
@@ -58,7 +57,12 @@ window.DJ = {
     liveMobile: "assets/video/club-hands",                                 // 720×1280 (0.7 MB)
     bio: "assets/video/club-groove",                                       // 720×1280 (1.9 MB), desktop only; poster on phones
   },
-  // Still frames pulled from the footage (there are no DJ photos yet). TODO: replace with real photos when shot.
+  // PHOTOS. TODO: the client's DJ photo zip never arrived. When real photos exist, drop them in assets/photos/
+  // and list them here as { src: "assets/photos/name" (without extension; provide name.jpg and name-sm.jpg), alt, w, h }.
+  // While this list is empty, the page uses the `stills` below (frames pulled from the footage).
+  photos: [],
+
+  // Still frames pulled from the footage, used only while `photos` is empty.
   stills: [
     { src: "assets/stills/still-02-fader", alt: "Richie Miller at the decks under red light, hand on the fader", w: 1080, h: 1920 },
     { src: "assets/stills/still-01-cue",   alt: "Cueing a track on headphones under the vault lights", w: 1080, h: 1920 },

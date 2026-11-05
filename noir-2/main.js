@@ -20,6 +20,11 @@
   const WORDS = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty".split(" ");
   const word = (n) => WORDS[n] || String(n);
   const cap1 = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const touch = !fine;                 /* coarse pointer or no hover: phones and tablets */
+  const T = touch ? 0.55 : 1;          /* motion runs shorter on touch */
+  /* the opening still: a high-key studio frame. A concept choice for Noir; the book itself still comes from content.js */
+  const HERO_SRC = "assets/photos/rm-06.jpg";
+  const loadScript = (src) => new Promise((res, rej) => { if (d.querySelector(`script[src="${src}"]`)) return res(); const sc = d.createElement("script"); sc.src = src; sc.onload = res; sc.onerror = rej; d.head.append(sc); });
 
   history.scrollRestoration = "manual";
   if (!reduce) html.classList.add("motion");
@@ -30,7 +35,9 @@
   const all = order.flatMap((k) => M.photos.filter((p) => p.key === k));
   /* the close-up gets its own full-bleed scene, so it is not repeated inside the book */
   let cuEntry = M.closeUpDark ? all.find((p) => p.src === M.closeUpDark) || { src: M.closeUpDark, fit: "portrait", key: "dark", caption: "Close-up" } : null;
-  const photos = all.filter((p) => p !== cuEntry);
+  /* the opening still is the cover: it is not repeated inside the book either */
+  const heroEntry = all.find((p) => p.src === HERO_SRC) || null;
+  const photos = all.filter((p) => p !== cuEntry && p !== heroEntry);
   /* page order: the book, then the close-up. Numbering, lightbox and contents all follow it */
   const seq = cuEntry ? [...photos, cuEntry] : photos;
   const N = seq.length;
@@ -45,10 +52,15 @@
   $("#h-role").textContent = M.role;
   $("#h-city").textContent = M.city;
 
-  const heroV = $(".hero-frame video"), filmV = $(".film-frame video");
-  heroV.poster = filmV.poster = url(M.video.poster);
-  heroV.src = url(M.video.src);
-  filmV.src = url(M.video.src);
+  const heroLo = $(".hero-lo"), heroHi = $(".hero-hi"), filmV = $(".film-frame video");
+  heroLo.src = sm(HERO_SRC); heroLo.alt = `${full} — ${heroEntry ? heroEntry.caption : "studio portrait"}`;
+  /* the sharp hero arrives after first paint (at once on desktop, when idle on touch) and fades over the small file */
+  const heroSharp = () => {
+    heroHi.onload = () => { if (reduce) heroHi.style.opacity = 1; else gsap.to(heroHi, { opacity: 1, duration: 0.6, ease: "none" }); };
+    heroHi.src = url(HERO_SRC);
+  };
+  /* the studio film lives in this concept's own folder; the shared placeholder stays for the other concepts */
+  filmV.poster = "assets/video/studio-bw-poster.jpg"; filmV.src = "assets/video/studio-bw.mp4";
 
   $("#statement").innerHTML = M.statement.split(/\s+/).map((w) => `<span class="w">${w}</span>`).join(" ");
   const facts = [["Based", M.city], ["Available", M.available]];
@@ -99,7 +111,9 @@
     const ar = p.fit === "landscape" ? "3/2" : "2/3";
     const mSize = mob === "m-pa" || mob === "m-pb" ? "50vw" : mob === "m-full" || mob === "m-bleed" ? "100vw" : "84vw";
     const lazy = !hzAtBuild && i > 1;
-    f.innerHTML = `<div class="clip" style="--ar:${ar}"><img src="${sm(p.src)}" srcset="${sm(p.src)} 900w, ${url(p.src)} 2000w" sizes="(min-width: 900px) 34vw, ${mSize}" alt="${p.caption}" ${lazy ? 'loading="lazy"' : ""} decoding="async"></div><figcaption><span class="lbl num">${pad(i + 1)}</span><span class="lbl mute">${p.caption}</span></figcaption>`;
+    /* touch screens get the 900px file: a DPR-3 phone would otherwise pick the 2000px one for every frame */
+    const srcAttrs = touch ? `src="${sm(p.src)}"` : `src="${sm(p.src)}" srcset="${sm(p.src)} 900w, ${url(p.src)} 2000w" sizes="(min-width: 900px) 34vw, ${mSize}"`;
+    f.innerHTML = `<div class="clip" style="--ar:${ar}"><img ${srcAttrs} alt="${p.caption}" ${lazy ? 'loading="lazy"' : ""} decoding="async"></div><figcaption><span class="lbl num">${pad(i + 1)}</span><span class="lbl mute">${p.caption}</span></figcaption>`;
     const img = $("img", f);
     const setAr = () => {
       if (!img.naturalWidth) return;
@@ -117,7 +131,9 @@
   const cuIdx = cuEntry ? seq.indexOf(cuEntry) : 0;
   const cuSrc = seq[cuIdx].src;
   const cuImg = $("#cu-img"), cuF = $("#cu-frame");
-  cuImg.src = url(cuSrc); cuImg.alt = seq[cuIdx].caption || "Close-up";
+  cuImg.alt = seq[cuIdx].caption || "Close-up";
+  /* full-bleed, so it keeps the large file, but it is fetched only as its scene approaches (not first-screen work) */
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { cuImg.src = url(cuSrc); o.disconnect(); } }, { rootMargin: "150% 0px" }).observe(cuF);
   $("#cu-c").textContent = `${pad(cuIdx + 1)} / ${pad(N)} — ${seq[cuIdx].caption || ""}`;
   /* where the eyes sit in the close-up frame, as a fraction of the image (x, y) */
   const CU_FOCUS = [0.36, 0.25];
@@ -205,29 +221,36 @@
 
   /* film controls */
   let userPaused = false;
-  const snd = $("#snd"), pp = $("#pp");
-  const setSound = (on) => { filmV.muted = !on; snd.textContent = on ? "Sound off" : "Sound on"; if (on) { userPaused = false; pp.textContent = "Pause"; filmV.play().catch(() => {}); } };
-  snd.addEventListener("click", () => setSound(filmV.muted));
-  $(".film-frame").addEventListener("click", () => setSound(filmV.muted));
-  pp.addEventListener("click", () => {
-    if (filmV.paused) { userPaused = false; filmV.play().catch(() => {}); pp.textContent = "Pause"; }
-    else { userPaused = true; filmV.pause(); pp.textContent = "Play"; }
-  });
+  const pp = $("#pp"), filmF = $(".film-frame");
+  const togglePlay = () => {
+    if (filmV.paused) { userPaused = false; filmV.play().catch(() => {}); pp.textContent = "Pause"; filmF.dataset.cursor = "Pause"; }
+    else { userPaused = true; filmV.pause(); pp.textContent = "Play"; filmF.dataset.cursor = "Play"; }
+  };
+  pp.addEventListener("click", togglePlay);
+  filmF.addEventListener("click", togglePlay);
+  /* buffer the film a screen early so it starts the moment it is in view */
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { filmV.preload = "auto"; o.disconnect(); } }, { rootMargin: "100% 0px" }).observe(filmV);
   filmV.addEventListener("loadedmetadata", () => {
     const s = Math.round(filmV.duration || 0); if (s) $("#dur").textContent = `— ${Math.floor(s / 60)}:${pad(s % 60)}`;
   });
   const vio = (v, isFilm) => new IntersectionObserver(([e]) => {
     if (e.isIntersecting) { if (!(isFilm && userPaused)) v.play().catch(() => {}); }
-    else { v.pause(); if (isFilm && !v.muted) setSound(false); }
+    else v.pause();
   }, { threshold: 0.2 }).observe(v);
-  if (reduce) { userPaused = true; pp.textContent = "Play"; heroV.removeAttribute("autoplay"); heroV.preload = "metadata"; }
-  else vio(heroV, false);
+  if (reduce) { userPaused = true; pp.textContent = "Play"; filmF.dataset.cursor = "Play"; }
   vio(filmV, true);
 
   /* image reveals (curtain, not clip-path, so lazy images still load) */
   if (!reduce) {
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px -4% -8% 0px", threshold: 0.12 });
-    $$(".ph").forEach((f) => io.observe(f));
+    const phs = $$(".ph");
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("in"); io.unobserve(e.target);
+      /* the next two frames start downloading as soon as this one shows */
+      const k = phs.indexOf(e.target);
+      for (let j = k + 1; j <= k + 2 && j < phs.length; j++) { const im = $("img", phs[j]); if (im && im.loading === "lazy") im.loading = "eager"; }
+    }), touch ? { rootMargin: "0px 0px 4% 0px", threshold: 0.04 } : { rootMargin: "0px -4% -8% 0px", threshold: 0.12 });
+    phs.forEach((f) => io.observe(f));
   }
 
   /* ---------------- lightbox ---------------- */
@@ -238,27 +261,29 @@
     const p = lbList[lbI], tok = ++lbTok;
     lbN.textContent = `${pad(lbI + 1)} / ${pad(lbList.length)}`; lbC.textContent = p.caption || "";
     const im = new Image(); im.src = url(p.src);
+    const enter = () => { if (!reduce) gsap.fromTo(lbImg, { opacity: 0, x: dir * 40 * T, scale: dir ? 1 : 0.97 }, { opacity: 1, x: 0, scale: 1, duration: 0.9 * T, ease: "expo.out", overwrite: true }); };
+    /* on touch the small file is already cached from the book, so it shows at once; the large one replaces it when decoded */
+    if (touch) { lbImg.src = sm(p.src); lbImg.alt = p.caption || ""; enter(); }
+    else if (!reduce) gsap.to(lbImg, { opacity: 0.0, duration: 0.2 });
     const swap = () => {
       if (tok !== lbTok) return;
       lbImg.src = im.src; lbImg.alt = p.caption || "";
-      if (reduce) return;
-      gsap.fromTo(lbImg, { opacity: 0, x: dir * 40, scale: dir ? 1 : 0.97 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: "expo.out", overwrite: true });
+      if (!touch) enter();
     };
     (im.decode ? im.decode() : Promise.resolve()).then(swap, swap);
-    if (!reduce) gsap.to(lbImg, { opacity: 0.0, duration: 0.2 });
   };
   const lbGo = (dx) => { lbI = (lbI + dx + lbList.length) % lbList.length; lbShow(dx); };
   function lightbox(list, i, from) {
     lbList = list; lbI = i; lbFrom = from || null; lbOpen = true;
     lb.classList.add("open"); lenis && lenis.stop(); html.style.overflow = "hidden";
     lbShow(0);
-    if (!reduce) gsap.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" });
+    if (!reduce) gsap.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.5 * T, ease: "power2.out" });
     lbX.focus({ preventScroll: true });
   }
   const lbClose = () => {
     if (!lbOpen) return; lbOpen = false;
     const end = () => { lb.classList.remove("open"); lbImg.removeAttribute("src"); };
-    reduce ? end() : gsap.to(lb, { opacity: 0, duration: 0.4, ease: "power2.in", onComplete: end });
+    reduce ? end() : gsap.to(lb, { opacity: 0, duration: 0.4 * T, ease: "power2.in", onComplete: end });
     html.style.overflow = ""; lenis && lenis.start();
     lbFrom && lbFrom.focus({ preventScroll: true });
   };
@@ -294,7 +319,6 @@
     d.addEventListener("pointerover", (e) => {
       const t = e.target.closest("[data-cursor]");
       let l = t ? t.dataset.cursor : "";
-      if (t && t.classList.contains("film-frame")) l = filmV.muted ? "Sound on" : "Sound off";
       c.classList.toggle("big", !!t); lab.textContent = l;
       c.classList.toggle("link", !t && !!e.target.closest("a,button"));
     });
@@ -303,7 +327,7 @@
   /* ---------------- smooth scroll + scroll-driven motion ---------------- */
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.config({ ignoreMobileResize: true });
-  let lenis = null, gl = null;
+  let lenis = null, gl = null, introHold = false;
   /* a refresh restores scroll and would cut short a smooth jump, so it waits until the jump has landed */
   var rT, jumping = 0; function refreshSoon() { clearTimeout(rT); rT = setTimeout(() => (performance.now() < jumping ? refreshSoon() : ScrollTrigger.refresh()), 160); }
   addEventListener("load", refreshSoon);
@@ -388,6 +412,7 @@
       const dir = last == null || k > last ? 1 : -1; last = k;
       rowsEl.classList.add("hov"); $$(".ix-row.on", rowsEl).forEach((r) => r.classList.remove("on")); row.classList.add("on");
       const im = flImgs[+row.dataset.i]; im.style.zIndex = ++z;
+      if (!im.dataset.hi) { im.dataset.hi = "1"; im.src = url(seq[+row.dataset.i].src); } /* the small file stays up until the large one has decoded */
       gsap.fromTo(im, { clipPath: dir > 0 ? "inset(0% 0% 100% 0%)" : "inset(100% 0% 0% 0%)", scale: 1.16 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 0.85, ease: "expo.out", overwrite: true });
       show();
     }));
@@ -396,8 +421,10 @@
       if (!on && fl.style.visibility !== "visible") return;
       const nx = cx + (tx - cx) * 0.14, vx = nx - cx; cx = nx; cy += (ty - cy) * 0.14;
       rot += (clamp(vx * 0.2, -6, 6) - rot) * 0.12;
-      const w = fl.offsetWidth, h = fl.offsetHeight;
-      const x = Math.min(cx + 40, innerWidth - w - 24), y = clamp(cy - h * 0.55, 16, innerHeight - h - 16);
+      const w = fl.offsetWidth, h = fl.offsetHeight, rr = rowsEl.getBoundingClientRect();
+      /* it follows the cursor, but stays to the right of the titles (columns 1–8) whenever the screen allows */
+      const minX = rr.left + rr.width * 0.66 + 16, maxX = innerWidth - w - Math.max(24, rr.left * 0.6);
+      const x = minX <= maxX ? clamp(cx + 40, minX, maxX) : maxX, y = clamp(cy - h * 0.55, 16, innerHeight - h - 16);
       fl.style.transform = `translate3d(${x}px,${y}px,0) rotate(${rot}deg)`;
     });
   } else fl.remove();
@@ -407,10 +434,16 @@
   /* desktop with a mouse: Lenis + the pinned horizontal book */
   mm.add(`${DESK} and (prefers-reduced-motion: no-preference)`, () => {
     html.classList.add("hz");
-    lenis = new Lenis({ lerp: 0.085, smoothWheel: true, wheelMultiplier: 0.95 });
-    lenis.on("scroll", ScrollTrigger.update);
+    let active = true;
     const raf = (t) => lenis && lenis.raf(t * 1000);
-    gsap.ticker.add(raf); gsap.ticker.lagSmoothing(0);
+    /* Lenis is fetched here, on a mouse desktop: phones never download it */
+    loadScript("vendor/lenis.min.js").then(() => {
+      if (!active || !window.Lenis) return;
+      lenis = new Lenis({ lerp: 0.085, smoothWheel: true, wheelMultiplier: 0.95 });
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add(raf); gsap.ticker.lagSmoothing(0);
+      if (introHold || lbOpen) lenis.stop();
+    }).catch(() => {});
 
     const sec = $(".book"), bar = $(".book-bar i"), figs = $$(".ph", track);
     const dist = () => Math.max(0, track.scrollWidth - innerWidth);
@@ -435,13 +468,13 @@
       html.classList.remove("hz");
       ScrollTrigger.removeEventListener("refreshInit", setH);
       sec.style.height = ""; gsap.set(track, { clearProps: "transform" }); figs.forEach((f) => gsap.set($("img", f), { clearProps: "transform" }));
-      gsap.ticker.remove(raf); lenis.destroy(); lenis = null;
+      active = false; gsap.ticker.remove(raf); if (lenis) { lenis.destroy(); lenis = null; }
     };
   });
 
   /* every device without reduced motion: hero, statement, close-up, film */
   mm.add("(prefers-reduced-motion: no-preference)", () => {
-    const scrub = matchMedia(DESK).matches ? true : 0.5;
+    const scrub = matchMedia(DESK).matches ? true : 0.3;
     const pinH = () => $(".hero-pin").offsetHeight;
     const mOff = () => $(".hero-meta").offsetLeft;
 
@@ -458,7 +491,6 @@
     };
     const ht = gsap.timeline({ scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom bottom", scrub, invalidateOnRefresh: true } });
     ht.to(".hero-frame", { scale: () => geo().s, ease: "power2.inOut", duration: 1 }, 0)
-      .to(".hero-shade", { opacity: 0, ease: "power1.in", duration: 0.8 }, 0)
       .to(hn1, { x: () => geo().x1, y: () => geo().y1, ease: "power2.inOut", duration: 1 }, 0)
       .to(hn2, { x: () => geo().x2, y: () => geo().y2, ease: "power2.inOut", duration: 1 }, 0)
       .to(".hero-meta", { opacity: 0, ease: "none", duration: 0.25 }, 0)
@@ -488,21 +520,22 @@
     /* the slit is already visible while the section scrolls into place */
     gsap.set(cuF, { clipPath: inset() }); cuApply();
 
-    /* film: grows to full screen, swallowing the words */
-    const s0 = () => (portrait() ? 0.72 : 0.36);
-    const wOff = () => (portrait() ? 0 : innerWidth * s0() / 2 + innerWidth * 0.022);
+    /* film: the footage is 9:16, so a tall frame grows to full height while the words make room for it */
+    const s0 = () => (portrait() ? 0.78 : 0.56);
+    const fw = () => $(".film-frame").offsetWidth, gapW = () => innerWidth * 0.022;
     gsap.set(".film-w", { yPercent: () => (portrait() ? 0 : -50) });
     const ft = gsap.timeline({ scrollTrigger: { trigger: ".film", start: "top top", end: "bottom bottom", scrub, invalidateOnRefresh: true } });
     ft.fromTo(".film-frame", { scale: s0 }, { scale: 1, ease: "power2.inOut", duration: 1 }, 0)
-      .fromTo(".film-w1", { x: () => -wOff(), opacity: 1 }, { x: () => -wOff() - innerWidth * (portrait() ? 0 : 0.08), opacity: () => (portrait() ? 1 : 0), ease: "power2.in", duration: 0.55 }, 0)
-      .fromTo(".film-w2", { x: () => wOff(), opacity: 1 }, { x: () => wOff() + innerWidth * (portrait() ? 0 : 0.08), opacity: () => (portrait() ? 1 : 0), ease: "power2.in", duration: 0.55 }, 0)
-      .to({}, { duration: 0.3 });
+      .fromTo(".film-w1", { x: () => (portrait() ? 0 : -(fw() * s0() / 2 + gapW())) }, { x: () => (portrait() ? 0 : -(fw() / 2 + gapW())), ease: "power2.inOut", duration: 1 }, 0)
+      .fromTo(".film-w2", { x: () => (portrait() ? 0 : fw() * s0() / 2 + gapW()) }, { x: () => (portrait() ? 0 : fw() / 2 + gapW()), ease: "power2.inOut", duration: 1 }, 0)
+      .to({}, { duration: 0.25 });
 
     return () => { cuApply = () => {}; gsap.set([cuF, ".film-frame", ".hero-frame", hn1, hn2, cuImg, ".film-w", words], { clearProps: "all" }); };
   });
 
   /* ---------------- WebGL close-up: a whisper of bend on fast scroll ---------------- */
-  if (!reduce) { gl = glImage(cuF, url(cuSrc)); cuApply(); }
+  /* mouse desktops only, and only once the scene is near: a 2000px texture is not first-screen work */
+  if (fine && !reduce) new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); gl = glImage(cuF, url(cuSrc)); cuApply(); } }, { rootMargin: "120% 0px" }).observe(cuF);
 
   function glImage(host, src) {
     const c = d.createElement("canvas"); c.setAttribute("aria-hidden", "true");
@@ -582,22 +615,27 @@
 
   /* ---------------- intro ---------------- */
   const chars = $$(".hn .mk>span"), meta = $$(".hero-meta > *");
-  if (reduce) { html.classList.add("no-pre"); $(".pre").remove(); return; }
+  /* a very slow pull-back on the still, the only movement in the opening frame */
+  const kenBurns = () => gsap.fromTo([heroLo, heroHi], { scale: 1.1, xPercent: 1 }, { scale: 1, xPercent: 0, duration: touch ? 9 : 16, ease: "power1.out", overwrite: true });
+  if (reduce) { html.classList.add("no-pre"); $(".pre").remove(); heroSharp(); return; }
   scrollTo(0, 0);
-  html.style.overflow = "hidden"; lenis && lenis.stop();
-  gsap.set(chars, { yPercent: 115 }); gsap.set(meta, { opacity: 0 }); gsap.set(heroV, { scale: 1.12 });
+  introHold = true; html.style.overflow = "hidden"; lenis && lenis.stop();
+  gsap.set(chars, { yPercent: 115 }); gsap.set(meta, { opacity: 0 }); gsap.set([heroLo, heroHi], { scale: 1.1, xPercent: 1 });
   const loadImg = (s) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = s; });
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-  gsap.to(".pre-bar i", { scaleX: 0.7, duration: 1.2, ease: "power2.out" });
-  Promise.race([Promise.all([d.fonts ? d.fonts.ready : 0, loadImg(url(M.video.poster)), wait(420)]), wait(3000)]).then(() => {
-    heroV.play().catch(() => {});
+  gsap.to(".pre-bar i", { scaleX: 0.7, duration: 1.2 * T, ease: "power2.out" });
+  /* the curtain lifts as soon as the small hero file and the fonts are in (hard cap 1.8 s on touch, 3 s otherwise) */
+  Promise.race([Promise.all([d.fonts ? d.fonts.ready : 0, loadImg(sm(HERO_SRC)), wait(touch ? 120 : 420)]), wait(touch ? 1800 : 3000)]).then(() => {
+    kenBurns();
     gsap.timeline()
-      .to(".pre-bar i", { scaleX: 1, duration: 0.35, ease: "power2.inOut", overwrite: true })
-      .to(".pre", { yPercent: -100, duration: 1.05, ease: "expo.inOut" }, "+=.05")
-      .add(() => { html.style.overflow = ""; lenis && lenis.start(); }, "-=.5")
-      .to(heroV, { scale: 1, duration: 2, ease: "expo.out" }, "<.2")
-      .to(chars, { yPercent: 0, duration: 1.25, ease: "expo.out", stagger: 0.032 }, "<.05")
-      .to(meta, { opacity: 1, duration: 0.9, ease: "power1.out", clearProps: "opacity" }, "<.5")
-      .add(() => { const p = $(".pre"); p && p.remove(); ScrollTrigger.refresh(); });
+      .to(".pre-bar i", { scaleX: 1, duration: 0.3 * T, ease: "power2.inOut", overwrite: true })
+      .to(".pre", { yPercent: -100, duration: 1.05 * T, ease: "expo.inOut" }, "+=.05")
+      .add(() => { introHold = false; html.style.overflow = ""; lenis && lenis.start(); }, "-=.5")
+      .to(chars, { yPercent: 0, duration: 1.25 * T, ease: "expo.out", stagger: 0.032 * T }, "<.05")
+      .to(meta, { opacity: 1, duration: 0.9 * T, ease: "power1.out", clearProps: "opacity" }, "<.5")
+      .add(() => {
+        const p = $(".pre"); p && p.remove(); ScrollTrigger.refresh();
+        if (touch && "requestIdleCallback" in window) requestIdleCallback(heroSharp, { timeout: 2500 }); else heroSharp();
+      });
   });
 })();

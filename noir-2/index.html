@@ -6,16 +6,16 @@
 <title>Richie Miller — Model, Budapest</title>
 <meta name="description" content="Richie Miller, model based in Budapest. Editorial, tailoring and campaign. Portfolio, studio film, measurements and bookings.">
 <meta property="og:title" content="Richie Miller — Model">
-<meta property="og:image" content="../assets/photos/rm-16.jpg">
+<meta property="og:image" content="../assets/photos/rm-06.jpg">
 <meta name="theme-color" content="#0a0a09">
 <!--
   Noir II — an original build for Richie Miller (no third-party template code adapted).
   Vendored, unmodified: GSAP 3.15.1 + ScrollTrigger (GreenSock standard no-charge licence, vendor/LICENSE-gsap.txt),
-  Lenis 1.3.27 (MIT, vendor/LICENSE-lenis.txt). Fonts: Libre Caslon Display, Host Grotesk (SIL OFL 1.1, fonts/).
+  Lenis 1.3.27 (MIT, vendor/LICENSE-lenis.txt; fetched by main.js on mouse desktops only). Fonts: Libre Caslon Display, Host Grotesk (SIL OFL 1.1, fonts/).
 -->
 <link rel="preload" href="fonts/libre-caslon-display-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/host-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/video/studio-poster.jpg" as="image">
+<link rel="preload" href="../assets/photos/rm-06-sm.jpg" as="image" fetchpriority="high">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,8 +37,8 @@
   <section class="hero" aria-label="Introduction">
     <div class="hero-pin">
       <div class="hero-frame">
-        <video muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
-        <span class="hero-shade"></span>
+        <img class="hero-lo" alt="" decoding="async" fetchpriority="high">
+        <img class="hero-hi" alt="" decoding="async" aria-hidden="true">
       </div>
       <h1 class="hero-name d-xl"><span class="hn hn-1"></span><span class="hn hn-2"></span></h1>
       <div class="hero-meta lbl"><span id="h-role"></span><span class="cue" aria-hidden="true">Scroll<i></i></span><span id="h-city"></span></div>
@@ -76,8 +76,8 @@
   <section class="film" id="film" aria-label="Studio film">
     <div class="film-pin">
       <span class="film-w film-w1" aria-hidden="true">Studio</span><span class="film-w film-w2" aria-hidden="true">Film</span>
-      <div class="film-frame" data-cursor="Sound"><video muted loop playsinline preload="metadata"></video></div>
-      <div class="film-ui lbl"><span>Studio film <span class="num" id="dur"></span></span><div><button id="snd" type="button">Sound on</button><button id="pp" type="button">Pause</button></div></div>
+      <div class="film-frame" data-cursor="Pause"><video muted loop playsinline preload="metadata" aria-label="Behind the scenes in the studio"></video></div>
+      <div class="film-ui lbl"><span>Studio film <span class="num" id="dur"></span></span><div><button id="pp" type="button">Pause</button></div></div>
     </div>
   </section>
 
@@ -121,10 +121,10 @@
   <div class="lb-foot lbl"><span>Use arrow keys or swipe</span><span>Esc to close</span></div>
 </div>
 
-<script src="../assets/content.js"></script>
-<script src="vendor/gsap.min.js"></script>
-<script src="vendor/ScrollTrigger.min.js"></script>
-<script src="vendor/lenis.min.js"></script>
-<script src="main.js"></script>
+<!-- deferred: the preloader paints before any script is fetched -->
+<script src="../assets/content.js" defer></script>
+<script src="vendor/gsap.min.js" defer></script>
+<script src="vendor/ScrollTrigger.min.js" defer></script>
+<script src="main.js" defer></script>
 </body>
 </html>
