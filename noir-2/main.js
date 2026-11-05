@@ -373,9 +373,9 @@
   rowsEl.innerHTML = groups.map((g) => {
     const a = seq.indexOf(g.items[0]) + 1, b = seq.indexOf(g.items[g.items.length - 1]) + 1;
     return `<div class="ix-ch"><span class="d-s">${g.roman}</span><span class="lbl">${g.name}</span><span class="lbl mute num">${pad(a)}${b > a ? "—" + pad(b) : ""}</span></div>` +
-      g.items.map((p) => { const i = seq.indexOf(p); return `<a class="ix-row" href="#book" data-i="${i}"><span class="lbl mute num n">${pad(i + 1)}</span><span class="ti">${p.caption}</span><span class="lbl mute ft">${p.fit}</span><span class="go">${arrowSvg}</span></a>`; }).join("");
+      g.items.map((p) => { const i = seq.indexOf(p); return `<a class="ix-row" href="#book" data-i="${i}"><span class="lbl mute num n">${pad(i + 1)}</span><span class="ti">${p.caption}</span><span class="lbl mute ft">${p.shot || p.fit}</span><span class="go">${arrowSvg}</span></a>`; }).join("");
   }).join("");
-  $("#ix-note").textContent = `${cap1(word(photos.length))} frames in ${word(groups.length - (cuEntry ? 1 : 0))} chapters, closing on a close-up. ${fine && !reduce ? "Hover for a preview, select" : "Select"} a title to go to the frame.`;
+  $("#ix-note").textContent = `${cap1(word(photos.length))} frames in ${word(groups.length - (cuEntry ? 1 : 0))} chapters, high key and low key, closing on a close-up. ${fine && !reduce ? "Hover for a preview, select" : "Select"} a look to go to the frame.`;
 
   const scrollToY = (y) => {
     jumping = performance.now() + 2200;

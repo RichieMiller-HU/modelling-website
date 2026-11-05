@@ -33,25 +33,25 @@ window.MODEL = {
   // THE BOOK — curated & sequenced by an art-director pass (see CREATIVE-DIRECTION.md).
   // Rule: light-key studio chapter → dark-key studio chapter → a short warm colour coda.
   // Never put a saturated holiday photo next to a monochrome studio frame.
-  // `fit` = "portrait" | "landscape";  `key` = "light" | "dark" | "colour".
+  // `fit` = "portrait" | "landscape";  `key` = "light" | "dark" | "colour";  `caption` = the look (wardrobe), `shot` = Close-up | Mid | Full length.
   photos: [
-    { src: "assets/photos/rm-d01.jpg",  fit: "portrait",  key: "light",  caption: "Collar" },
-    { src: "assets/photos/rm-d02.jpg",  fit: "portrait",  key: "light",  caption: "Full length" },
-    { src: "assets/photos/rm-d03.jpg",  fit: "portrait",  key: "light",  caption: "Close-up" },
-    { src: "assets/photos/rm-d04.jpg",  fit: "portrait",  key: "light",  caption: "Black Shirt" },
-    { src: "assets/photos/rm-d05.jpg",  fit: "landscape", key: "light",  caption: "Sunglasses" },
-    { src: "assets/photos/rm-d06.jpg",  fit: "portrait",  key: "light",  caption: "Close-up" },
-    { src: "assets/photos/rm-d07.jpg",  fit: "portrait",  key: "light",  caption: "Studio White" },
-    { src: "assets/photos/rm-d08.jpg",  fit: "portrait",  key: "light",  caption: "Glasses" },
-    { src: "assets/photos/rm-d09.jpg",  fit: "portrait",  key: "dark",   caption: "Low Key Close-up" },
-    { src: "assets/photos/rm-d10.jpg",  fit: "portrait",  key: "dark",   caption: "Full length" },
-    { src: "assets/photos/rm-d11.jpg",  fit: "portrait",  key: "dark",   caption: "White Tee" },
-    { src: "assets/photos/rm-d12.jpg",  fit: "portrait",  key: "dark",   caption: "Crossed" },
-    { src: "assets/photos/rm-d13.jpg",  fit: "portrait",  key: "dark",   caption: "Low Key" },
-    { src: "assets/photos/rm-d14.jpg",  fit: "portrait",  key: "dark",   caption: "Movement" },
-    { src: "assets/photos/rm-d15.jpg",  fit: "portrait",  key: "dark",   caption: "Jacket" },
-    { src: "assets/photos/rm-d16.jpg",  fit: "portrait",  key: "dark",   caption: "Coat" },
-    { src: "assets/photos/rm-d17.jpg",  fit: "portrait",  key: "colour", caption: "White Shirt" },
+    { src: "assets/photos/rm-d01.jpg",  fit: "portrait",  key: "light",  caption: "Black shirt", shot: "Close-up" },
+    { src: "assets/photos/rm-d02.jpg",  fit: "portrait",  key: "light",  caption: "Tailoring", shot: "Full length" },
+    { src: "assets/photos/rm-d03.jpg",  fit: "portrait",  key: "light",  caption: "Portrait", shot: "Close-up" },
+    { src: "assets/photos/rm-d04.jpg",  fit: "portrait",  key: "light",  caption: "Open collar", shot: "Mid" },
+    { src: "assets/photos/rm-d05.jpg",  fit: "landscape", key: "light",  caption: "Shades", shot: "Mid" },
+    { src: "assets/photos/rm-d06.jpg",  fit: "portrait",  key: "light",  caption: "Hands", shot: "Close-up" },
+    { src: "assets/photos/rm-d07.jpg",  fit: "portrait",  key: "light",  caption: "Studio white", shot: "Mid" },
+    { src: "assets/photos/rm-d08.jpg",  fit: "portrait",  key: "light",  caption: "Glasses", shot: "Mid" },
+    { src: "assets/photos/rm-d09.jpg",  fit: "portrait",  key: "dark",   caption: "Tee", shot: "Close-up" },
+    { src: "assets/photos/rm-d10.jpg",  fit: "portrait",  key: "dark",   caption: "Overshirt", shot: "Full length" },
+    { src: "assets/photos/rm-d11.jpg",  fit: "portrait",  key: "dark",   caption: "White tee", shot: "Mid" },
+    { src: "assets/photos/rm-d12.jpg",  fit: "portrait",  key: "dark",   caption: "Chair", shot: "Close-up" },
+    { src: "assets/photos/rm-d13.jpg",  fit: "portrait",  key: "dark",   caption: "Low key", shot: "Mid" },
+    { src: "assets/photos/rm-d14.jpg",  fit: "portrait",  key: "dark",   caption: "Movement", shot: "Full length" },
+    { src: "assets/photos/rm-d15.jpg",  fit: "portrait",  key: "dark",   caption: "Jacket", shot: "Mid" },
+    { src: "assets/photos/rm-d16.jpg",  fit: "portrait",  key: "dark",   caption: "Coat", shot: "Mid" },
+    { src: "assets/photos/rm-d17.jpg",  fit: "portrait",  key: "colour", caption: "White shirt", shot: "Mid" },
   ],
   heroLight: "assets/photos/rm-10.jpg",   // used by light concepts (Atelier)
   closeUpDark: "assets/photos/rm-16.jpg", // used by dark concepts (Noir, Cinema)
