@@ -29,7 +29,6 @@
   fill('[data-city]', C.city || '');
   fill('[data-status]', C.status || '');
   fill('[data-year]', C.year || new Date().getFullYear());
-  fill('[data-setcount]', (C.sets || []).length);
   fill('[data-alias-short]', alias.split(/\s+/)[0].toUpperCase());
   const heroWhere = $('.hero-where');
   if (heroWhere) {

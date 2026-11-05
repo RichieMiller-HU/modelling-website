@@ -55,7 +55,7 @@ window.DJ = {
     heroTriptych: ["assets/video/club-side", "assets/video/club-cue", "assets/video/club-hands"],
     live: "assets/video/studio-decks",                                     // 1920×1080 (3.3 MB), desktop only
     liveMobile: "assets/video/club-hands",                                 // 720×1280 (0.7 MB)
-    bio: "assets/video/club-groove",                                       // 720×1280 (1.9 MB), desktop only; poster on phones
+    bio: "assets/video/club-cue"   ,                                       // 720×1280 (1.9 MB), desktop only; poster on phones
   },
   // PHOTOS. Real photos from the client: a studio session shot on a phone in 2022 (frames with other people left out).
   // Cropped and graded as one series (ink-blue shadows, scarlet mids; two frames in scarlet mono). Each needs
