@@ -15,17 +15,20 @@ The client's current favourites:
 
 ## 2. Repository map
 
+**Decision (5 Nov):** only three sites are developed further: `noir-2/` (modelling), `cinema-2/` (acting) and `dj/` (DJ). Every other concept folder is **outdated**: kept for reference, not maintained, safe to delete when the three go live.
+
 | Path | What it is | Status |
 |---|---|---|
 | `index.html` | Internal "nine directions" index of all concepts. Not for the public. | keep while deciding |
 | `entry/` | Model / Actor split entry screen. Links to `noir-2/` and `cinema-2/`. | preview |
 | `noir-2/` | Dark fashion-house editorial. Caslon + Host Grotesk. Hero film with split name, "Selected work" index with cursor-follow preview, pinned horizontal book, eye-slit close-up, film, measurements, contact. | **chosen for modelling** |
 | `cinema-2/` | Film concept: viewfinder HUD (REC, timecode), letterbox opening over the film, iris act cards, scenes stacked in three acts, end-credit roll with measurements and contact. | **chosen for acting** |
-| `atelier-2/` | Printed photo book with 3D page turns. Newsreader + Schibsted. | alternative |
-| `lookbook/` | 3-column lookbook, WebGL "develop" reveal. From Codrops *LookbookHoverEffects* (MIT). | alternative |
-| `elastic/` | Multi-speed columns. From Codrops *ElasticGridScroll* (MIT). | alternative |
-| `expansion/` | "Richie [eyes] Miller" typographic expansion. From Codrops *ImageExpansionTypography* (MIT). | alternative |
-| `noir/`, `atelier/`, `cinema/` | Round one. Google-Fonts based. | archive, don't develop further |
+| `dj/` | DJ site. Club-poster concept: footage bleeding through the cut-out name, three YouTube sets, live clip, booking. Self-contained; meant to be split into its own repo for its own domain. | **active (DJ)** |
+| `atelier-2/` | Printed photo book with 3D page turns. | outdated |
+| `lookbook/` | 3-column lookbook, WebGL "develop" reveal. From Codrops *LookbookHoverEffects* (MIT). | outdated |
+| `elastic/` | Multi-speed columns. From Codrops *ElasticGridScroll* (MIT). | outdated |
+| `expansion/` | "Richie [eyes] Miller" typographic expansion. From Codrops *ImageExpansionTypography* (MIT). | outdated |
+| `noir/`, `atelier/`, `cinema/` | Round one. Google-Fonts based. | outdated |
 | `assets/content.js` | **All content.** Name, role, city, email, Instagram, agency, comp card, statement, stats, photo list, video, digitals, clients. | edit this |
 | `assets/photos/` | `rm-NN.jpg` (≤2000 px) and `rm-NN-sm.jpg` (900 px thumbnails). Numbers match the client's original `portfolio-NN` files. | |
 | `assets/video/` | `studio.mp4` + poster. **Placeholder**: a slow-zoom film cut from the stills. Replace with real footage. | replace |
