@@ -70,7 +70,6 @@ window.DJ = {
     { src: "assets/photos/rm-06-mixer",  fit: "landscape", w: 1800, h: 1199, caption: "Studio session, 2022", alt: "Looking down at the mixer, adjusting a fader" },
     { src: "assets/photos/rm-07-front",  fit: "portrait",  w: 1440, h: 1800, caption: "Studio session, 2022", alt: "Front-on behind the decks, mid-mix" },
     { src: "assets/photos/rm-08-look",   fit: "portrait",  w: 1441, h: 1800, caption: "Studio session, 2022", alt: "Looking up at the camera from the decks, hands on the controls" },
-    { src: "assets/photos/rm-09-hand",   fit: "portrait",  w: 1441, h: 1800, caption: "Studio session, 2022", alt: "A hand raised over the mixer under red light" },
   ],
 
   // Still frames pulled from the footage, used only while `photos` is empty.
