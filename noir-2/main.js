@@ -34,7 +34,8 @@
   const order = [...new Set(M.photos.map((p) => p.key))];
   const all = order.flatMap((k) => M.photos.filter((p) => p.key === k));
   /* the close-up gets its own full-bleed scene, so it is not repeated inside the book */
-  let cuEntry = M.closeUpDark ? all.find((p) => p.src === M.closeUpDark) || { src: M.closeUpDark, fit: "portrait", key: "dark", caption: "Close-up" } : null;
+  /* the close-up: the book's own frame when closeUpDark is in it (or is its low-key close-up, re-exported under a new name), else the file as given */
+  let cuEntry = M.closeUpDark ? all.find((p) => p.src === M.closeUpDark) || all.find((p) => p.key === "dark" && /close-?up/i.test(p.caption)) || { src: M.closeUpDark, fit: "portrait", key: "dark", caption: "Close-up" } : null;
   /* the opening still is the cover: it is not repeated inside the book either */
   const heroEntry = all.find((p) => p.src === HERO_SRC) || null;
   const photos = all.filter((p) => p !== cuEntry && p !== heroEntry);
@@ -46,7 +47,8 @@
   const masked = (text) => [...text].map((c) => `<span class="mk"><span>${c}</span></span>`).join("");
   const h1 = $(".hero-name"), hn1 = $(".hn-1"), hn2 = $(".hn-2");
   h1.setAttribute("aria-label", full);
-  hn1.innerHTML = masked(M.first); hn2.innerHTML = masked(M.last);
+  if (touch || reduce) { hn1.textContent = M.first; hn2.textContent = M.last; } /* on touch the name is on screen before any script: no masks, no re-layout */
+  else { hn1.innerHTML = masked(M.first); hn2.innerHTML = masked(M.last); }
   hn1.setAttribute("aria-hidden", "true"); hn2.setAttribute("aria-hidden", "true");
   $(".nav-mark").textContent = full;
   $("#h-role").textContent = M.role;
@@ -615,9 +617,17 @@
 
   /* ---------------- intro ---------------- */
   const chars = $$(".hn .mk>span"), meta = $$(".hero-meta > *");
-  /* a very slow pull-back on the still, the only movement in the opening frame */
-  const kenBurns = () => gsap.fromTo([heroLo, heroHi], { scale: 1.1, xPercent: 1 }, { scale: 1, xPercent: 0, duration: touch ? 9 : 16, ease: "power1.out", overwrite: true });
-  if (reduce) { html.classList.add("no-pre"); $(".pre").remove(); heroSharp(); return; }
+  /* a very slow drift on the still, the only movement in the opening frame: a pull-back on desktop, a push-in on touch (where the still is already on screen) */
+  const kenBurns = () => (touch
+    ? gsap.fromTo([heroLo, heroHi], { scale: 1, xPercent: 0 }, { scale: 1.07, xPercent: -0.8, duration: 10, ease: "power1.out", overwrite: true })
+    : gsap.fromTo([heroLo, heroHi], { scale: 1.1, xPercent: 1 }, { scale: 1, xPercent: 0, duration: 16, ease: "power1.out", overwrite: true }));
+  if (reduce || touch) {
+    /* touch: no curtain. The hero is in the HTML and paints before any script runs; the sharp file follows when idle */
+    html.classList.add("no-pre"); const pre = $(".pre"); pre && pre.remove();
+    if (!reduce) kenBurns();
+    if (touch && "requestIdleCallback" in window) requestIdleCallback(heroSharp, { timeout: 2500 }); else heroSharp();
+    return;
+  }
   scrollTo(0, 0);
   introHold = true; html.style.overflow = "hidden"; lenis && lenis.stop();
   gsap.set(chars, { yPercent: 115 }); gsap.set(meta, { opacity: 0 }); gsap.set([heroLo, heroHi], { scale: 1.1, xPercent: 1 });

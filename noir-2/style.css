@@ -262,12 +262,12 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
 
 /* ---------- portrait / narrow ---------- */
 @media (max-aspect-ratio:1/1){
-  .hero-name{flex-direction:column;gap:0;font-size:clamp(84px,25vw,260px);line-height:.92}
+  .hero-name{flex-direction:column;justify-content:flex-end;padding-bottom:15svh;gap:0;font-size:clamp(84px,25vw,260px);line-height:.92}
   .motion .hero{height:130vh}
   .motion .cu{height:130vh}
   .motion .film{height:125vh}
   .hero-frame img{object-position:50% 30%}
-  .film-pin{--fh:min(177vw,calc(100svh - 2 * (var(--m) + 76px)))}
+  .film-pin{--fh:min(177vw,calc(100svh - var(--nav-h) - var(--m) - 190px))}
   .film-frame{height:var(--fh);width:calc(var(--fh) * .5625)}
   .film-w{top:auto;left:var(--m);right:auto;font-size:clamp(60px,19vw,150px)}
   .film-w1{bottom:calc(50% + var(--fh) / 2 + 14px)}
@@ -324,6 +324,7 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
 }
 
 @media (hover:none),(pointer:coarse){
+  .pre{display:none}
   .motion .ph .clip::after{transition-duration:.6s}
   .motion .ph img{transform:scale(1.03)}
   .ph .clip img,.motion .ph img{transition-duration:.7s}

@@ -102,7 +102,7 @@
       if (this.querySelector('iframe')) return;
       const f = document.createElement('iframe');
       f.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(s.id)}?autoplay=1&rel=0&modestbranding=1`;
-      f.title = title; f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.title = title; f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       f.setAttribute('allowfullscreen', ''); f.referrerPolicy = 'strict-origin-when-cross-origin';
       this.appendChild(f);
     });
