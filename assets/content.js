@@ -11,7 +11,7 @@ window.MODEL = {
   city: "Gran Canaria",               // TODO: your base
   available: "Europe · Worldwide",
   email: "booking@richiemiller.com", // TODO
-  instagram: "richiemiller",        // TODO: handle without @
+  instagram: "",                    // TODO: handle without @ once the account exists. Empty = hidden.
   agency: { name: "Independent", url: "" }, // TODO: agency name + link once signed
   compCard: "",                     // TODO: path to a PDF comp card, e.g. "assets/richie-miller-compcard.pdf"
 
@@ -69,6 +69,11 @@ window.MODEL = {
   // Empty = section hidden. Add 4 real ones (front, profile, three-quarter, full length) like:
   // { src: "assets/photos/digital-front.jpg", caption: "Front" },
   digitals: [],
+  digitalsNote: "Natural light · No styling · iPhone", // add the date once shot, e.g. "Taken Nov 2026 · Daylight, phone, no edits"
+
+  // OFF DUTY: a small strip of styled / lifestyle phone photos above Contact. Personality, not the book.
+  // Square crops, 4–6 photos. Empty = hidden. e.g. { src: "assets/photos/off-01.jpg", caption: "Lisbon" },
+  offDuty: [],
 
   // The studio behind-the-scenes clip. Keep it short (10–30 s), muted, H.264 MP4, ≤ 8 MB.
   video: { src: "assets/video/studio.mp4", poster: "assets/video/studio-poster.jpg" },

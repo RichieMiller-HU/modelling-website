@@ -167,6 +167,18 @@
       f.onclick = () => lightbox(M.digitals, i, f); dg.append(f);
     });
   }
+  if ($("#dg-note")) $("#dg-note").textContent = M.digitalsNote || "";
+
+  /* off duty: styled phone photos, small square strip above contact; hidden while empty */
+  if (!M.offDuty || !M.offDuty.length) $$("[data-hide-empty=offDuty]").forEach((e) => e.remove());
+  else {
+    const od = $("#od");
+    M.offDuty.forEach((p, i) => {
+      const f = d.createElement("figure"); f.className = "ph"; f.dataset.cursor = "View"; f.tabIndex = 0;
+      f.innerHTML = `<div class="clip"><img src="${url(p.src)}" alt="Off duty${p.caption ? " — " + p.caption : ""}" loading="lazy" decoding="async"></div>${p.caption ? `<figcaption><span class="lbl mute">${p.caption}</span></figcaption>` : ""}`;
+      f.onclick = () => lightbox(M.offDuty, i, f); od.append(f);
+    });
+  }
 
   /* measurements */
   const statsEl = $("#stats");
@@ -200,7 +212,7 @@
   if (d.fonts && d.fonts.load) d.fonts.load('400 100px "Caslon RM"', "Book").then(fitCta, fitCta);
   new ResizeObserver(fitCta).observe(ctMail.parentNode);
   const cm = $("#c-mail"); cm.href = mail(); cm.textContent = M.email;
-  const ig = $("#c-ig"); ig.href = `https://instagram.com/${M.instagram}`; ig.textContent = "@" + M.instagram;
+  const ig = $("#c-ig"); if (M.instagram) { ig.href = `https://instagram.com/${M.instagram}`; ig.textContent = "@" + M.instagram; } else ig.parentElement.remove();
   const ag = $("#c-ag");
   if (M.agency && M.agency.url) { const a = d.createElement("a"); a.href = M.agency.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = M.agency.name; ag.replaceWith(a); }
   else ag.textContent = (M.agency && M.agency.name) || "Independent";
