@@ -23,7 +23,7 @@
   const touch = !fine;                 /* coarse pointer or no hover: phones and tablets */
   const T = touch ? 0.55 : 1;          /* motion runs shorter on touch */
   /* the opening still: a high-key studio frame. A concept choice for Noir; the book itself still comes from content.js */
-  const HERO_SRC = "assets/photos/rm-d04.jpg";
+  const HERO_SRC = M.heroLight || "assets/photos/rm-s15.jpg";
   const loadScript = (src) => new Promise((res, rej) => { if (d.querySelector(`script[src="${src}"]`)) return res(); const sc = d.createElement("script"); sc.src = src; sc.onload = res; sc.onerror = rej; d.head.append(sc); });
 
   history.scrollRestoration = "manual";
@@ -51,7 +51,7 @@
   else { hn1.innerHTML = masked(M.first); hn2.innerHTML = masked(M.last); }
   hn1.setAttribute("aria-hidden", "true"); hn2.setAttribute("aria-hidden", "true");
   $(".nav-mark").textContent = full;
-  $("#h-role").textContent = M.role;
+  $("#h-role").textContent = M.heroNote ? `${M.role} · ${M.heroNote}` : M.role;
   $("#h-city").textContent = M.city;
 
   const heroLo = $(".hero-lo"), heroHi = $(".hero-hi"), filmV = $(".film-frame video");
@@ -375,7 +375,7 @@
     return `<div class="ix-ch"><span class="d-s">${g.roman}</span><span class="lbl">${g.name}</span><span class="lbl mute num">${pad(a)}${b > a ? "—" + pad(b) : ""}</span></div>` +
       g.items.map((p) => { const i = seq.indexOf(p); return `<a class="ix-row" href="#book" data-i="${i}"><span class="lbl mute num n">${pad(i + 1)}</span><span class="ti">${p.caption}</span><span class="lbl mute ft">${p.shot || p.fit}</span><span class="go">${arrowSvg}</span></a>`; }).join("");
   }).join("");
-  $("#ix-note").textContent = `${cap1(word(photos.length))} frames in ${word(groups.length - (cuEntry ? 1 : 0))} chapters, high key and low key, closing on a close-up. ${fine && !reduce ? "Hover for a preview, select" : "Select"} a look to go to the frame.`;
+  $("#ix-note").textContent = `${cap1(word(M.photos.length))} frames. ${M.bookNote || ""} ${fine && !reduce ? "Hover for a preview, select" : "Select"} a look to go to the frame.`;
 
   const scrollToY = (y) => {
     jumping = performance.now() + 2200;
