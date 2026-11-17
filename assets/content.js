@@ -94,9 +94,24 @@ window.MODEL = {
     hands: { label: "Hands",     text: "Backs of both hands, watch and bracelets on." },
   },
 
-  // OFF DUTY: a small strip of styled / lifestyle phone photos above Contact. Personality, not the book.
-  // Square crops, 4–6 photos. Empty = hidden. e.g. { src: "assets/photos/off-01.jpg", caption: "Lisbon" },
-  offDuty: [],
+  // OFF DUTY: a small drifting strip of lifestyle phone photos above Contact. Personality, not the book.
+  // Order alternates black & white with colour. `ar` = width / height. Empty = hidden.
+  offDutyNote: "Away from the set. Phone photos, the way friends see me.",
+  offDuty: [
+    { src: "assets/photos/off-01.jpg", ar: 0.75 },
+    { src: "assets/photos/off-02.jpg", ar: 0.8 },
+    { src: "assets/photos/off-03.jpg", ar: 0.75 },
+    { src: "assets/photos/off-04.jpg", ar: 0.75 },
+    { src: "assets/photos/off-05.jpg", ar: 0.75 },
+    { src: "assets/photos/off-06.jpg", ar: 0.8 },
+    { src: "assets/photos/off-07.jpg", ar: 0.564 },
+    { src: "assets/photos/off-08.jpg", ar: 0.75 },
+    { src: "assets/photos/off-09.jpg", ar: 1.333 },
+    { src: "assets/photos/off-10.jpg", ar: 1.114 },
+    { src: "assets/photos/off-11.jpg", ar: 0.89 },
+    { src: "assets/photos/off-12.jpg", ar: 0.769 },
+    { src: "assets/photos/off-13.jpg", ar: 0.801 },
+  ],
 
   // The studio behind-the-scenes clip. Keep it short (10–30 s), muted, H.264 MP4, ≤ 8 MB.
   video: { src: "assets/video/studio.mp4", poster: "assets/video/studio-poster.jpg" },

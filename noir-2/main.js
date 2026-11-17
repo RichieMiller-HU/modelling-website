@@ -252,15 +252,24 @@
   }
   if ($("#dg-note")) $("#dg-note").textContent = M.digitalsNote || "";
 
-  /* off duty: styled phone photos, small square strip above contact; hidden while empty */
+  /* off duty: a slow, endless strip of phone photos (b&w and colour alternating); pauses on hover, opens the lightbox. Hidden while empty */
   if (!M.offDuty || !M.offDuty.length) $$("[data-hide-empty=offDuty]").forEach((e) => e.remove());
   else {
-    const od = $("#od");
-    M.offDuty.forEach((p, i) => {
-      const f = d.createElement("figure"); f.className = "ph"; f.dataset.cursor = "View"; f.tabIndex = 0;
-      f.innerHTML = `<div class="clip"><img src="${url(p.src)}" alt="Off duty${p.caption ? " — " + p.caption : ""}" loading="lazy" decoding="async"></div>${p.caption ? `<figcaption><span class="lbl mute">${p.caption}</span></figcaption>` : ""}`;
-      f.onclick = () => lightbox(M.offDuty, i, f); od.append(f);
+    const od = $("#od"), tr = d.createElement("div"); tr.className = "od-tr";
+    if ($("#od-n")) $("#od-n").textContent = M.offDutyNote || "";
+    const set = (dup) => M.offDuty.map((p, i) => {
+      const f = d.createElement("figure"); f.className = "od-it"; f.dataset.cursor = "View";
+      if (dup) f.setAttribute("aria-hidden", "true"); else { f.tabIndex = 0; f.setAttribute("role", "button"); }
+      f.style.setProperty("--ar", p.ar || 0.8);
+      f.innerHTML = `<img src="${sm(p.src)}" alt="${dup ? "" : "Off duty" + (p.caption ? " — " + p.caption : "")}" loading="lazy" decoding="async">`;
+      f.onclick = () => lightbox(M.offDuty, i, f);
+      f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(M.offDuty, i, f); } });
+      return f;
     });
+    tr.append(...set(false), ...(reduce ? [] : set(true)));
+    od.append(tr);
+    od.style.setProperty("--od-dur", `${M.offDuty.length * 6}s`);
+    if (reduce) od.classList.add("still");
   }
 
   /* measurements */
