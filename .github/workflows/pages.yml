@@ -29,6 +29,10 @@ jobs:
         run: |
           mkdir _site
           rsync -a --exclude '.git' --exclude '.github' --exclude '_site' --exclude '*.md' --exclude '.gitignore' ./ _site/
+          # model.richiemiller.com serves the modelling site (noir-2) at the root; the concepts stay at their own paths
+          mv _site/index.html _site/concepts.html
+          rsync -a --exclude 'index.html' noir-2/ _site/
+          sed -e 's#data-base="\.\./"#data-base=""#' -e 's#"\.\./assets/#"assets/#g' noir-2/index.html > _site/index.html
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
