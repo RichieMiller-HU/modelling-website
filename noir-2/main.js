@@ -161,15 +161,97 @@
   cuF.addEventListener("click", openCu);
   cuF.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCu(); } });
 
-  /* digitals: hidden while empty */
+  /* digitals: a blueprint body map. Each point opens its photos, notes and measurements. Hidden while empty */
   if (!M.digitals || !M.digitals.length) $$("[data-hide-empty=digitals]").forEach((e) => e.remove());
   else {
-    const dg = $("#dg");
-    M.digitals.forEach((p, i) => {
-      const f = d.createElement("figure"); f.className = "ph"; f.dataset.cursor = "View"; f.tabIndex = 0;
-      f.innerHTML = `<div class="clip"><img src="${url(p.src)}" alt="Digital — ${p.caption}" loading="lazy" decoding="async"></div><figcaption><span class="lbl">${p.caption}</span><span class="lbl mute num">${pad(i + 1)}</span></figcaption>`;
-      f.onclick = () => lightbox(M.digitals, i, f); dg.append(f);
+    const NS = "http://www.w3.org/2000/svg";
+    const MAP = M.bodyMap || {};
+    const mx = (x) => 320 - x; /* the figure is symmetric about x = 160 */
+    /* left half of the figure; the right half is its mirror */
+    const half = [
+      [[152, 62], [152, 74], [122, 84], [112, 150], [106, 215], [104, 250]],
+      [[112, 250], [114, 215], [120, 160], [126, 112], [128, 150], [132, 200], [130, 240], [134, 330], [138, 420], [132, 438], [152, 438], [150, 420], [154, 330], [158, 263]],
+    ];
+    const poly = (pts) => "M" + pts.map((p) => p.join(" ")).join(" L");
+    let fig = half.map(poly).join(" ") + " " + half.map((h) => poly(h.map(([x, y]) => [mx(x), y]))).join(" ") + " M158 263 Q160 257 162 263";
+    const stat = (name) => (M.stats || []).find((s) => s[0] === name);
+    const num = (name) => { const s = stat(name); return s ? s[1].replace(/\s*(cm|EU)$/i, "") : ""; };
+    /* hotspot, side of its label, label height */
+    const PTS = {
+      face:    { at: [160, 36],  side: "l", ly: 30 },
+      profile: { at: [177, 44],  side: "r", ly: 44 },
+      back:    { at: [134, 96],  side: "l", ly: 104 },
+      torso:   { at: [160, 160], side: "r", ly: 160 },
+      hands:   { at: [213, 262], side: "r", ly: 262 },
+      legs:    { at: [144, 345], side: "l", ly: 345 },
+    };
+    const parts = Object.keys(PTS).filter((k) => MAP[k] && M.digitals.some((p) => p.part === k));
+    const svg = d.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 320 470"); svg.setAttribute("role", "group"); svg.setAttribute("aria-label", "Body map: select a part to see its digitals");
+    const meas = [
+      ["Chest", 124, 128, 192], ["Waist", 198, 132, 188], ["Hips", 238, 130, 190],
+    ].filter((m) => stat(m[0])).map(([n, y, a, b]) => `<line class="ms" x1="${a}" y1="${y}" x2="${b}" y2="${y}"/><text class="mt" x="${b + 3}" y="${y + 2.6}">${num(n)}</text>`).join("");
+    svg.innerHTML =
+      `<defs><pattern id="bpg" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" class="g1"/></pattern><pattern id="bpG" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#bpg)"/><path d="M50 0H0V50" class="g2"/></pattern></defs>` +
+      `<rect width="320" height="470" fill="url(#bpG)"/>` +
+      `<g class="fig"><ellipse cx="160" cy="40" rx="18" ry="23"/><ellipse cx="107" cy="263" rx="6.5" ry="11"/><ellipse cx="213" cy="263" rx="6.5" ry="11"/><path d="${fig}"/></g>` +
+      meas +
+      (stat("Inseam") ? `<line class="ms" x1="160" y1="266" x2="160" y2="436"/><text class="mt" x="163" y="300">${num("Inseam")}</text>` : "") +
+      (stat("Height") ? `<g class="dim"><line x1="236" y1="17" x2="236" y2="438"/><line x1="231" y1="17" x2="241" y2="17"/><line x1="231" y1="438" x2="241" y2="438"/><text class="mt" transform="translate(246 236) rotate(90)" text-anchor="middle">${stat("Height")[1].toUpperCase()}</text></g>` : "") +
+      (stat("Shoe") ? `<text class="mt" x="170" y="452" text-anchor="middle">${num("Shoe")} EU</text>` : "") +
+      parts.map((k, i) => {
+        const { at: [x, y], side, ly } = PTS[k], ex = side === "l" ? 70 : 250, tx = side === "l" ? 8 : 312;
+        const elbow = side === "l" ? Math.min(x - 10, 100) : Math.max(x + 10, 222);
+        return `<g class="pt" data-k="${k}" tabindex="0" role="button" aria-label="${MAP[k].label}">` +
+          `<polyline class="ld" points="${x},${y} ${elbow},${ly} ${ex},${ly}"/>` +
+          `<text class="pl" x="${tx}" y="${ly + 3}" text-anchor="${side === "l" ? "start" : "end"}">${pad(i + 1)} ${MAP[k].label.toUpperCase()}</text>` +
+          `<circle class="hit" cx="${x}" cy="${y}" r="12"/><circle class="ring" cx="${x}" cy="${y}" r="8"/><circle class="dot" cx="${x}" cy="${y}" r="3.2"/></g>`;
+      }).join("");
+    $("#bp-fig").append(svg);
+    const ptEls = $$(".pt", svg);
+    ptEls.forEach((g) => {
+      const l = $(".ld", g), t = $(".pl", g);
+      /* the pointer line stops just short of its label, whatever the label's length */
+      try {
+        const w = t.getComputedTextLength(), x0 = +t.getAttribute("x"), left = t.getAttribute("text-anchor") === "start";
+        const pts = l.getAttribute("points").split(" "); const ly = pts[2].split(",")[1];
+        pts[2] = `${left ? x0 + w + 6 : x0 - w - 6},${ly}`; l.setAttribute("points", pts.join(" "));
+      } catch (e) {}
+      const len = l.getTotalLength ? l.getTotalLength() : 200; l.style.strokeDasharray = len; l.style.strokeDashoffset = 0;
     });
+    const T_ = $("#bp-t"), X = $("#bp-x"), N = $("#bp-n"), ST = $("#bp-st"), PH = $("#bp-ph");
+    const pick = (k, user) => {
+      ptEls.forEach((g) => {
+        const on = g.dataset.k === k, l = $(".ld", g); g.classList.toggle("on", on); g.setAttribute("aria-pressed", on);
+        /* the active pointer line draws itself out from the point */
+        if (on && !reduce) { l.style.transition = "none"; l.style.strokeDashoffset = l.style.strokeDasharray; l.getBoundingClientRect(); l.style.transition = ""; l.style.strokeDashoffset = 0; }
+      });
+      const part = MAP[k], list = M.digitals.filter((p) => p.part === k);
+      N.textContent = `${pad(parts.indexOf(k) + 1)} / ${pad(parts.length)}`;
+      T_.textContent = part.label; X.textContent = part.text || "";
+      ST.innerHTML = (part.stats || []).map(stat).filter(Boolean).map((s) => `<div><dt class="lbl mute">${s[0]}</dt><dd>${s[1]}${s[2] ? `<span class="mute"> / ${s[2]}</span>` : ""}</dd></div>`).join("");
+      ST.hidden = !ST.innerHTML;
+      PH.innerHTML = "";
+      list.forEach((p, i) => {
+        const f = d.createElement("figure"); f.className = "bp-th"; f.dataset.cursor = "View"; f.tabIndex = 0; f.setAttribute("role", "button");
+        f.innerHTML = `<div class="clip"><img src="${sm(p.src)}" alt="Digital — ${p.caption}" decoding="async"></div><figcaption class="lbl mute">${p.caption}</figcaption>`;
+        f.onclick = () => lightbox(list, i, f);
+        f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(list, i, f); } });
+        PH.append(f);
+        if (!reduce) gsap.fromTo(f, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, delay: i * 0.07, ease: "power3.out" });
+      });
+    };
+    ptEls.forEach((g) => {
+      g.addEventListener("click", () => {
+        pick(g.dataset.k);
+        /* stacked layout: bring the details into view */
+        const top = T_.getBoundingClientRect().top;
+        if (top > innerHeight * 0.7 || top < 0) T_.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+      });
+      g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(g.dataset.k); } });
+    });
+    const all = $("#bp-all"); all.textContent = `View all ${M.digitals.length} digitals`; all.onclick = () => lightbox(M.digitals, 0, all);
+    pick(parts[0]);
   }
   if ($("#dg-note")) $("#dg-note").textContent = M.digitalsNote || "";
 

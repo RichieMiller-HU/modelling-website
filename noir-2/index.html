@@ -28,6 +28,7 @@
   <nav aria-label="Primary">
     <a class="lbl" href="#work">Book</a>
     <a class="lbl" href="#film">Film</a>
+    <a class="lbl opt" href="#digitals">Digitals</a>
     <a class="lbl opt" href="#measurements">Measurements</a>
     <a class="lbl" href="#contact">Contact</a>
   </nav>
@@ -84,7 +85,17 @@
   <section class="dg-sec grid" id="digitals" aria-label="Digitals" data-hide-empty="digitals">
     <h2 class="d-l">Digitals</h2>
     <p class="lbl mute dg-note" id="dg-note"></p>
-    <div class="dg" id="dg"></div>
+    <div class="bp">
+      <div class="bp-fig" id="bp-fig"></div>
+      <div class="bp-panel" aria-live="polite">
+        <p class="lbl mute num" id="bp-n"></p>
+        <h3 class="d-m" id="bp-t"></h3>
+        <p class="bp-x" id="bp-x"></p>
+        <dl class="bp-st" id="bp-st"></dl>
+        <div class="bp-ph" id="bp-ph"></div>
+        <button class="lbl bp-all" id="bp-all" type="button"></button>
+      </div>
+    </div>
   </section>
 
   <section class="meas grid" id="measurements" aria-label="Measurements">

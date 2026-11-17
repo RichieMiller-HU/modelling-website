@@ -69,8 +69,31 @@ window.MODEL = {
   // front / profile / three-quarter / full length. Agencies ask for these first. Placeholders below.
   // Empty = section hidden. Add 4 real ones (front, profile, three-quarter, full length) like:
   // { src: "assets/photos/digital-front.jpg", caption: "Front" },
-  digitals: [],
-  digitalsNote: "Natural light · No styling · iPhone", // add the date once shot, e.g. "Taken Nov 2026 · Daylight, phone, no edits"
+  // Digitals: raw phone photos, 17 Nov 2026. `part` links each one to a point on the body map.
+  digitals: [
+    { src: "assets/photos/digital-face-front.jpg",         caption: "Face, front",          part: "face" },
+    { src: "assets/photos/digital-face-three-quarter.jpg", caption: "Face, three-quarter",  part: "face" },
+    { src: "assets/photos/digital-face-tilt.jpg",          caption: "Face, tilted",         part: "face" },
+    { src: "assets/photos/digital-profile-left.jpg",       caption: "Left profile",         part: "profile" },
+    { src: "assets/photos/digital-profile-right.jpg",      caption: "Right profile",        part: "profile" },
+    { src: "assets/photos/digital-three-quarter.jpg",      caption: "Three-quarter",        part: "profile" },
+    { src: "assets/photos/digital-waist-up.jpg",           caption: "Waist up",             part: "torso" },
+    { src: "assets/photos/digital-hands.jpg",              caption: "Hands",                part: "hands" },
+    { src: "assets/photos/digital-full-length-front.jpg",  caption: "Full length, front",   part: "legs" },
+    { src: "assets/photos/digital-full-length-back.jpg",   caption: "Full length, back",    part: "back" },
+    { src: "assets/photos/digital-back-waist-up.jpg",      caption: "Back, waist up",       part: "back" },
+  ],
+  digitalsNote: "Taken 17 Nov 2026 · Window light · Phone camera · No edits",
+
+  // The body map in the Digitals section. `stats` names rows of `stats` above.
+  bodyMap: {
+    face:    { label: "Face",        text: "Front, three-quarter and a slight tilt. Window light, no make-up, nothing retouched." },
+    profile: { label: "Profile",     text: "Left and right profile and a three-quarter turn: jawline, nose and hairline as they are." },
+    torso:   { label: "Build",       text: "Waist up in a plain fitted tee.", stats: ["Chest", "Waist", "Hips"] },
+    hands:   { label: "Hands",       text: "Backs of both hands, for close-up and product work." },
+    legs:    { label: "Full length", text: "Standing straight, front on, in shorts.", stats: ["Height", "Inseam", "Shoe"] },
+    back:    { label: "Back",        text: "Full length and waist up from behind." },
+  },
 
   // OFF DUTY: a small strip of styled / lifestyle phone photos above Contact. Personality, not the book.
   // Square crops, 4–6 photos. Empty = hidden. e.g. { src: "assets/photos/off-01.jpg", caption: "Lisbon" },
