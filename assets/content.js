@@ -22,7 +22,7 @@ window.MODEL = {
 
   // Industry-standard comp card stats (metric + imperial). TODO: real numbers.
   stats: [
-    ["Height", "188 cm", "6'2\""],
+    ["Height", "182 cm", "5'11.5\""],
     ["Chest", "98 cm", "38.5\""],
     ["Waist", "80 cm", "31.5\""],
     ["Inseam", "86 cm", "34\""],
@@ -38,21 +38,20 @@ window.MODEL = {
   // `fit` = "portrait" | "landscape";  `key` = "light" | "dark" | "colour";  `caption` = the look (wardrobe), `shot` = Close-up | Mid | Full length.
   // All studio frames are unretouched, straight out of camera (deliberate: see heroNote / statement).
   photos: [
-    { src: "assets/photos/rm-s15.jpg", fit: "portrait", key: "light", caption: "Hands at collar", shot: "Close-up" },
-    { src: "assets/photos/rm-s12.jpg", fit: "portrait", key: "light", caption: "Black shirt", shot: "Mid" },
     { src: "assets/photos/rm-s07.jpg", fit: "portrait", key: "light", caption: "Arms crossed", shot: "Mid" },
-    { src: "assets/photos/rm-s09.jpg", fit: "portrait", key: "light", caption: "Stool", shot: "Mid" },
+    { src: "assets/photos/rm-s14.jpg", fit: "portrait", key: "light", caption: "Open collar", shot: "Close-up" },
     { src: "assets/photos/rm-s11.jpg", fit: "portrait", key: "light", caption: "Stool, seated", shot: "Full length" },
     { src: "assets/photos/rm-s08.jpg", fit: "portrait", key: "light", caption: "Wall lean", shot: "Full length" },
     { src: "assets/photos/rm-s06.jpg", fit: "portrait", key: "light", caption: "Hand to chin", shot: "Mid" },
     { src: "assets/photos/rm-s17.jpg", fit: "portrait", key: "light", caption: "Sunglasses", shot: "Mid" },
-    { src: "assets/photos/rm-s14.jpg", fit: "portrait", key: "light", caption: "Open collar", shot: "Close-up" },
+    { src: "assets/photos/rm-s12.jpg", fit: "portrait", key: "light", caption: "Black shirt", shot: "Mid" },
     { src: "assets/photos/rm-s10.jpg", fit: "portrait", key: "light", caption: "Stool, turning", shot: "Full length" },
     { src: "assets/photos/rm-s18.jpg", fit: "landscape", key: "light", caption: "Glasses", shot: "Mid" },
     { src: "assets/photos/rm-s19.jpg", fit: "portrait", key: "light", caption: "Table", shot: "Mid" },
     { src: "assets/photos/rm-s13.jpg", fit: "portrait", key: "light", caption: "Stool, buttoning", shot: "Full length" },
     { src: "assets/photos/rm-s16.jpg", fit: "landscape", key: "light", caption: "Sunglasses, table", shot: "Mid" },
     { src: "assets/photos/rm-s20.jpg", fit: "portrait", key: "light", caption: "Standing", shot: "Full length" },
+    { src: "assets/photos/rm-s09.jpg", fit: "portrait", key: "light", caption: "Stool", shot: "Mid" },
     { src: "assets/photos/rm-s01.jpg", fit: "portrait", key: "dark", caption: "Linen overshirt", shot: "Full length" },
     { src: "assets/photos/rm-s03.jpg", fit: "portrait", key: "dark", caption: "Black overshirt", shot: "Mid" },
     { src: "assets/photos/rm-s21.jpg", fit: "portrait", key: "dark", caption: "Black tee", shot: "Close-up" },
@@ -61,7 +60,8 @@ window.MODEL = {
     { src: "assets/photos/rm-s04.jpg", fit: "portrait", key: "dark", caption: "Black overshirt, white tee", shot: "Mid" },
     { src: "assets/photos/rm-s22.jpg", fit: "landscape", key: "dark", caption: "Chair", shot: "Close-up" },
   ],
-  heroLight: "assets/photos/rm-s15.jpg",   // used by light concepts (Atelier)
+  heroLight: "assets/photos/rm-s09-face.jpg",   // hero on portrait screens (face crop of rm-s09)
+  heroFull: "assets/photos/rm-s09.jpg",          // hero on landscape screens (whole frame)
   closeUpDark: "assets/photos/rm-s21.jpg", // used by dark concepts (Noir, Cinema)
 
   // Digitals / polaroids. TODO: shoot real ones — natural light, plain fitted tee, no retouching,

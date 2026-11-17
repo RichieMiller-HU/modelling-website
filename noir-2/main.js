@@ -23,7 +23,11 @@
   const touch = !fine;                 /* coarse pointer or no hover: phones and tablets */
   const T = touch ? 0.55 : 1;          /* motion runs shorter on touch */
   /* the opening still: a high-key studio frame. A concept choice for Noir; the book itself still comes from content.js */
-  const HERO_SRC = M.heroLight || "assets/photos/rm-s15.jpg";
+  /* landscape screens get the whole frame, portrait screens (phones) the face crop. ?hero=full / ?hero=face forces one */
+  const heroQ = (location.search.match(/[?&]hero=(full|face)\b/) || [])[1];
+  const HERO_FULL = M.heroFull && (heroQ ? heroQ === "full" : matchMedia("(orientation: landscape)").matches) && M.heroFull;
+  const HERO_SRC = HERO_FULL || M.heroLight || "assets/photos/rm-s09-face.jpg";
+  if (HERO_FULL) document.documentElement.classList.add("hero-full");
   const loadScript = (src) => new Promise((res, rej) => { if (d.querySelector(`script[src="${src}"]`)) return res(); const sc = d.createElement("script"); sc.src = src; sc.onload = res; sc.onerror = rej; d.head.append(sc); });
 
   history.scrollRestoration = "manual";
@@ -37,7 +41,7 @@
   /* the close-up: the book's own frame when closeUpDark is in it (or is its low-key close-up, re-exported under a new name), else the file as given */
   let cuEntry = M.closeUpDark ? all.find((p) => p.src === M.closeUpDark) || all.find((p) => p.key === "dark" && /close-?up/i.test(p.caption)) || { src: M.closeUpDark, fit: "portrait", key: "dark", caption: "Close-up" } : null;
   /* the opening still is the cover: it is not repeated inside the book either */
-  const heroEntry = all.find((p) => p.src === HERO_SRC) || null;
+  const heroEntry = all.find((p) => p.src === HERO_SRC || p.src === M.heroFull) || null;
   const photos = all.filter((p) => p !== cuEntry && p !== heroEntry);
   /* page order: the book, then the close-up. Numbering, lightbox and contents all follow it */
   const seq = cuEntry ? [...photos, cuEntry] : photos;
@@ -425,7 +429,7 @@
     $$(".ix-row", rowsEl).forEach((row, k) => row.addEventListener("pointerenter", () => {
       const dir = last == null || k > last ? 1 : -1; last = k;
       rowsEl.classList.add("hov"); $$(".ix-row.on", rowsEl).forEach((r) => r.classList.remove("on")); row.classList.add("on");
-      const im = flImgs[+row.dataset.i]; im.style.zIndex = ++z;
+      const im = flImgs[+row.dataset.i]; im.style.zIndex = ++z; fl.style.aspectRatio = seq[+row.dataset.i].fit === "landscape" ? "3/2" : "2/3";
       if (!im.dataset.hi) { im.dataset.hi = "1"; im.src = url(seq[+row.dataset.i].src); } /* the small file stays up until the large one has decoded */
       gsap.fromTo(im, { clipPath: dir > 0 ? "inset(0% 0% 100% 0%)" : "inset(100% 0% 0% 0%)", scale: 1.16 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 0.85, ease: "expo.out", overwrite: true });
       show();
