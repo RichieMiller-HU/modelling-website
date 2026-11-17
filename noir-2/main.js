@@ -279,7 +279,7 @@
     };
     let lastK = 0;
     const layout = () => {
-      const W = od.clientWidth, target = innerWidth < 600 ? 150 : innerWidth < 900 ? 210 : Math.min(300, innerHeight * 0.32);
+      const W = od.clientWidth, target = innerWidth < 600 ? 225 : innerWidth < 900 ? 315 : Math.min(450, innerHeight * 0.5);
       const sum = ar.reduce((a, b) => a + b, 0), k = Math.max(1, Math.min(ar.length, Math.round((sum * target) / W)));
       if (k === lastK) return; lastK = k;
       od.innerHTML = "";

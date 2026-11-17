@@ -83,7 +83,7 @@ window.MODEL = {
     { src: "assets/photos/digital-back-waist-up.jpg",      caption: "Back, waist up",      part: "body" },
     { src: "assets/photos/digital-hands.jpg",              caption: "Backs of hands",      part: "hands" },
   ],
-  digitalsNote: "Taken 17 Nov 2026 · Google Pixel · Unedited",
+  digitalsNote: "Taken 17 Nov 2026 · Natural light · Unedited",
   digitalsAllText: "Straight off the phone, nothing edited. Filter by category, or pick a point on the figure.",
   digitalsMap: "assets/photos/digital-map.jpg", // greyscale crop of the full-length front, base of the body map
 
