@@ -266,8 +266,8 @@
       e.target.classList.add("in"); io.unobserve(e.target);
       /* the next two frames start downloading as soon as this one shows */
       const k = phs.indexOf(e.target);
-      for (let j = k + 1; j <= k + 2 && j < phs.length; j++) { const im = $("img", phs[j]); if (im && im.loading === "lazy") im.loading = "eager"; }
-    }), touch ? { rootMargin: "0px 0px 4% 0px", threshold: 0.04 } : { rootMargin: "0px -4% -8% 0px", threshold: 0.12 });
+      for (let j = k + 1; j <= k + 4 && j < phs.length; j++) { const im = $("img", phs[j]); if (im && im.loading === "lazy") im.loading = "eager"; }
+    }), touch ? { rootMargin: "0px 0px 4% 0px", threshold: 0.04 } : { rootMargin: "0px 6% -4% 0px", threshold: 0.05 });
     phs.forEach((f) => io.observe(f));
   }
 

@@ -111,8 +111,8 @@ html:not(.hz) .m-pb{grid-column:4/-1;margin-top:22%}
 html:not(.hz) .m-bleed{grid-column:1/-1;margin-inline:calc(var(--m) * -1)}
 html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
 /* reveal curtain — not clip-path, so lazy images still load */
-.motion .ph .clip::after{content:"";position:absolute;inset:0;background:var(--bg);transform-origin:50% 0;transition:transform 1.3s var(--ease-io)}
-.motion .ph img{transform:scale(1.08);transition:transform 2s var(--ease)}
+.motion .ph .clip::after{content:"";position:absolute;inset:0;background:var(--bg);transform-origin:50% 0;transition:transform .85s var(--ease-io)}
+.motion .ph img{transform:scale(1.08);transition:transform 1.3s var(--ease)}
 .motion .ph.in .clip::after{transform:scaleY(0)}
 .motion .ph.in img{transform:none}
 
@@ -140,7 +140,7 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
 .hz .ph figcaption{position:absolute;left:0;right:0;top:100%}
 .hz .ph.a-c{transform:translateY(-10px)}
 .hz .book-end{width:1px;margin-right:0}
-.ph .clip img{transition:transform 1.4s var(--ease)}
+.ph .clip img{transition:transform .9s var(--ease)}
 
 /* ---------- contents index ---------- */
 .ix{padding:0 var(--m) var(--sec)}
