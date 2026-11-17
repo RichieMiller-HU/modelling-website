@@ -20,13 +20,14 @@ window.MODEL = {
     "One studio, two backdrops, nothing retouched. What you see in the book is what walks onto your set.",
   bookNote: "Studio light, straight out of camera.",
 
-  // Industry-standard comp card stats (metric + imperial). TODO: real numbers.
+  // Measured by Richie, 17 Nov 2026. Weight (88 kg) kept off the site on purpose: agencies ask for it privately.
+  // TODO: confirm hair + eye colour; add suit size once known (chest 107 cm usually = EU 52 / 42R).
   stats: [
-    ["Height", "182 cm", "5'11.5\""],
-    ["Chest", "98 cm", "38.5\""],
-    ["Waist", "80 cm", "31.5\""],
-    ["Inseam", "86 cm", "34\""],
-    ["Suit", "50 EU", "40L"],
+    ["Height", "181 cm", "5'11\""],
+    ["Chest", "107 cm", "42\""],
+    ["Waist", "86 cm", "34\""],
+    ["Hips", "108 cm", "42.5\""],
+    ["Inseam", "83 cm", "32.5\""],
     ["Shoe", "44 EU", "10 US"],
     ["Hair", "Dark brown", ""],
     ["Eyes", "Brown", ""],
