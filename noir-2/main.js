@@ -252,24 +252,42 @@
   }
   if ($("#dg-note")) $("#dg-note").textContent = M.digitalsNote || "";
 
-  /* off duty: a slow, endless strip of phone photos (b&w and colour alternating); pauses on hover, opens the lightbox. Hidden while empty */
+  /* off duty: a justified collage, every photo visible at once. Rows keep the b&w / colour order and are balanced so each row
+     ends flush; row height follows the viewport. Hover dims the rest, click opens the lightbox. Hidden while empty */
   if (!M.offDuty || !M.offDuty.length) $$("[data-hide-empty=offDuty]").forEach((e) => e.remove());
   else {
-    const od = $("#od"), tr = d.createElement("div"); tr.className = "od-tr";
+    const od = $("#od"), L = M.offDuty, ar = L.map((p) => p.ar || 0.8);
     if ($("#od-n")) $("#od-n").textContent = M.offDutyNote || "";
-    const set = (dup) => M.offDuty.map((p, i) => {
-      const f = d.createElement("figure"); f.className = "od-it"; f.dataset.cursor = "View";
-      if (dup) f.setAttribute("aria-hidden", "true"); else { f.tabIndex = 0; f.setAttribute("role", "button"); }
-      f.style.setProperty("--ar", p.ar || 0.8);
-      f.innerHTML = `<img src="${sm(p.src)}" alt="${dup ? "" : "Off duty" + (p.caption ? " — " + p.caption : "")}" loading="lazy" decoding="async">`;
-      f.onclick = () => lightbox(M.offDuty, i, f);
-      f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(M.offDuty, i, f); } });
+    const figs = L.map((p, i) => {
+      const f = d.createElement("figure"); f.className = "od-it"; f.dataset.cursor = "View"; f.tabIndex = 0; f.setAttribute("role", "button");
+      f.style.setProperty("--ar", ar[i]); f.style.flexGrow = ar[i];
+      f.innerHTML = `<img src="${sm(p.src)}" alt="Off duty${p.caption ? " — " + p.caption : ""}" loading="lazy" decoding="async">`;
+      f.onclick = () => lightbox(L, i, f);
+      f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(L, i, f); } });
       return f;
     });
-    tr.append(...set(false), ...(reduce ? [] : set(true)));
-    od.append(tr);
-    od.style.setProperty("--od-dur", `${M.offDuty.length * 6}s`);
-    if (reduce) od.classList.add("still");
+    /* split the sequence into k rows with sums of aspect ratios as even as possible (linear partition) */
+    const part = (k) => {
+      const n = ar.length, pre = [0]; ar.forEach((a, i) => pre.push(pre[i] + a));
+      const cost = Array.from({ length: k + 1 }, () => Array(n + 1).fill(Infinity)), cut = cost.map((r) => r.map(() => 0));
+      cost[0][0] = 0;
+      for (let r = 1; r <= k; r++) for (let e = r; e <= n; e++) for (let s = r - 1; s < e; s++) {
+        const c = Math.max(cost[r - 1][s], pre[e] - pre[s]); if (c < cost[r][e]) { cost[r][e] = c; cut[r][e] = s; }
+      }
+      const rows = []; let e = n; for (let r = k; r >= 1; r--) { const s = cut[r][e]; rows.unshift([s, e]); e = s; }
+      return rows;
+    };
+    let lastK = 0;
+    const layout = () => {
+      const W = od.clientWidth, target = innerWidth < 600 ? 150 : innerWidth < 900 ? 210 : Math.min(300, innerHeight * 0.32);
+      const sum = ar.reduce((a, b) => a + b, 0), k = Math.max(1, Math.min(ar.length, Math.round((sum * target) / W)));
+      if (k === lastK) return; lastK = k;
+      od.innerHTML = "";
+      part(k).forEach(([s, e]) => { const r = d.createElement("div"); r.className = "od-row"; r.append(...figs.slice(s, e)); od.append(r); });
+    };
+    layout(); addEventListener("resize", layout);
+    if (!reduce) gsap.fromTo(figs, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", stagger: 0.035,
+      scrollTrigger: { trigger: od, start: "top 85%", once: true } });
   }
 
   /* measurements */
@@ -458,13 +476,13 @@
   const setMark = () => navMark.classList.toggle("on", pastHero && covered === 0);
   ScrollTrigger.create({ start: () => $(".profile").offsetTop - innerHeight * 0.6, end: "max", onToggle: (s) => { pastHero = s.isActive; setMark(); setScrim(); } });
   const navBand = () => navMark.getBoundingClientRect().bottom + 14;
-  $$(".ix-h h2, .meas-h h2, .dg-sec h2, .ct-big").forEach((el) => ScrollTrigger.create({
+  $$(".ix-h h2, .meas-h h2, .dg-sec h2, .od-h h2, .ct-big").forEach((el) => ScrollTrigger.create({
     trigger: el, start: () => `top ${navBand()}px`, end: "bottom 6px",
     onToggle: (s) => { covered = Math.max(0, covered + (s.isActive ? 1 : -1)); setMark(); },
   }));
   /* full-bleed scenes keep the image untouched: the difference-blended nav reads on its own there */
   [".cu", ".film"].forEach((sel) => ScrollTrigger.create({ trigger: sel, start: "top 12%", end: "bottom top", onToggle: (s) => { overBleed += s.isActive ? 1 : -1; overBleed = Math.max(0, overBleed); setScrim(); } }));
-  [["#work", ".ix", ".book"], ["#film", ".film"], ["#measurements", ".meas"], ["#contact", ".ct"]].forEach(([h, s, e]) => {
+  [["#work", ".ix", ".book"], ["#digitals", "#digitals"], ["#measurements", ".meas"], ["#off-duty", "#off-duty"], ["#contact", ".ct"]].forEach(([h, s, e]) => {
     const link = $(`.nav a[href="${h}"]`), sec = $(s); if (!link || !sec) return;
     ScrollTrigger.create({ trigger: sec, endTrigger: e ? $(e) : sec, start: "top 50%", end: "bottom 50%", onToggle: (st) => link.setAttribute("aria-current", st.isActive) });
   });
