@@ -429,7 +429,7 @@
     $$(".ix-row", rowsEl).forEach((row, k) => row.addEventListener("pointerenter", () => {
       const dir = last == null || k > last ? 1 : -1; last = k;
       rowsEl.classList.add("hov"); $$(".ix-row.on", rowsEl).forEach((r) => r.classList.remove("on")); row.classList.add("on");
-      const im = flImgs[+row.dataset.i]; im.style.zIndex = ++z; fl.style.aspectRatio = seq[+row.dataset.i].fit === "landscape" ? "3/2" : "2/3";
+      const im = flImgs[+row.dataset.i]; im.style.zIndex = ++z; const land = seq[+row.dataset.i].fit === "landscape"; fl.style.aspectRatio = land ? "3/2" : "2/3"; fl.style.width = land ? "min(34vw,620px,calc((100vh - 140px) * 1.5))" : "min(28vw,520px,calc((100vh - 140px) * 2 / 3))";
       if (!im.dataset.hi) { im.dataset.hi = "1"; im.src = url(seq[+row.dataset.i].src); } /* the small file stays up until the large one has decoded */
       gsap.fromTo(im, { clipPath: dir > 0 ? "inset(0% 0% 100% 0%)" : "inset(100% 0% 0% 0%)", scale: 1.16 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 0.85, ease: "expo.out", overwrite: true });
       show();
@@ -442,7 +442,7 @@
       const w = fl.offsetWidth, h = fl.offsetHeight, rr = rowsEl.getBoundingClientRect();
       /* it follows the cursor, but stays to the right of the titles (columns 1–8) whenever the screen allows */
       const minX = rr.left + rr.width * 0.66 + 16, maxX = innerWidth - w - Math.max(24, rr.left * 0.6);
-      const x = minX <= maxX ? clamp(cx + 40, minX, maxX) : maxX, y = clamp(cy - h * 0.55, 16, innerHeight - h - 16);
+      const x = minX <= maxX ? clamp(cx + 40, minX, maxX) : maxX, y = clamp(cy - h * 0.55, 108, Math.max(108, innerHeight - h - 16)); /* never over the nav */
       fl.style.transform = `translate3d(${x}px,${y}px,0) rotate(${rot}deg)`;
     });
   } else fl.remove();
