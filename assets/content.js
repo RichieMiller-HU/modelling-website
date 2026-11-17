@@ -77,21 +77,22 @@ window.MODEL = {
     { src: "assets/photos/digital-profile-left.jpg",       caption: "Left profile",         part: "profile" },
     { src: "assets/photos/digital-profile-right.jpg",      caption: "Right profile",        part: "profile" },
     { src: "assets/photos/digital-three-quarter.jpg",      caption: "Three-quarter",        part: "profile" },
-    { src: "assets/photos/digital-waist-up.jpg",           caption: "Waist up",             part: "torso" },
+    { src: "assets/photos/digital-waist-up.jpg",           caption: "Chest up",             part: "torso" },
     { src: "assets/photos/digital-hands.jpg",              caption: "Hands",                part: "hands" },
     { src: "assets/photos/digital-full-length-front.jpg",  caption: "Full length, front",   part: "legs" },
     { src: "assets/photos/digital-full-length-back.jpg",   caption: "Full length, back",    part: "back" },
     { src: "assets/photos/digital-back-waist-up.jpg",      caption: "Back, waist up",       part: "back" },
   ],
-  digitalsNote: "Taken 17 Nov 2026 · Window light · Phone camera · No edits",
+  digitalsNote: "Taken 17 Nov 2026 · Google Pixel · Unedited",
+  digitalsAllText: "Every shot, straight off the phone. Pick a point on the figure or a tab to filter by type.",
 
   // The body map in the Digitals section. `stats` names rows of `stats` above.
   bodyMap: {
-    face:    { label: "Face",        text: "Front, three-quarter and a slight tilt. Window light, no make-up, nothing retouched." },
+    face:    { label: "Face",        text: "Front, three-quarter and a slight tilt. No make-up, nothing retouched." },
     profile: { label: "Profile",     text: "Left and right profile and a three-quarter turn: jawline, nose and hairline as they are." },
-    torso:   { label: "Build",       text: "Waist up in a plain fitted tee.", stats: ["Chest", "Waist", "Hips"] },
-    hands:   { label: "Hands",       text: "Backs of both hands, for close-up and product work." },
-    legs:    { label: "Full length", text: "Standing straight, front on, in shorts.", stats: ["Height", "Inseam", "Shoe"] },
+    torso:   { label: "Build",       text: "Chest up in a plain V-neck tee, eyes off camera.", stats: ["Chest", "Waist", "Hips"] },
+    hands:   { label: "Hands",       text: "Backs of both hands, watch and bracelets on." },
+    legs:    { label: "Full length", text: "Front on, standing straight. Shorts, socks, watch and bracelets.", stats: ["Height", "Inseam", "Shoe"] },
     back:    { label: "Back",        text: "Full length and waist up from behind." },
   },
 
