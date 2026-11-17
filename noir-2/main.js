@@ -161,92 +161,86 @@
   cuF.addEventListener("click", openCu);
   cuF.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCu(); } });
 
-  /* digitals: all shots up front, filtered by tabs or by a blueprint body map. Hidden while empty */
+  /* digitals: every shot up front, grouped by category; tabs or points on a blueprint of his own full-length digital filter them. Hidden while empty */
   if (!M.digitals || !M.digitals.length) $$("[data-hide-empty=digitals]").forEach((e) => e.remove());
   else {
     const NS = "http://www.w3.org/2000/svg";
     const MAP = M.bodyMap || {};
-    const mx = (x) => 320 - x; /* the figure is symmetric about x = 160 */
-    /* left half of a fashion-croquis figure (about 9 heads); the right half is its mirror */
-    const left = "M152 59 L152.5 70 Q141 74 127 81 Q116 86 114.5 100 L110 150 L106 200 L103.5 238 Q99.5 252 101 266 Q104 276 109 270 Q112 258 111 240 L114.5 200 L119.5 150 L124 113 L126.5 150 L132 196 L128 236 L130.5 262 L134 330 L137.5 412 Q134 424 135 431 L154 431 L152.5 414 L154.5 330 L158 264";
-    const mirror = (path) => path.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (m, x, y) => `${+(320 - +x).toFixed(1)} ${y}`);
-    const fig = `${left} Q160 258 162 264 ${mirror(left).replace(/^M/, "M")}`;
     const stat = (name) => (M.stats || []).find((s) => s[0] === name);
     const num = (name) => { const s = stat(name); return s ? s[1].replace(/\s*(cm|EU)$/i, "") : ""; };
-    /* hotspot, side of its label, label height. Back has no point on a front view: it lives in the tabs */
-    const PTS = {
-      face:    { at: [160, 36],  side: "l", ly: 30 },
-      profile: { at: [175, 44],  side: "r", ly: 30 },
-      torso:   { at: [160, 160], side: "l", ly: 160 },
-      hands:   { at: [214, 258], side: "r", ly: 286 },
-      legs:    { at: [144, 345], side: "l", ly: 345 },
-    };
     const parts = Object.keys(MAP).filter((k) => M.digitals.some((p) => p.part === k));
+    const ordered = parts.flatMap((k) => M.digitals.filter((p) => p.part === k));
+    /* the base is the full-length digital, cropped to 320 × 650 (head at y 30, feet at y 625) */
+    const PTS = { face: [155, 78], body: [160, 225], hands: [76, 352] };
     const svg = d.createElementNS(NS, "svg");
-    svg.setAttribute("viewBox", "0 0 320 460"); svg.setAttribute("role", "group"); svg.setAttribute("aria-label", "Body map: select a part to filter the digitals");
-    /* measurements read off a rail on the right, beside the height */
-    const rail = [["Chest", 124, 125], ["Waist", 196, 132], ["Hips", 236, 128]].filter((m) => stat(m[0]))
-      .map(([n, y, a]) => `<line class="ms" x1="${a}" y1="${y}" x2="${mx(a)}" y2="${y}"/><line class="ms ms-l" x1="${mx(a) + 4}" y1="${y}" x2="244" y2="${y}"/><text class="mt" x="248" y="${y + 3}">${n.toUpperCase()} ${num(n)}</text>`).join("");
+    svg.setAttribute("viewBox", "0 0 420 650"); svg.setAttribute("role", "group"); svg.setAttribute("aria-label", "Body map: select a point to filter the digitals");
+    const rail = [["Chest", 192], ["Waist", 318], ["Hips", 372], ["Inseam", 452]].filter((m) => stat(m[0]))
+      .map(([n, y]) => `<line class="ms" x1="250" y1="${y}" x2="338" y2="${y}"/><text class="mt" x="344" y="${y + 3}">${n.toUpperCase()} ${num(n)}</text>`).join("");
     svg.innerHTML =
       `<defs><pattern id="bpg" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" class="g1"/></pattern><pattern id="bpG" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#bpg)"/><path d="M50 0H0V50" class="g2"/></pattern></defs>` +
-      `<rect width="320" height="460" fill="url(#bpG)"/>` +
-      `<g class="fig"><ellipse cx="160" cy="37" rx="15.5" ry="22.5"/><path d="${fig}"/></g>` +
+      `<image class="base" href="${url(M.digitalsMap || "assets/photos/digital-map.jpg")}" x="0" y="0" width="320" height="650" preserveAspectRatio="xMidYMid slice"/>` +
+      `<rect class="tint" width="320" height="650"/>` +
+      `<rect width="420" height="650" fill="url(#bpG)"/>` +
+      `<line class="edge" x1="320" y1="0" x2="320" y2="650"/>` +
       rail +
-      (stat("Inseam") ? `<line class="ms" x1="160" y1="267" x2="160" y2="431"/><line class="ms ms-l" x1="160" y1="322" x2="244" y2="322"/><text class="mt" x="248" y="325">INSEAM ${num("Inseam")}</text>` : "") +
-      (stat("Height") ? `<g class="dim"><line x1="236" y1="14.5" x2="236" y2="431"/><line x1="231" y1="14.5" x2="241" y2="14.5"/><line x1="231" y1="431" x2="241" y2="431"/></g><text class="mt" x="248" y="58">HEIGHT ${stat("Height")[1].toUpperCase()}</text>` : "") +
-      (stat("Shoe") ? `<text class="mt" x="248" y="434">SHOE ${num("Shoe")} EU</text>` : "") +
+      (stat("Height") ? `<g class="dim"><line x1="332" y1="30" x2="332" y2="625"/><line x1="327" y1="30" x2="337" y2="30"/><line x1="327" y1="625" x2="337" y2="625"/></g><text class="mt" x="344" y="33">HEIGHT ${num("Height")}</text>` : "") +
+      (stat("Shoe") ? `<text class="mt" x="344" y="628">SHOE ${num("Shoe")}</text>` : "") +
+      `<text class="mt mt-u" x="344" y="645">CM · EU</text>` +
       Object.keys(PTS).filter((k) => parts.includes(k)).map((k) => {
-        const { at: [x, y], side, ly } = PTS[k], tx = side === "l" ? 8 : 312;
-        const elbow = side === "l" ? Math.min(x - 12, 100) : Math.max(x + 12, 222);
+        const [x, y] = PTS[k], tx = 8, ly = y;
         return `<g class="pt" data-k="${k}" tabindex="0" role="button" aria-label="${MAP[k].label}">` +
-          `<polyline class="ld" points="${x},${y} ${elbow},${ly} ${tx},${ly}"/>` +
-          `<text class="pl" x="${tx}" y="${ly + 3.5}" text-anchor="${side === "l" ? "start" : "end"}">${pad(parts.indexOf(k) + 1)} ${MAP[k].label.toUpperCase()}</text>` +
-          `<circle class="hit" cx="${x}" cy="${y}" r="13"/><circle class="ring" cx="${x}" cy="${y}" r="8"/><circle class="dot" cx="${x}" cy="${y}" r="3.2"/></g>`;
+          `<polyline class="ld" points="${x},${y} ${tx + 60},${ly}"/>` +
+          `<rect class="plb" x="${tx - 4}" y="${ly - 9}" height="17" rx="1"/>` +
+          `<text class="pl" x="${tx}" y="${ly + 3.5}">${pad(parts.indexOf(k) + 1)} ${MAP[k].label.toUpperCase()}</text>` +
+          `<circle class="hit" cx="${x}" cy="${y}" r="16"/><circle class="ring" cx="${x}" cy="${y}" r="9"/><circle class="dot" cx="${x}" cy="${y}" r="3.6"/></g>`;
       }).join("");
     $("#bp-fig").append(svg);
     const ptEls = $$(".pt", svg);
     ptEls.forEach((g) => {
-      const l = $(".ld", g), t = $(".pl", g);
-      /* the pointer line stops just short of its label, whatever the label's length */
+      const l = $(".ld", g), t = $(".pl", g), b = $(".plb", g);
+      /* the pointer line runs from the point to just past its label; the label sits on a small plate */
       try {
-        const w = t.getComputedTextLength(), x0 = +t.getAttribute("x"), left = t.getAttribute("text-anchor") === "start";
-        const pts = l.getAttribute("points").split(" "); const ly = pts[2].split(",")[1];
-        pts[2] = `${left ? x0 + w + 6 : x0 - w - 6},${ly}`; l.setAttribute("points", pts.join(" "));
+        const w = t.getComputedTextLength(), x0 = +t.getAttribute("x"), pts = l.getAttribute("points").split(" "), ly = pts[1].split(",")[1];
+        pts[1] = `${x0 + w + 6},${ly}`; l.setAttribute("points", pts.join(" ")); b.setAttribute("width", w + 8);
       } catch (e) {}
       const len = l.getTotalLength ? l.getTotalLength() : 200; l.style.strokeDasharray = len; l.style.strokeDashoffset = 0;
     });
-    /* tabs: All first, then every part in order */
     const tabs = $("#bp-tabs");
-    tabs.innerHTML = ["all", ...parts].map((k) => `<button type="button" class="lbl" role="tab" data-k="${k}">${k === "all" ? `All <span class="num mute">${M.digitals.length}</span>` : MAP[k].label}</button>`).join("");
+    tabs.innerHTML = ["all", ...parts].map((k) => `<button type="button" class="lbl" role="tab" data-k="${k}">${k === "all" ? "All" : MAP[k].label} <span class="num mute">${k === "all" ? M.digitals.length : M.digitals.filter((p) => p.part === k).length}</span></button>`).join("");
     const tabEls = $$("button", tabs);
-    const T_ = $("#bp-t"), X = $("#bp-x"), N = $("#bp-n"), ST = $("#bp-st"), PH = $("#bp-ph");
+    const T_ = $("#bp-t"), X = $("#bp-x"), ST = $("#bp-st"), PH = $("#bp-ph");
+    const thumb = (p, list, i, delay) => {
+      const f = d.createElement("figure"); f.className = "bp-th"; f.dataset.cursor = "View"; f.tabIndex = 0; f.setAttribute("role", "button");
+      f.innerHTML = `<div class="clip"><img src="${sm(p.src)}" alt="Digital — ${p.caption}" decoding="async"></div><figcaption class="lbl mute">${p.caption}</figcaption>`;
+      f.onclick = () => lightbox(list, i, f);
+      f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(list, i, f); } });
+      if (!reduce) gsap.fromTo(f, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, delay, ease: "power3.out" });
+      return f;
+    };
     const pick = (k) => {
       ptEls.forEach((g) => {
         const on = g.dataset.k === k, l = $(".ld", g); g.classList.toggle("on", on); g.setAttribute("aria-pressed", on);
-        /* the active pointer line draws itself out from the point */
         if (on && !reduce) { l.style.transition = "none"; l.style.strokeDashoffset = l.style.strokeDasharray; l.getBoundingClientRect(); l.style.transition = ""; l.style.strokeDashoffset = 0; }
       });
       tabEls.forEach((b) => b.setAttribute("aria-selected", b.dataset.k === k));
       const isAll = k === "all", part = isAll ? { label: "All digitals", text: M.digitalsAllText || "" } : MAP[k];
-      const list = isAll ? M.digitals : M.digitals.filter((p) => p.part === k);
-      N.textContent = isAll ? `${pad(list.length)} shots` : `${pad(parts.indexOf(k) + 1)} / ${pad(parts.length)}`;
       T_.textContent = part.label; X.textContent = part.text || "";
       ST.innerHTML = (part.stats || []).map(stat).filter(Boolean).map((s) => `<div><dt class="lbl mute">${s[0]}</dt><dd>${s[1]}${s[2] ? `<span class="mute"> / ${s[2]}</span>` : ""}</dd></div>`).join("");
       ST.hidden = !ST.innerHTML;
-      PH.className = `bp-ph${isAll ? " all" : ""}${list.length === 1 ? " one" : ""}`;
       PH.innerHTML = "";
-      list.forEach((p, i) => {
-        const f = d.createElement("figure"); f.className = "bp-th"; f.dataset.cursor = "View"; f.tabIndex = 0; f.setAttribute("role", "button");
-        f.innerHTML = `<div class="clip"><img src="${sm(p.src)}" alt="Digital — ${p.caption}" decoding="async"></div><figcaption class="lbl mute">${p.caption}</figcaption>`;
-        f.onclick = () => lightbox(list, i, f);
-        f.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lightbox(list, i, f); } });
-        PH.append(f);
-        if (!reduce) gsap.fromTo(f, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.55, delay: Math.min(i, 8) * 0.05, ease: "power3.out" });
+      let n = 0;
+      (isAll ? parts : [k]).forEach((pk) => {
+        const items = M.digitals.filter((p) => p.part === pk);
+        const sec = d.createElement("div"); sec.className = "bp-grp";
+        if (isAll) sec.innerHTML = `<h4 class="lbl"><span>${MAP[pk].label}</span><span class="mute num">${pad(items.length)}</span></h4>`;
+        const grid = d.createElement("div"); grid.className = `bp-gr${items.length === 1 && !isAll ? " one" : ""}`;
+        const list = isAll ? ordered : items;
+        items.forEach((p) => { grid.append(thumb(p, list, list.indexOf(p), Math.min(n++, 8) * 0.04)); });
+        sec.append(grid); PH.append(sec);
       });
     };
     const choose = (k, fromMap) => {
       pick(k);
-      /* stacked layout: bring the results into view after a tap on the figure */
       if (fromMap) { const top = tabs.getBoundingClientRect().top; if (top > innerHeight * 0.75 || top < 0) tabs.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); }
     };
     ptEls.forEach((g) => {

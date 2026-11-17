@@ -69,31 +69,29 @@ window.MODEL = {
   // front / profile / three-quarter / full length. Agencies ask for these first. Placeholders below.
   // Empty = section hidden. Add 4 real ones (front, profile, three-quarter, full length) like:
   // { src: "assets/photos/digital-front.jpg", caption: "Front" },
-  // Digitals: raw phone photos, 17 Nov 2026. `part` links each one to a point on the body map.
+  // Digitals: raw phone photos, 17 Nov 2026, grouped by `part` (face / body / hands).
   digitals: [
-    { src: "assets/photos/digital-face-front.jpg",         caption: "Face, front",          part: "face" },
-    { src: "assets/photos/digital-face-three-quarter.jpg", caption: "Face, three-quarter",  part: "face" },
-    { src: "assets/photos/digital-face-tilt.jpg",          caption: "Face, tilted",         part: "face" },
-    { src: "assets/photos/digital-profile-left.jpg",       caption: "Left profile",         part: "profile" },
-    { src: "assets/photos/digital-profile-right.jpg",      caption: "Right profile",        part: "profile" },
-    { src: "assets/photos/digital-three-quarter.jpg",      caption: "Three-quarter",        part: "profile" },
-    { src: "assets/photos/digital-waist-up.jpg",           caption: "Chest up",             part: "torso" },
-    { src: "assets/photos/digital-hands.jpg",              caption: "Hands",                part: "hands" },
-    { src: "assets/photos/digital-full-length-front.jpg",  caption: "Full length, front",   part: "legs" },
-    { src: "assets/photos/digital-full-length-back.jpg",   caption: "Full length, back",    part: "back" },
-    { src: "assets/photos/digital-back-waist-up.jpg",      caption: "Back, waist up",       part: "back" },
+    { src: "assets/photos/digital-face-front.jpg",         caption: "Front",               part: "face" },
+    { src: "assets/photos/digital-face-three-quarter.jpg", caption: "Three-quarter",       part: "face" },
+    { src: "assets/photos/digital-face-tilt.jpg",          caption: "Tilted",              part: "face" },
+    { src: "assets/photos/digital-waist-up.jpg",           caption: "Chest up",            part: "face" },
+    { src: "assets/photos/digital-full-length-front.jpg",  caption: "Front",               part: "body" },
+    { src: "assets/photos/digital-full-length-back.jpg",   caption: "Back",                part: "body" },
+    { src: "assets/photos/digital-profile-left.jpg",       caption: "Left profile",        part: "body" },
+    { src: "assets/photos/digital-profile-right.jpg",      caption: "Right profile",       part: "body" },
+    { src: "assets/photos/digital-three-quarter.jpg",      caption: "Three-quarter",       part: "body" },
+    { src: "assets/photos/digital-back-waist-up.jpg",      caption: "Back, waist up",      part: "body" },
+    { src: "assets/photos/digital-hands.jpg",              caption: "Backs of hands",      part: "hands" },
   ],
   digitalsNote: "Taken 17 Nov 2026 · Google Pixel · Unedited",
-  digitalsAllText: "Every shot, straight off the phone. Pick a point on the figure or a tab to filter by type.",
+  digitalsAllText: "Straight off the phone, nothing edited. Filter by category, or pick a point on the figure.",
+  digitalsMap: "assets/photos/digital-map.jpg", // greyscale crop of the full-length front, base of the body map
 
-  // The body map in the Digitals section. `stats` names rows of `stats` above.
+  // Categories, in this order, for the tabs, the body map and the grouped grid. `stats` names rows of `stats`.
   bodyMap: {
-    face:    { label: "Face",        text: "Front, three-quarter and a slight tilt. No make-up, nothing retouched." },
-    profile: { label: "Profile",     text: "Left and right profile and a three-quarter turn: jawline, nose and hairline as they are." },
-    torso:   { label: "Build",       text: "Chest up in a plain V-neck tee, eyes off camera.", stats: ["Chest", "Waist", "Hips"] },
-    hands:   { label: "Hands",       text: "Backs of both hands, watch and bracelets on." },
-    legs:    { label: "Full length", text: "Front on, standing straight. Shorts, socks, watch and bracelets.", stats: ["Height", "Inseam", "Shoe"] },
-    back:    { label: "Back",        text: "Full length and waist up from behind." },
+    face:  { label: "Face",      text: "Front, three-quarter, tilted and chest up. No make-up, nothing retouched." },
+    body:  { label: "Full body", text: "Front, back, both profiles and a three-quarter turn. Shorts, socks, watch and bracelets.", stats: ["Height", "Chest", "Waist", "Hips", "Inseam", "Shoe"] },
+    hands: { label: "Hands",     text: "Backs of both hands, watch and bracelets on." },
   },
 
   // OFF DUTY: a small strip of styled / lifestyle phone photos above Contact. Personality, not the book.
