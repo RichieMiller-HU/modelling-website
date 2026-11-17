@@ -249,7 +249,7 @@ html:not(.hz) .m-bleed figcaption{padding-inline:var(--m)}
 /* ---------- cursor ---------- */
 .cur{position:fixed;left:0;top:0;z-index:300;pointer-events:none;mix-blend-mode:difference;opacity:0;transition:opacity .3s}
 .cur.on{opacity:1}
-.cur-d{position:absolute;width:8px;height:8px;left:-4px;top:-4px;border-radius:50%;background:#fff;transition:transform .6s var(--ease)}
+.cur-d{position:absolute;width:8px;height:8px;left:-4px;top:-4px;border-radius:50%;background:#fff;transition:transform .35s var(--ease)}
 .cur.link .cur-d{transform:scale(2.6)}
 .cur.big .cur-d{transform:scale(11)}
 .cur-l{position:absolute;transform:translate(-50%,-50%);font:500 10px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#000;white-space:nowrap;opacity:0;transition:opacity .3s}

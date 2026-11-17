@@ -33,6 +33,8 @@ jobs:
           mv _site/index.html _site/concepts.html
           rsync -a --exclude 'index.html' noir-2/ _site/
           sed -e 's#data-base="\.\./"#data-base=""#' -e 's#"\.\./assets/#"assets/#g' noir-2/index.html > _site/index.html
+          # the old /noir-2/ address now points to the root
+          printf '%s\n' '<!doctype html><meta charset="utf-8"><title>Richie Miller</title><link rel="canonical" href="https://model.richiemiller.com/"><meta http-equiv="refresh" content="0;url=/"><script>location.replace("/"+location.search+location.hash)</script>' > _site/noir-2/index.html
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:

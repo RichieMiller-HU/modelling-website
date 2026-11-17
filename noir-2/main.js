@@ -330,7 +330,7 @@
   if (fine && !reduce) {
     const c = d.createElement("div"); c.className = "cur"; c.setAttribute("aria-hidden", "true");
     c.innerHTML = '<span class="cur-d"></span><span class="cur-l"></span>'; d.body.append(c);
-    const qx = gsap.quickTo(c, "x", { duration: 0.45, ease: "power3" }), qy = gsap.quickTo(c, "y", { duration: 0.45, ease: "power3" });
+    const qx = gsap.quickTo(c, "x", { duration: 0.12, ease: "power2" }), qy = gsap.quickTo(c, "y", { duration: 0.12, ease: "power2" });
     const lab = $(".cur-l", c);
     addEventListener("pointermove", (e) => { qx(e.clientX); qy(e.clientY); c.classList.add("on"); }, { passive: true });
     d.addEventListener("pointerleave", () => c.classList.remove("on"));
