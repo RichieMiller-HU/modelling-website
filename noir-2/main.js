@@ -744,7 +744,14 @@
   const kenBurns = () => (touch
     ? gsap.fromTo([heroLo, heroHi], { scale: 1, xPercent: 0 }, { scale: 1.07, xPercent: -0.8, duration: 10, ease: "power1.out", overwrite: true })
     : gsap.fromTo([heroLo, heroHi], { scale: 1.1, xPercent: 1 }, { scale: 1, xPercent: 0, duration: 16, ease: "power1.out", overwrite: true }));
-  if (reduce || touch) {
+  /* a deep link (e.g. /#digitals, sent in an application) skips the curtain and lands on its section once the layout has settled */
+  let deep = null; try { deep = location.hash.length > 1 ? $(location.hash) : null; } catch (e) {}
+  if (deep) {
+    const land = () => { ScrollTrigger.refresh(); if (lenis) lenis.scrollTo(deep, { immediate: true, force: true }); else deep.scrollIntoView(); };
+    const later = () => { setTimeout(land, 60); setTimeout(land, 420); };
+    if (d.readyState === "complete") later(); else addEventListener("load", later);
+  }
+  if (reduce || touch || deep) {
     /* touch: no curtain. The hero is in the HTML and paints before any script runs; the sharp file follows when idle */
     html.classList.add("no-pre"); const pre = $(".pre"); pre && pre.remove();
     if (!reduce) kenBurns();

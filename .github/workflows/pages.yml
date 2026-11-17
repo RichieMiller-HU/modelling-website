@@ -35,6 +35,8 @@ jobs:
           sed -e 's#data-base="\.\./"#data-base=""#' -e 's#"\.\./assets/#"assets/#g' noir-2/index.html > _site/index.html
           # the old /noir-2/ address now points to the root
           printf '%s\n' '<!doctype html><meta charset="utf-8"><title>Richie Miller</title><link rel="canonical" href="https://model.richiemiller.com/"><meta http-equiv="refresh" content="0;url=/"><script>location.replace("/"+location.search+location.hash)</script>' > _site/noir-2/index.html
+          # short links for applications: /digitals and /off-duty land on their sections
+          for s in digitals off-duty; do mkdir -p _site/$s; printf '%s\n' "<!doctype html><meta charset=\"utf-8\"><title>Richie Miller</title><meta name=\"robots\" content=\"noindex\"><link rel=\"canonical\" href=\"https://model.richiemiller.com/#$s\"><meta http-equiv=\"refresh\" content=\"0;url=/#$s\"><script>location.replace(\"/#$s\")</script>" > _site/$s/index.html; done
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
