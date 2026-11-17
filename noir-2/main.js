@@ -479,7 +479,7 @@
     });
     setIdx(0);
     figs.forEach((f, i) => {
-      gsap.fromTo($("img", f), { xPercent: 4.5 }, { xPercent: -4.5, ease: "none", scrollTrigger: { trigger: f, containerAnimation: tween, start: "left right", end: "right left", scrub: true } });
+      /* parallax removed: the overscan it needs cropped heads */ if (false) gsap.fromTo($("img", f), { xPercent: 4.5 }, { xPercent: -4.5, ease: "none", scrollTrigger: { trigger: f, containerAnimation: tween, start: "left right", end: "right left", scrub: true } });
     });
     refreshSoon();
     return () => {
