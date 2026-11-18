@@ -308,7 +308,9 @@
   }));
 
   /* contact */
-  const ctMail = $("#ct-mail"); ctMail.href = mail(); $("#ct-t").textContent = `Book ${M.first}`;
+  /* the address only reaches the page when someone clicks: nothing for scrapers in the HTML or the rendered page */
+  const ctMail = $("#ct-mail"); ctMail.href = "mailto:";
+  ctMail.addEventListener("click", (e) => { e.preventDefault(); location.href = mail(); }); $("#ct-t").textContent = `Book ${M.first}`;
   /* the closing line is set to the full measure, edge to edge */
   const fitCta = () => {
     ctMail.style.fontSize = "100px"; ctMail.style.width = "max-content"; /* measure the line at its natural width */
@@ -321,14 +323,18 @@
   /* refit once the display face is really in use (fonts.ready can resolve before it is even requested) */
   if (d.fonts && d.fonts.load) d.fonts.load('400 100px "Caslon RM"', "Book").then(fitCta, fitCta);
   new ResizeObserver(fitCta).observe(ctMail.parentNode);
-  const cm = $("#c-mail"); cm.href = mail(); cm.textContent = M.email;
+  const cm = $("#c-mail"); cm.href = "mailto:"; cm.textContent = "Show email";
+  cm.addEventListener("click", (e) => {
+    if (cm.dataset.on) return;            /* second click: the real mailto link */
+    e.preventDefault(); cm.dataset.on = "1"; cm.textContent = M.email; cm.href = mail();
+  });
   const ig = $("#c-ig"); if (M.instagram) { ig.href = `https://instagram.com/${M.instagram}`; ig.textContent = "@" + M.instagram; } else ig.parentElement.remove();
   const ag = $("#c-ag");
   if (M.agency && M.agency.url) { const a = d.createElement("a"); a.href = M.agency.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = M.agency.name; ag.replaceWith(a); }
   else ag.textContent = (M.agency && M.agency.name) || "Independent";
   const cc = $("#c-cc");
   if (M.compCard) { cc.href = url(M.compCard); cc.textContent = "Download PDF"; cc.setAttribute("download", ""); }
-  else { cc.href = mail(`Comp card request — ${full}`); cc.textContent = "On request"; }
+  else { cc.href = "mailto:"; cc.textContent = "On request"; cc.addEventListener("click", (e) => { e.preventDefault(); location.href = mail(`Comp card request — ${full}`); }); }
   const copyB = $("#c-copy");
   copyB.addEventListener("click", () => {
     const done = () => { copyB.textContent = "Copied"; setTimeout(() => (copyB.textContent = "Copy address"), 2200); };

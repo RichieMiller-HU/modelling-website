@@ -10,7 +10,9 @@ window.MODEL = {
   role: "Model",
   city: "Gran Canaria",               // TODO: your base
   available: "Europe · Worldwide",
-  email: "booking@richiemiller.com", // TODO
+  // Booking email, stored scrambled (base64 of the address written backwards) so the plain address never
+  // appears in the page source for scrapers. MODEL.email (below) decodes it in the browser.
+  emailCode: "bW9jLnJlbGxpbWVpaGNpckBvbGxlaA==",
   instagram: "",                    // TODO: handle without @ once the account exists. Empty = hidden.
   agency: { name: "Independent", url: "" }, // TODO: agency name + link once signed
   compCard: "",                     // TODO: path to a PDF comp card, e.g. "assets/richie-miller-compcard.pdf"
@@ -119,3 +121,8 @@ window.MODEL = {
   // Selected clients / publications. 
   clients: [], // TODO: add real names only, e.g. ["Brand", "Magazine"]. Empty = hidden.
 };
+
+/* The address is put together in the browser only when a page asks for it. */
+Object.defineProperty(window.MODEL, "email", {
+  get() { try { return atob(this.emailCode || "").split("").reverse().join(""); } catch (e) { return ""; } },
+});
