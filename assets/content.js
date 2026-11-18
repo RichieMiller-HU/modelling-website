@@ -32,7 +32,7 @@ window.MODEL = {
     ["Inseam", "83 cm", "32.5\""],
     ["Shoe", "44 EU", "10 US"],
     ["Hair", "Dark brown", ""],
-    ["Eyes", "Brown", ""],
+    ["Eyes", "Hazel", ""],
   ],
 
   // THE BOOK — curated & sequenced by an art-director pass (see CREATIVE-DIRECTION.md).
